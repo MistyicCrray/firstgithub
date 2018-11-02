@@ -1,0 +1,800 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<title>Home</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Place favicon.ico in the root directory -->
+		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+		<!--All Css Here-->
+
+		<!-- Ionicons Font CSS-->
+		<link rel="stylesheet" href="css/ionicons.min.css">
+		<!-- Font Awesome CSS-->
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+
+		<!-- Animate CSS-->
+		<link rel="stylesheet" href="css/animate.css">
+		<!-- Owl Carousel CSS-->
+		<link rel="stylesheet" href="css/owl.carousel.min.css">
+		<!-- Nice Select CSS-->
+		<link rel="stylesheet" href="css/nice-select.css">
+		<!-- Slick CSS-->
+		<link rel="stylesheet" href="css/slick.css">
+		<!-- Meanmenu CSS-->
+		<link rel="stylesheet" href="css/meanmenu.min.css">
+		<!-- Venobox CSS-->
+		<link rel="stylesheet" href="css/venobox.css">
+		<!-- Bootstrap CSS-->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<!-- Style CSS -->
+		<link rel="stylesheet" href="style.css">
+		<!-- Responsive CSS -->
+		<link rel="stylesheet" href="css/responsive.css">
+		<!-- Modernizr Js -->
+		<script src="js/vendor/modernizr-2.8.3.min.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<div class="wrapper">
+				<!--Header Area Start-->
+				<header>
+					<!--Header Top Area Start-->
+					<div class="header-top-area">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-6">
+									<!--Header Top Left Start-->
+									<div class="header-top-left">
+										<span v-if="islogin">
+										<a href="#"><i class="fa fa-user"></i>{{user.userName}}</a>
+										<a href="#" v-on:click="logout"></i>退出登录</a>
+									</span>
+										<span v-else>
+										<a href="login.html">登录</a>
+										<a href="register.html" v-on:click="logout"><i class="fa"></i>注册</a>
+									</span>
+									</div>
+									<!--Header Top Left End-->
+								</div>
+								<div class="col-md-6">
+									<!--Header Top Right Start-->
+									<div class="header-top-right text-center text-md-right">
+										<ul class="header-top-menu">
+											<li>
+												<a href="cart.html"><i class="fa fa-shopping-cart"></i>我的购物车</a>
+											</li>
+											<li class="drodown-show">
+												<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+											</li>
+											<li class="drodown-show">
+												<a href="#"><i class="fa fa-phone"></i>联系客服</a>
+											</li>
+										</ul>
+									</div>
+									<!--Header Top Right End-->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Header Top Area End-->
+					<!--Header Middle Area Start-->
+					<div class="header-middle-area header-sticky">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-3">
+									<!--Logo Start-->
+									<div class="logo">
+										<a href="index.html">
+											<img src="img/logo/logo1.jpg" alt="">
+										</a>
+									</div>
+									<!--Logo End-->
+								</div>
+								<div class="col-md-9">
+									<!--Header Menu Start-->
+									<div class="header-menu-area">
+										<nav>
+											<ul class="main-menu">
+												<li class="active">
+													<a href="index.html">主页</a>
+												</li>
+												<li>
+													<a href="about.html">手机二手</a>
+												</li>
+												<li>
+													<a href="shop.html">拍卖场</a>
+												</li>
+												<li>
+													<a href="index.html">我的发布</a>
+												</li>
+											</ul>
+										</nav>
+									</div>
+									<!--Header Menu End-->
+									<div class="header-phone">
+										<p>联系我们：<br><span>(999) 1234 56789</span></p>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<!--Mobile Menu Area Start-->
+									<div class="mobile-menu d-lg-none"></div>
+									<!--Mobile Menu Area End-->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Header Middle Area End-->
+					<!--Header Bottom Area Start-->
+					<div class="header-bottom-area pb-15">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12 col-lg-3 order-lg-1 order-3">
+									<!--Category Menu Start-->
+									<div class="category-menu">
+										<div class="category-heading">
+											<h2 class="categories-toggle"><span>种类</span><i class="ion-ios-arrow-down"></i></h2>
+										</div>
+										<div id="cate-toggle" class="category-menu-list">
+											<ul>
+												<li class="right-menu" v-for="item1 in categories" v-if="item1.parentid==null">
+													<a v-bind:href="['shop.html?id=' + item1.id]" target="_blank">{{item1.name}}</a>
+													<!--Category Dropdown Menu Start-->
+													<ul class="cat-dropdown">
+														<li v-for="item2 in categories" v-if="item1.id==item2.parentid">
+															<a v-bind:href="['shop.html?id=' + item2.id]" target="_blank">{{item2.name}}</a>
+														</li>
+													</ul>
+													<!--Category Dropdown Menu Start-->
+												</li>
+											</ul>
+										</div>
+									</div>
+									<!--Category Menu End-->
+								</div>
+								<div class="col-md-9 col-lg-6 order-lg-2 order-1">
+									<!--Header Top Search Start-->
+									<div class="header-top-search">
+										<div class="search-categories">
+											<form action="#">
+												<div class="search-form-input">
+													<input type="text" placeholder="点击搜索">
+													<button class="top-search-btn" type="submit"><i class="ion-ios-search-strong"></i></button>
+												</div>
+											</form>
+										</div>
+									</div>
+									<!--Header Top Search End-->
+								</div>
+								<div class="col-md-3 col-lg-3 order-lg-3 order-2">
+									<!--Mini Cart Start-->
+									<div class="mini-cart">
+										<a href="cart.html">
+											<span class="cart-info">
+		                                <span class="cart-total">2</span>
+											<!--购物车商品数量-->
+											<span class="text">我的购物车</span>
+											</span>
+										</a>
+									</div>
+									<!--Mini Cart End-->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Header Bottom Area End-->
+				</header>
+				<!--Header Area End-->
+				<!--Slider Area Start-->
+				<div class="slider-area">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-3 d-md-none col-lg-3 d-lg-block"></div>
+							<div class="col-md-8 col-lg-6">
+								<div class="hero-slider owl-carousel">
+									<!--Single Slider Start-->
+									<div class="single-slider" style="background-image: url(img/slider/home1-slider-1.jpg)">
+										<div class="hero-slider-content">
+											<h2 class="slow-animation1">pendant lights</h2>
+											<h2 class="slow-animation2">collection 2018</h2>
+											<h4>get up to</h4>
+											<h1>30% off</h1>
+											<div class="slider-btn mt-50">
+												<a href="#">Shop Now</a>
+											</div>
+										</div>
+									</div>
+									<!--Single Slider End-->
+									<!--Single Slider Start-->
+									<div class="single-slider" style="background-image: url(img/slider/home1-slider-2.jpg)">
+										<div class="hero-slider-content">
+											<h2 class="slow-animation1">Beat solo2</h2>
+											<h2 class="slow-animation2">wireless</h2>
+											<h4>get up to</h4>
+											<h1>60% off</h1>
+											<div class="slider-btn mt-50">
+												<a href="#">Shop Now</a>
+											</div>
+										</div>
+									</div>
+									<!--Single Slider End-->
+								</div>
+							</div>
+							<div class="col-md-4 col-lg-3">
+								<!--Sidebar Product Categories Start-->
+								<div class="sidebar-product-categori">
+									<div class="sidebar-cate-title">
+										<h2>最热二手</h2>
+									</div>
+									<div class="categori-block-content owl-carousel">
+										<div class="item-listcategories">
+											<!--Single List Categories Start-->
+											<div class="list-categories">
+												<div class="desc-listcategoreis">
+													<div class="name-categoreis">
+														<a href="shop.html">Fashion</a>
+													</div>
+													<div class="view-more">
+														<a href="#">立即购买</a>
+													</div>
+												</div>
+												<div class="thumb-category">
+													<a href="shop.html"><img src="img/product-thumb/product-thumb1.jpg" alt=""></a>
+												</div>
+											</div>
+											<!--Single List Categories End-->
+										</div>
+									</div>
+								</div>
+								<!--Sidebar Product Categories Start-->
+							</div>
+						</div>
+						<div class="banner-slide mt-30">
+							<div class="banner-inner">
+								<a href="#"><img class="d-lg-block d-md-block d-none" src="img/banner/slider-banner.jpg" alt=""> <img class="d-block d-md-none d-lg-none" src="img/banner/slider-banner1.png" alt=""></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Slider Area End-->
+				<!--Banner Area Start-->
+				<div class="banner-area mt-80">
+					<div class="container">
+						<div class="banner-items">
+							<div class="row">
+								<div class="col-md-6 col-lg-3">
+									<!--Single Banner Item Start-->
+									<div class="single-banner-item mb-20">
+										<div class="banner-inner">
+											<a href="#"><img src="img/offer/offer1.jpg" alt=""></a>
+										</div>
+										<div class="banner-content">
+											<span class="name">Living Room Sale</span>
+											<p class="price-sale">Up to <span class="text">75% off</span></p>
+										</div>
+									</div>
+									<!--Single Banner Item End-->
+								</div>
+								<div class="col-md-6 col-lg-3">
+									<!--Single Banner Item Start-->
+									<div class="single-banner-item mb-20">
+										<div class="banner-inner">
+											<a href="#"><img src="img/offer/offer2.jpg" alt=""></a>
+										</div>
+										<div class="banner-content">
+											<span class="name">Makeup Combos Collection</span>
+											<p class="price-sale">Up to <span class="text">75% off</span></p>
+										</div>
+									</div>
+									<!--Single Banner Item End-->
+								</div>
+								<div class="col-md-6 col-lg-3">
+									<!--Single Banner Item Start-->
+									<div class="single-banner-item mb-20">
+										<div class="banner-inner">
+											<a href="#"><img src="img/offer/offer3.jpg" alt=""></a>
+										</div>
+										<div class="banner-content">
+											<span class="name">Sports Action Camera on Sale</span>
+											<p class="price-sale">Up to <span class="text">75% off</span></p>
+										</div>
+									</div>
+									<!--Single Banner Item End-->
+								</div>
+								<div class="col-md-6 col-lg-3">
+									<!--Single Banner Item Start-->
+									<div class="single-banner-item mb-20">
+										<div class="banner-inner">
+											<a href="#"><img src="img/offer/offer4.jpg" alt=""></a>
+										</div>
+										<div class="banner-content">
+											<span class="name">Fashion Coolest Men's</span>
+											<p class="price-sale">Up to <span class="text">75% off</span></p>
+										</div>
+									</div>
+									<!--Single Banner Item End-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Banner Area End-->
+				<!--Product Area Start-->
+				<div class="product-area mt-80">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<!--Section Title Start-->
+								<div class="section-title">
+									<h2>最新上架</h2>
+								</div>
+								<!--Section Title End-->
+							</div>
+						</div>
+						<div class="product-block-content">
+							<div class="row">
+								<div class="bestsellerSlide pdr-0 owl-carousel" v-for="product in products">
+									<div class="col-md-12">
+										<!--Single Product Start-->
+										<div class="single-product">
+											<div class="product-img">
+												<a v-bind:href="['single-product.html?id=' + product.id]">
+													<img :src="product.img" class="first-img" />
+													<img :src="product.img" class="hover-img" />
+												</a>
+												<span class="sticker">New</span>
+											</div>
+											<div class="product-content">
+												<h4><a v-bind:href="['single-product.html?id=' + product.id]">{{product.name}}</a></h4>
+												<div class="product-price">
+													<span class="price">${{product.price}}</span>
+												</div>
+											</div>
+										</div>
+										<!--Single Product End-->
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Product Area End-->
+				<!--Banner Area Start-->
+				<div class="banner-area mt-80">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<div class="banner-inner">
+									<a href="#"><img src="img/banner/offer-banner1.jpg" alt=""></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Banner Area End-->
+				<!--Categorie Product Area Start-->
+				<div class="categorie-product-area mt-80">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<!--Section Title Start-->
+								<div class="section-title float-left">
+									<h2>手机卖场</h2>
+								</div>
+								<!--Section Title End-->
+								<!--Product Slider Nav-->
+								<div class="cate-slider-nav float-right">
+									<button class="nav-prev"><i class="fa fa-angle-left"></i></button>
+									<button class="nav-next"><i class="fa fa-angle-right"></i></button>
+								</div>
+								<!--Product Slider Nav-->
+							</div>
+						</div>
+						<div class="cate-product-wrapper">
+							<div class="row">
+								<div class="col-md-12 col-lg-3">
+									<!--Product Categorie Start-->
+									<div class="product-categorie">
+										<!--Categorie Filter Toggle-->
+										<button class="product-tab-filter-toggle">品牌<span>all</span><i class="ion-chevron-down"></i></button>
+										<!--Categorie Filter Toggle-->
+										<ul class="cate-filter">
+											<li v-for="category in categories" v-if="category.parentid==1">
+												<a v-bind:href="['shop.html?id=' + category.id]">{{category.name}}</a>
+											</li>
+										</ul>
+									</div>
+									<!--Product Categorie Start-->
+								</div>
+								<div class="col-md-12 col-lg-9">
+									<!--Product Banner Start-->
+									<div class="banner-block-content">
+										<div class="banner-inner">
+											<a href="#"><img src="img/banner/product-banner1.jpg" alt=""></a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="categorie-product-block-content">
+								<div class="row">
+									<div class="cate-product-slide owl-carousel">
+										<div class="col-md-12">
+											<!--Single Product Start-->
+											<div class="single-product">
+												<div class="product-img">
+													<a href="single-product.html">
+														<img class="first-img" src="img/product/product6.jpg" alt="">
+													</a>
+													<span class="sticker">New</span>
+													<div class="product-content">
+														<h4><a href="single-product.html">Dwar Men's Casual Long</a></h4>
+														<div class="product-price">
+															<span class="price">$350.00</span>
+														</div>
+
+													</div>
+												</div>
+												<!--Single Product End-->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Categorie Product Area End-->
+					<!--Categorie Product Area Start-->
+					<div class="categorie-product-area mt-80">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<!--Section Title Start-->
+									<div class="section-title float-left">
+										<h2>笔记本电脑/电脑周边</h2>
+									</div>
+									<!--Section Title End-->
+									<!--Product Slider Nav-->
+									<div class="cate-slider-nav float-right">
+										<button class="nav-prev"><i class="fa fa-angle-left"></i></button>
+										<button class="nav-next"><i class="fa fa-angle-right"></i></button>
+									</div>
+									<!--Product Slider Nav-->
+								</div>
+							</div>
+							<div class="cate-product-wrapper">
+								<div class="row">
+									<div class="col-md-12 col-lg-3">
+										<!--Product Categorie Start-->
+										<div class="product-categorie">
+											<!--Categorie Filter Toggle-->
+											<button class="product-tab-filter-toggle">品牌<span>all</span><i class="ion-chevron-down"></i></button>
+											<!--Categorie Filter Toggle-->
+											<ul class="cate-filter">
+												<li v-for="category in categories" v-if="category.parentid==3">
+													<a v-bind:href="['shop.html?id=' + category.id]">{{category.name}}</a>
+												</li>
+											</ul>
+										</div>
+										<!--Product Categorie Start-->
+									</div>
+									<div class="col-md-12 col-lg-9">
+										<!--Product Banner Start-->
+										<div class="banner-block-content">
+											<div class="banner-inner">
+												<a href="#"><img src="img/banner/product-banner2.jpg" alt=""></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="categorie-product-block-content">
+									<div class="row">
+										<div class="cate-product-slide owl-carousel">
+											<div class="col-md-12">
+												<!--Single Product Start-->
+												<div class="single-product">
+													<div class="product-img">
+														<a href="single-product.html">
+															<img class="first-img" src="img/product/product6.jpg" alt="">
+														</a>
+														<span class="sticker">New</span>
+													</div>
+													<div class="product-content">
+														<h4><a href="single-product.html">Dwar Men's Casual Long</a></h4>
+														<div class="product-price">
+															<span class="price">$350.00</span>
+														</div>
+													</div>
+												</div>
+												<!--Single Product End-->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Categorie Product Area End-->
+					<!--Categorie Product Area Start-->
+					<div class="categorie-product-area mt-80">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<!--Section Title Start-->
+									<div class="section-title float-left">
+										<h2>相机/摄像机</h2>
+									</div>
+									<!--Section Title End-->
+									<!--Product Slider Nav-->
+									<div class="cate-slider-nav float-right">
+										<button class="nav-prev"><i class="fa fa-angle-left"></i></button>
+										<button class="nav-next"><i class="fa fa-angle-right"></i></button>
+									</div>
+									<!--Product Slider Nav-->
+								</div>
+							</div>
+							<div class="cate-product-wrapper">
+								<div class="row">
+									<div class="col-md-12 col-lg-3">
+										<!--Product Categorie Start-->
+										<div class="product-categorie">
+											<!--Categorie Filter Toggle-->
+											<button class="product-tab-filter-toggle">品牌 <span>all</span><i class="ion-chevron-down"></i></button>
+											<!--Categorie Filter Toggle-->
+											<ul class="cate-filter">
+												<li v-for="category in categories" v-if="category.parentid==2">
+													<a v-bind:href="['shop.html?id=' + category.id]">{{category.name}}</a>
+												</li>
+											</ul>
+										</div>
+										<!--Product Categorie Start-->
+									</div>
+									<div class="col-md-12 col-lg-9">
+										<!--Product Banner Start-->
+										<div class="banner-block-content">
+											<div class="banner-inner">
+												<a href="#"><img src="img/banner/product-banner3.jpg" alt=""></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="categorie-product-block-content">
+									<div class="row">
+										<div class="cate-product-slide owl-carousel">
+											<div class="col-md-12">
+												<!--Single Product Start-->
+												<div class="single-product">
+													<div class="product-img">
+														<a href="single-product.html">
+															<img class="first-img" src="img/product/product6.jpg" alt="">
+														</a>
+														<span class="sticker">New</span>
+													</div>
+													<div class="product-content">
+														<h4><a href="single-product.html">Dwar Men's Casual Long</a></h4>
+														<div class="product-price">
+															<span class="price">$350.00</span>
+														</div>
+
+													</div>
+												</div>
+												<!--Single Product End-->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--Categorie Product Area End-->
+					<!--Categorie Product Area Start-->
+					<div class="categorie-product-area mt-80">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<!--Section Title Start-->
+									<div class="section-title float-left">
+										<h2>家用电器</h2>
+									</div>
+									<!--Section Title End-->
+									<!--Product Slider Nav-->
+									<div class="cate-slider-nav float-right">
+										<button class="nav-prev"><i class="fa fa-angle-left"></i></button>
+										<button class="nav-next"><i class="fa fa-angle-right"></i></button>
+									</div>
+									<!--Product Slider Nav-->
+								</div>
+							</div>
+							<div class="cate-product-wrapper">
+								<div class="row">
+									<div class="col-md-12 col-lg-3">
+										<!--Product Categorie Start-->
+										<div class="product-categorie">
+											<!--Categorie Filter Toggle-->
+											<button class="product-tab-filter-toggle">品牌<span>all</span><i class="ion-chevron-down"></i></button>
+											<!--Categorie Filter Toggle-->
+											<ul class="cate-filter">
+												<li v-for="category in categories" v-if="category.parentid==4">
+													<a v-bind:href="['shop.html?id=' + category.id]">{{category.name}}</a>
+												</li>
+											</ul>
+										</div>
+										<!--Product Categorie Start-->
+									</div>
+									<div class="col-md-12 col-lg-9">
+										<!--Product Banner Start-->
+										<div class="banner-block-content">
+											<div class="banner-inner">
+												<a href="#"><img src="img/banner/product-banner4.jpg" alt=""></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="categorie-product-block-content">
+									<div class="row">
+										<div class="cate-product-slide owl-carousel">
+											<div class="col-md-12">
+												<!--Single Product Start-->
+												<div class="single-product">
+													<div class="product-img">
+														<a href="single-product.html">
+															<img class="first-img" src="img/product/product6.jpg" alt="">
+														</a>
+														<span class="sticker">New</span>
+													</div>
+													<div class="product-content">
+														<h4><a href="single-product.html">Dwar Men's Casual Long</a></h4>
+														<div class="product-price">
+															<span class="price">$350.00</span>
+														</div>
+													</div>
+												</div>
+												<!--Single Product End-->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--All Js Here-->
+
+			<!--Jquery 1.12.4-->
+			<script src="js/vendor/jquery-1.12.4.min.js"></script>
+			<!--Imagesloaded-->
+			<script src="js/imagesloaded.pkgd.min.js"></script>
+			<!--Isotope-->
+			<script src="js/isotope.pkgd.min.js"></script>
+			<!--Waypoints-->
+			<script src="js/waypoints.min.js"></script>
+			<!--Counterup-->
+			<script src="js/jquery.counterup.min.js"></script>
+			<!--Countdown-->
+			<script src="js/jquery.countdown.min.js"></script>
+			<!--Carousel-->
+			<script src="js/owl.carousel.min.js"></script>
+			<!--Slick-->
+			<script src="js/slick.min.js"></script>
+			<!--Meanmenu-->
+			<script src="js/jquery.meanmenu.min.js"></script>
+			<!--Instafeed-->
+			<!--<script src="js/instafeed.min.js"></script>-->
+			<!--Nice Select-->
+			<script src="js/jquery.nice-select.min.js"></script>
+			<!--ScrollUp-->
+			<script src="js/jquery.scrollUp.min.js"></script>
+			<!--Wow-->
+			<script src="js/wow.min.js"></script>
+			<!--Venobox-->
+			<script src="js/venobox.min.js"></script>
+			<!--Popper-->
+			<script src="js/popper.min.js"></script>
+			<!--Bootstrap-->
+			<script src="js/bootstrap.min.js"></script>
+			<!--Plugins-->
+			<script src="js/plugins.js"></script>
+			<!--Main Js-->
+			<script src="js/main.js"></script>
+			<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+			<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+			<script type="text/javascript" src="resource/js/vue-main.js"></script>
+			<script type="text/javascript" src="resource/js/moment.min.js"></script>
+			<script type="text/javascript">
+				axios.defaults.baseURL = "http://localhost:8080";
+				var vm = new Vue({
+					el: '#app',
+					data: {
+						products: "",
+						pageNum: 1,
+						pageSize: 5,
+						total: 0,
+						pages: 0,
+						inputPage: '',
+						user: sessionStorage,
+						islogin: sessionStorage.length > 0,
+						categories: "",
+						carts: ""
+					},
+					created: function() {
+						this.getProduct();
+						this.getCategory();
+					},
+					methods: {
+						// 获取购物车信息
+						getCarts: function() {
+
+						},
+						// 获取类别信息
+						getCategory: function() {
+							var _this = this;
+							axios.get('/category', {
+								params: {
+									size: 1000,
+									pageNum: 1
+								}
+							}).then(function(response) {
+								_this.categories = response.data.data.rows;
+							})
+						},
+						getlocal: function() {
+							console.info(localStorage.getItem("userName") + localStorage.getItem("password"));
+						},
+						logout: function() {
+							logout();
+							location.href = "login.html";
+						},
+						// 获取商品信息
+						getProduct: function(pageIndex) {
+							pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+							var _this = this;
+							axios.get('/product', {
+								params: {
+									pageNum: pageIndex,
+									size: _this.pageSize
+								}
+							}).then(function(response) {
+								_this.products = response.data.data.rows;
+								_this.pageNum = pageIndex;
+								_this.total = response.data.data.total;
+								_this.pages = Math.ceil(_this.total / _this.pageSize);
+							})
+						},
+						edit: function(id) {
+							location.href = "update.html?id=" + id;
+						},
+						pageClick: function(page) {
+							this.search(page);
+						},
+						prePage: function() {
+							this.pageNum--;
+							if(this.pageNum < 1) {
+								this.pageNum = 1;
+								return;
+							}
+							this.search(this.pageNum);
+						},
+						nextPage: function() {
+							this.pageNum++;
+							if(this.pageNum > this.pages) {
+								this.pageNum = this.pages;
+								return;
+							}
+							this.search(this.pageNum);
+						}
+					},
+					mounted: function() {
+						this.getlocal();
+					}
+				});
+			</script>
+	</body>
+
+</html>
