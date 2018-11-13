@@ -75,8 +75,8 @@ public class CategoryController {
 	* @param id
 	* @return Result
 	 */
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result selectById(@PathVariable String id) {
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public Result selectById(@PathVariable(value = "id") String id) {
 		return ResultGenerator.genSuccessResult(categoryService.selectById(id));
 	}
 }

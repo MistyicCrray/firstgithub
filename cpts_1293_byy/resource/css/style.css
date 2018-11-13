@@ -23,32 +23,31 @@ a{border:none;text-decoration: none;color:#000;}
 
 
 /*header*/
-header{width: 100%;height: 40px;background: #333}
+header{width: 100%;height: 40px;background: #ffffff;border-bottom: 4px solid #007ab6}
 header .top{width: 1226px;height: 40px;line-height: 40px;}
 header .top .left ul li{float: left;font-size: 12px;color: #ccc;}
-header .top .left ul li a{display:block;padding:0 8px;font-size: 12px;font-family: Times New Roman;color: #b0b0b0;}
-header .top .left ul li a:hover{color:#fff;}
+header .top .left ul li a{display:block;padding:0 8px;font-size: 12px;font-family: Times New Roman;color: #000000;}
+header .top .left ul li a:hover{color:#007ab6;}
 header .top .right ul li{float: left;font-size: 12px;color: #ccc;}
-header .top .right ul li a{display:block;padding:0 8px;font-size: 12px;font-family: Times New Roman;color: #b0b0b0;}
-header .top .right ul li a:hover{color:#fff;}
+header .top .right ul li a{display:block;padding:0 8px;font-size: 12px;font-family: Times New Roman;color: #000000;}
+header .top .right ul li a:hover{color:#007ab6;}
 header .top .right .gouwuche a{color:#fff;}
-header .top .right .gouwuche{margin:0 20px;background: #424242;width: 120px;text-align: center;font-size: 12px;cursor:pointer;background: #ff6700;color: #fff;}
+header .top .right .gouwuche{margin:0 20px;background: #007ab6;width: 120px;text-align: center;font-size: 12px;cursor:pointer;background: #007ab6;color: #fff;}
 
 header .top .right .gouwuche:hover{color:#000;background: #666;}
 /*banner_x*/
 .banner_x {width: 1226px;height: 100px;}
-.banner_x .logo{background: url('../image/logo_top.png') no-repeat center center;width: 50px;height: 100px;}
-.banner_x .ad_top{width: 180px;height: 100px;background: url('../image/yyymix.gif') no-repeat center center;}
+.banner_x .logo{background: url('../image/logo.png') no-repeat center center;width: 300px;height: 100px;}
 .banner_x .nav ul li{float: left;height: 100px;line-height: 100px;}
 .banner_x .nav ul li a{display:inline-block;color: #000;font-size: 16px;padding: 0 10px;}
-.banner_x .nav ul li a:hover{color: rgb(255,103,0); }
+.banner_x .nav ul li a:hover{color: #007ab6; }
 .banner_x .search{width: 308px;height: 100px;line-height: 100px;}
 .banner_x .search .text{width: 250px;height:50px;line-height: 50px;font-size: 12px;margin-top: 25px;border:1px solid #ccc;}
-.banner_x .search .text:hover{border-color: #ff6700;}
+.banner_x .search .text:hover{border-color: #007ab6;}
 .banner_x .search .text .shuru{border: none;width: 250px;height: 50px;}
 .banner_x .search .submit{width: 50px;height:50px;line-height: 50px;text-align:center;font-size: 12px;margin-top: 25px;border:1px solid #ccc;}
 .banner_x .search .submit .sousuo{letter-spacing:3px;text-align:center;width: 50px;height:50px;border: none;background: none;cursor:pointer;}
-.banner_x .search .submit:hover{border-color: #ff6700;color:#ff6700;} 
+.banner_x .search .submit:hover{border-color: #007ab6;color:#007ab6;}
 /*banner_y*/
 .banner_y{width:1226px;height:460px;}
 .banner_y .nav{width: 234px;height: 460px;background: rgb(12,12,19);}
@@ -62,10 +61,10 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_y .nav ul li .pop .left .xuangou_left a{color: #000;}
 .banner_y .nav ul li .pop .left .xuangou_left a img{valign:middle;}
 .banner_y .nav ul li .pop .left .xuangou_left a span{display: inline-block;margin-left: 10px;font-size: 14px;}
-.banner_y .nav ul li .pop .left .xuangou_left a span:hover{color:#ff6700;}
+.banner_y .nav ul li .pop .left .xuangou_left a span:hover{color:#007ab6;}
 .banner_y .nav ul li .pop .left .xuangou_right{margin-top: 25px;height: 40px;line-height: 40px;}
 .banner_y .nav ul li .pop .left .xuangou_right a{display: block;width: 60px;line-height:24px;height: 24px;text-align: center;font-size: 12px;color:#ff6700;border:1px solid #ff6700;}
-.banner_y .nav ul li .pop .left .xuangou_right a:hover{display: block;background:#ff6700;color:#fff; }
+.banner_y .nav ul li .pop .left .xuangou_right a:hover{display: block;background:#007ab6;color:#fff; }
 
 .banner_y .nav ul li .pop .ctn{width: 265px;height: 460px;}
 .banner_y .nav ul li .pop .ctn div{margin-bottom: 3px;}
@@ -73,10 +72,10 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_y .nav ul li .pop .ctn .xuangou_left a{color: #000;}
 .banner_y .nav ul li .pop .ctn .xuangou_left a img{valign:middle;}
 .banner_y .nav ul li .pop .ctn .xuangou_left a span{display: inline-block;margin-left: 10px;font-size: 14px;}
-.banner_y .nav ul li .pop .ctn .xuangou_left a span:hover{color:#ff6700;}
+.banner_y .nav ul li .pop .ctn .xuangou_left a span:hover{color:#007ab6;}
 .banner_y .nav ul li .pop .ctn .xuangou_right{margin-top: 25px;height: 40px;line-height: 40px;}
-.banner_y .nav ul li .pop .ctn .xuangou_right a{display: block;width: 60px;line-height:24px;height: 24px;text-align: center;font-size: 12px;color:#ff6700;border:1px solid #ff6700;}
-.banner_y .nav ul li .pop .ctn .xuangou_right a:hover{display: block;background:#ff6700;color:#fff; }
+.banner_y .nav ul li .pop .ctn .xuangou_right a{display: block;width: 60px;line-height:24px;height: 24px;text-align: center;font-size: 12px;color:#007ab6;border:1px solid #007ab6;}
+.banner_y .nav ul li .pop .ctn .xuangou_right a:hover{display: block;background:#007ab6;color:#fff; }
 
 .banner_y .nav ul li .pop .right{width: 265px;height: 460px;margin-right: 5px;}
 .banner_y .nav ul li .pop .right div{margin-bottom: 3px;}
@@ -84,12 +83,12 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_y .nav ul li .pop .right .xuangou_left a{color: #000;}
 .banner_y .nav ul li .pop .right .xuangou_left a img{valign:middle;}
 .banner_y .nav ul li .pop .right .xuangou_left a span{display: inline-block;margin-left: 10px;font-size: 14px;}
-.banner_y .nav ul li .pop .right .xuangou_left a span:hover{color:#ff6700;}
+.banner_y .nav ul li .pop .right .xuangou_left a span:hover{color:#007ab6;}
 .banner_y .nav ul li .pop .right .xuangou_right{margin-top: 25px;height: 40px;line-height: 40px;}
-.banner_y .nav ul li .pop .right .xuangou_right a{display: block;width: 60px;line-height:24px;height: 24px;text-align: center;font-size: 12px;color:#ff6700;border:1px solid #ff6700;}
-.banner_y .nav ul li .pop .right .xuangou_right a:hover{display: block;background:#ff6700;color:#fff; }
+.banner_y .nav ul li .pop .right .xuangou_right a{display: block;width: 60px;line-height:24px;height: 24px;text-align: center;font-size: 12px;color:#007ab6;border:1px solid #007ab6;}
+.banner_y .nav ul li .pop .right .xuangou_right a:hover{display: block;background:#007ab6;color:#fff; }
 
-.banner_y .nav ul li:hover{background: #ff6700; }
+.banner_y .nav ul li:hover{background: #007ab6; }
 .banner_y .nav ul li a{display:inline-block;margin-left:10px;color: #fff;}
 .tlinks{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}
 /*sub_banner*/
@@ -131,9 +130,9 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .peijian .main .content .remen .tu a img{margin:10px 42px 20px 42px;}
 .peijian .main .content .remen .miaoshu{width: 234px;height: 25px;line-height: 25px;text-align: center;overflow: hidden;}
 .peijian .main .content .remen .miaoshu a{color:#000;font-size: 14px;}
-.peijian .main .content .remen .jiage{color:#ff6700;font-size: 14px;text-align:center;width: 234px;height: 25px;line-height: 25px;}
+.peijian .main .content .remen .jiage{color:#007ab6;font-size: 14px;text-align:center;width: 234px;height: 25px;line-height: 25px;}
 .peijian .main .content .remen .pingjia{width:234px;height: 15px;line-height: 15px;font-size: 12px;color:#aaa;text-align: center;}
-.peijian .main .content .remen .piao{width: 204px;height: 60px;font-size:12px;padding:10px 0px 0px 30px;background:#ff6700; position: absolute;display: none;}
+.peijian .main .content .remen .piao{width: 204px;height: 60px;font-size:12px;padding:10px 0px 0px 30px;background:#007ab6; position: absolute;display: none;}
 .peijian .main .content .remen .piao a{color:#fff;}
 .peijian .main .content .remen .piao span{display: block;margin-top:5px;}
 .peijian .main .content .remen:hover .piao{display: block;margin-top: -40px;}
@@ -149,25 +148,25 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .xiangqing .neirong nav{display:inline-block;width: 410px;height: 58px;line-height: 58px;}
 .xiangqing .neirong nav li{font-size:14px;float: left;display: block;margin:0px 5px;}
 .xiangqing .neirong nav li a{color: #333;font-size: 14px;}
-.xiangqing .neirong nav li a:hover{color:#ff6700;}
+.xiangqing .neirong nav li a:hover{color:#007ab6;}
 /*jieshao*/
 .jieshao{height: 560px; }
 .jieshao .left{width:560px;height:560px;border:1px solid #ccc;}
 .jieshao .right{width:620px;background: rgb(248,248,248);height: 600px;}
 .jieshao .right .jianjie{font-size: 14px;color: rgb(176,176,176);line-height: 20px;}
-.jieshao .right .jiage{font-size: 18px;color:#ff6700;font-weight: bold;}
+.jieshao .right .jiage{font-size: 18px;color:#007ab6;font-weight: bold;}
 .jieshao .right .xzbb{height: 58px;line-height:58px;}
 .jieshao .right .xzbb .banben{height: 58px;line-height: 58px;width: 278px;cursor:pointer;margin-right: 5px;border:1px solid #bbb;}
 .jieshao .right .xzbb .banben a{display:block;font-size: 18px;color:#000;padding:0 10px;}
 .jieshao .right .xzbb .banben a span{display: inline-block;margin-right: 10px;}
-.jieshao .right .xzbb .banben a:hover{color:#ff6700;}
-.jieshao .right .xzbb .banben:hover{border:1px solid #ff6700;}
+.jieshao .right .xzbb .banben a:hover{color:#007ab6;}
+.jieshao .right .xzbb .banben:hover{border:1px solid #007ab6;}
 .jieshao .right .xzbb .banben a .yuandian{display: inline-block;height: 15px;width: 15px;border-radius: 50%;background: #000;margin-left: 80px;}
 /*选取详情*/
 .xqxq{height: 80px;width: 555px;background: rgb(255,255,255);padding:20px;}
 /*是否下单*/
 .xiadan{height: 50px;line-height: 50px;}
-.xiadan .jrgwc{height: 50px;width: 200px;border:none;background:#ff6700;color:#fff;font-size: 18px;font-weight: bold;cursor:pointer;margin-right: 50px;}
+.xiadan .jrgwc{height: 50px;width: 200px;border:none;background:#007ab6;color:#fff;font-size: 18px;font-weight: bold;cursor:pointer;margin-right: 50px;}
 .xiadan .jrgwc:hover{border:1px solid #fff;}
 /*我的购物车*/
 .banner_x .wdgwc{height: 100px;line-height: 100px;font-weight:bold;font-size: 24px;}
@@ -175,8 +174,8 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_x .dlzc{height: 100px;line-height: 100px;}
 .banner_x .dlzc ul li{float: left;font-size: 12px;}
 .banner_x .dlzc ul li a{display:block;padding:0 8px;font-size: 12px;font-family: Times New Roman;color: #777;}
-.banner_x .dlzc ul li a:hover{color:#ff6700; }
-.xiantiao{width: 100%;height: 2px;background:#ff6700; }
+.banner_x .dlzc ul li a:hover{color:#007ab6; }
+.xiantiao{width: 100%;height: 2px;background:#007ab6; }
 /*购物车详单*/
 .gwcxqbj{width: 100%;height:400px;background: rgb(245,245,245);padding-bottom: 20px;}
 .gwcxqbj .gwcxd{background: #fff;width: 1226px;height: auto;padding-top: 30px;}
@@ -196,22 +195,22 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(3){margin-left: 55px;width: 330px;}
 .gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(4){margin-left: 55px;}
 .gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(5){margin-left: 115px;}
-.gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(6){margin-left: 115px;color:#ff6700;}
+.gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(6){margin-left: 115px;color:#007ab6;}
 .gwcxqbj .gwcxd .content2 .sub_content:nth-of-type(7){margin-left: 145px;font-size: 25px;}
-.gwcxqbj .gwcxd .content2 .sub_content .shuliang{width: 70px;height: 35px;border:2px solid #ccc;text-align: center;font-size:16px;color:#ff6700;}
+.gwcxqbj .gwcxd .content2 .sub_content .shuliang{width: 70px;height: 35px;border:2px solid #ccc;text-align: center;font-size:16px;color:#007ab6;}
 .gwcxqbj .gwcxd .content2 .sub_content a{display: block;width: 20px;height: 20px;border-radius: 10px;color:#000;}
-.gwcxqbj .gwcxd .content2 .sub_content a:hover{color:#ff6700;}
+.gwcxqbj .gwcxd .content2 .sub_content a:hover{color:#007ab6;}
 /*结算单*/
 .jiesuandan{width:1226px;height: 50px;background: #fff;}
 .jiesuandan .tishi{width: 400px;height: 50px;line-height: 50px;}
 .jiesuandan .tishi ul li{float: left; font-size: 14px;display: inline-block;padding:0 10px;color:#666;}
 .jiesuandan .tishi ul li a{color:#666;}
-.jiesuandan .tishi ul li a:hover{color:#ff6700;}
-.jiesuandan .tishi ul li span{display:inline-block;color:#ff6700;margin:0 4px;}
-.jiesuandan .jiesuan{width: 500px;height: 50px;line-height: 50px;font-size: 14px;color:#ff6700;}
+.jiesuandan .tishi ul li a:hover{color:#007ab6;}
+.jiesuandan .tishi ul li span{display:inline-block;color:#007ab6;margin:0 4px;}
+.jiesuandan .jiesuan{width: 500px;height: 50px;line-height: 50px;font-size: 14px;color:#007ab6;}
 .jiesuandan .jiesuan .jiesuanjiage span{font-size: 24px;font-weight: bold;}
 .jiesuandan .jiesuan .jsanniu .jsan{width: 200px;height: 50px;color:#fff;background:rgb(255,103,0); font-size: 20px;border:none;cursor:pointer;}
-.jiesuandan .jiesuan .jsanniu .jsan:hover{background: rgb(242,88,7);}
+.jiesuandan .jiesuan .jsanniu .jsan:hover{background: #007ab6;}
 /*个人中心*/
 .grzxbj{width: 100%;height:auto;background: rgb(245,245,245);padding-bottom: 20px;padding-top: 20px;}
 .grzxbj .selfinfo{width: 1226px;}
@@ -229,7 +228,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 }
 .grzxbj .selfinfo .rtcont .subgrzl span:nth-of-type(3){display: inline-block;font-size: 15px;width: 160px;height: 45px;line-height: 45px;text-align: right;}
 .grzxbj .selfinfo .rtcont .subgrzl span a{color:teal; }
-.grzxbj .selfinfo .rtcont .subgrzl span a:hover{color:#ff6700; }
+.grzxbj .selfinfo .rtcont .subgrzl span a:hover{color:#007ab6; }
 
 /*订单中心*/
 .grzxbj .selfinfo .rtcont .ddxq{width: 938px;height: 120px;line-height: 120px;font-size: 17px;color:rgb(117,117,117); 
@@ -237,6 +236,6 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .grzxbj .selfinfo .rtcont .ddxq .ddspt{width: 80px;height: 80px;margin: 19px 25px 0 0;border:1px solid #aaa;}
 .grzxbj .selfinfo .rtcont .ddxq .ztxx ul li{display: inline-block;width: 130px;height: 60px;line-height:60px;float: left;border-left:1px solid #aaa; margin-top: 30px;text-align: center;}
 .grzxbj .selfinfo .rtcont .ddxq .ztxx ul li a{color:rgb(117,117,117);}
-.grzxbj .selfinfo .rtcont .ddxq .ztxx ul li a:hover{color:#ff6700;}
+.grzxbj .selfinfo .rtcont .ddxq .ztxx ul li a:hover{color:#007ab6;}
 /*footer*/
 footer{width: 100%;height: 120px;line-height: 30px;text-align: center;font-size: 12px;background: rgb(250,250,250);padding:30px 0;}
