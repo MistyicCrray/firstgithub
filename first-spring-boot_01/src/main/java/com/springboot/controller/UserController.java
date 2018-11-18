@@ -1,8 +1,17 @@
 package com.springboot.controller;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +36,45 @@ import com.springboot.tools.TableData;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	// 读取配置文件中的参数
+	@Value("${spring.mail.username}")
+	private String form;
 
+	@Autowired
+	private JavaMailSender javaMailSender;
+	
+	/**
+	 * 发送验证码
+	 * @param loginCode  返回邮箱
+	 * @return
+	 */
+	@RequestMapping(value = "/sendEmail/{loginCode}", method = RequestMethod.GET)
+	public String sendEmail(@PathVariable String loginCode,
+			HttpServletResponse response) {
+		// 生成六位数字验证码
+		String compare = "";  
+		compare += (int)(Math.random()*9+1);  
+        for(int i = 0; i < 5; i++){  
+        	compare += (int)(Math.random()*10);  
+        } 
+		Cookie cookie = new Cookie("compare", compare);
+		cookie.setMaxAge(1800);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		SimpleMailMessage message = new SimpleMailMessage();
+		// 发送者
+		message.setFrom(form);
+		// 接收者
+		message.setTo(loginCode);
+		// 邮件主题
+		message.setSubject("主题：文本邮件");
+		// 邮件内容
+		message.setText("验证码：" + compare);
+		javaMailSender.send(message);
+		return compare;
+	}
+	
+	
 	/**
 	 * 用户注册
 	 * 
@@ -39,7 +86,89 @@ public class UserController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result insertUser(@ModelAttribute User user, @RequestParam(required = false) MultipartFile file) {
-		return ResultGenerator.genSuccessResult(userService.addUser(user, file));
+		// 生成六位数字验证码
+		String activeCode = "";
+		activeCode += (int) (Math.random() * 9 + 1);
+		for (int i = 0; i < 5; i++) {
+			activeCode += (int) (Math.random() * 10);
+		}
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.DATE, 2); // 存入过期时间
+		if (!user.getLoginname().matches("^\\w+@(\\w+\\.)+\\w+$")) {
+			throw new ServiceException("邮箱不合法");
+		}
+		// 检测用户登录账号是否存在
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("loginCode", user.getLoginname());
+		List<User> list = userService.getUsers(map);
+		if (list.size() != 0 && list.get(0).getState().equals("0")) {
+			throw new ServiceException("邮箱已被注册");
+		}
+		// 如账号存在并且没激活则重新发送邮件
+		if (list.size() != 0 && list.get(0).getState().equals("4")) {
+			Map<String, Object> userMap = new HashMap<String, Object>();
+			userMap.put("activeCode", activeCode);
+			userMap.put("activeDate", now.getTime());
+			userMap.put("id", list.get(0).getId());
+			SimpleMailMessage message = new SimpleMailMessage();
+			// 发送者
+			message.setFrom(form);
+			// 接收者
+			message.setTo(user.getLoginname());
+			// 邮件主题
+			message.setSubject("激活邮箱");
+			// 邮件内容
+			message.setText("点击激活邮箱："  + "?id="
+					+ list.get(0).getId() + "&activeCode=" + activeCode);
+			javaMailSender.send(message);
+			userService.updatePassword(userMap);
+			return ResultGenerator.genSuccessResult("success");
+		}
+
+		user.setId(com.springboot.tools.UUIDUtils.get16UUID());
+		user.setPassword(user.getPassword()); // 密码
+		user.setState("4"); // 未激活状态
+		SimpleMailMessage message = new SimpleMailMessage();
+		// 发送者
+		message.setFrom(form);
+		// 接收者
+		message.setTo(user.getLoginname());
+		// 邮件主题
+		message.setSubject("主题：激活邮箱");
+		// 邮件内容
+		message.setText("点击激活邮箱："   + "?id=" + user.getId()
+				+ "&activeCode=" + activeCode);
+		javaMailSender.send(message);
+		return ResultGenerator.genSuccessResult(userService.addUser(user,file));
+
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param activeCode
+	 * @return
+	 */
+	@RequestMapping(value = "/active", method = RequestMethod.GET)
+	public Result activeEmail(@RequestParam String id,
+			@RequestParam String activeCode) {
+		User user = userService.getById(id);
+		if (user == null) {
+			throw new ServiceException("用户还未注册，请前往注册页面");
+		}
+		/*if (!activeCode.equals(user.getExtendS2())) {
+			throw new ServiceException("激活码错误");
+		}
+		if (new Date().getTime() >= user.getExtendD2().getTime()) {
+			userService.delete(id);
+			throw new ServiceException("该链接已经过期,请重新注册");
+		}
+		// 激活成功时清空这两个字段,防止重复激活
+		user.setExtendD2(null);
+		user.setExtendS2(null);
+		user.setStatus("0"); // 设置为正常可用状态
+		userService.update(user);*/
+		return ResultGenerator.genSuccessResult("success");
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -50,7 +179,7 @@ public class UserController {
 	}
 
 	/**
-	 * 
+	 * 修改密码
 	 * @Title: updatePwd
 	 * @Description: TODO
 	 * @param id
@@ -88,6 +217,11 @@ public class UserController {
 		return ResultGenerator.genSuccessResult(userService.getById(id));
 	}
 
+	/**
+	 * 登录
+	 * @param map
+	 * @return
+	 */
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public Result Login(@RequestParam(required = false) Map<String, Object> map) {
 		map.put("password", MD5.md5((String) map.get("password")));

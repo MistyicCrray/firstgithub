@@ -93,7 +93,7 @@ public class ProductController {
 	
 	@LoginRequired
 	@RequestMapping(value = "/buy",method = RequestMethod.POST)
-	public Result buyProduct(@CurrentUser User user) {
-		return ResultGenerator.genSuccessResult(productService.buyProduct());
+	public Result buyProduct(@CurrentUser User user, @PathVariable String proId) {
+		return ResultGenerator.genSuccessResult(productService.buyProduct(proId));
 	}
 }

@@ -22,7 +22,6 @@ public class ProductService {
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
 		product.setHits(0);
-		product.setFaver(0);
 		return productMapper.insert(product);
 	}
 
@@ -64,7 +63,9 @@ public class ProductService {
 	/**
 	 * 购买商品
 	 */
-	public int buyProduct() {
+	public int buyProduct(String proId) {
+		Product product = productMapper.selectByPrimaryKey(proId);
+		
 		return 0;
 	}
 
