@@ -1,12 +1,10 @@
 package com.springboot.controller;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,41 +37,11 @@ public class UserController {
 	// 读取配置文件中的参数
 	@Value("${spring.mail.username}")
 	private String form;
+	@Value("${local_url}")
+	private String domain;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
-	/**
-	 * 发送验证码
-	 * @param loginCode  返回邮箱
-	 * @return
-	 */
-	@RequestMapping(value = "/sendEmail/{loginCode}", method = RequestMethod.GET)
-	public String sendEmail(@PathVariable String loginCode,
-			HttpServletResponse response) {
-		// 生成六位数字验证码
-		String compare = "";  
-		compare += (int)(Math.random()*9+1);  
-        for(int i = 0; i < 5; i++){  
-        	compare += (int)(Math.random()*10);  
-        } 
-		Cookie cookie = new Cookie("compare", compare);
-		cookie.setMaxAge(1800);
-		cookie.setPath("/");
-		response.addCookie(cookie);
-		SimpleMailMessage message = new SimpleMailMessage();
-		// 发送者
-		message.setFrom(form);
-		// 接收者
-		message.setTo(loginCode);
-		// 邮件主题
-		message.setSubject("主题：文本邮件");
-		// 邮件内容
-		message.setText("验证码：" + compare);
-		javaMailSender.send(message);
-		return compare;
-	}
-	
 	
 	/**
 	 * 用户注册
@@ -118,10 +86,9 @@ public class UserController {
 			// 邮件主题
 			message.setSubject("激活邮箱");
 			// 邮件内容
-			message.setText("点击激活邮箱："  + "?id="
-					+ list.get(0).getId() + "&activeCode=" + activeCode);
+			message.setText("点击激活邮箱：" + domain + "?id=" + list.get(0).getId() + "&activeCode=" + activeCode);
 			javaMailSender.send(message);
-			userService.updatePassword(userMap);
+			userService.update(userMap);
 			return ResultGenerator.genSuccessResult("success");
 		}
 
@@ -156,18 +123,18 @@ public class UserController {
 		if (user == null) {
 			throw new ServiceException("用户还未注册，请前往注册页面");
 		}
-		/*if (!activeCode.equals(user.getExtendS2())) {
+		if (!activeCode.equals(user.getActivecode())) {
 			throw new ServiceException("激活码错误");
 		}
-		if (new Date().getTime() >= user.getExtendD2().getTime()) {
+		if (new Date().getTime() >= user.getActivedate().getTime()) {
 			userService.delete(id);
 			throw new ServiceException("该链接已经过期,请重新注册");
 		}
 		// 激活成功时清空这两个字段,防止重复激活
-		user.setExtendD2(null);
-		user.setExtendS2(null);
-		user.setStatus("0"); // 设置为正常可用状态
-		userService.update(user);*/
+		user.setActivecode(null);
+		user.setActivedate(null);
+		user.setState("0"); // 设置为正常可用状态
+		userService.updateByUser(user);
 		return ResultGenerator.genSuccessResult("success");
 	}
 
@@ -200,7 +167,7 @@ public class UserController {
 			return ResultGenerator.genSuccessResult("新密码和旧密码不能相同");
 		}
 		map.put("password", MD5.md5(newPassword));
-		userService.updatePassword(map);
+		userService.update(map);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 

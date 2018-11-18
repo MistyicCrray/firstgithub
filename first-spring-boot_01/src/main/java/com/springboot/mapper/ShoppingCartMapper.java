@@ -2,11 +2,14 @@ package com.springboot.mapper;
 
 import com.springboot.entity.ShoppingCart;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.type.JdbcType;
 
@@ -99,5 +102,18 @@ public interface ShoppingCartMapper {
     })
     int updateByPrimaryKey(ShoppingCart record);
     
+    @SelectProvider(type = com.springboot.entity.dyna.ShoppingCartDynaProvider.class, method = "selectProvider")
+    @Results({
+        @Result(column="id", property="id", jdbcType=JdbcType.VARCHAR, id=true),
+        @Result(column="userid", property="userid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="quantity", property="quantity", jdbcType=JdbcType.INTEGER),
+        @Result(column="total", property="total", jdbcType=JdbcType.REAL),
+        @Result(column="productid", property="productid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="ischeck", property="ischeck", jdbcType=JdbcType.VARCHAR)
+    })
+    List<ShoppingCart> findList(Map<String, Object> map);
+    
+    @SelectProvider(type = com.springboot.entity.dyna.ShoppingCartDynaProvider.class, method = "updateProvider")
+    int update(Map<String, Object> map);
     
 }

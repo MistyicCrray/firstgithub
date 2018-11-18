@@ -77,7 +77,7 @@ public class UserService {
 	/**
 	 * 修改密码
 	 */
-	public int updatePassword(Map<String, Object> map) {
+	public int update(Map<String, Object> map) {
 		map.put("newPassword", MD5.md5((String) map.get("newPassword")));
 		return userMapper.update(map);
 	}
@@ -87,6 +87,15 @@ public class UserService {
 	 */
 	public User getById(String id) {
 		return userMapper.selectByPrimaryKey(id);
+	}
+	
+	// 删除
+	public int delete(String id){
+		return userMapper.deleteByPrimaryKey(id);
+	}
+	
+	public int updateByUser(User user){
+		return userMapper.updateByPrimaryKey(user);
 	}
 
 }

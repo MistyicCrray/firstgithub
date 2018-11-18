@@ -2,11 +2,14 @@ package com.springboot.mapper;
 
 import com.springboot.entity.Order;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.type.JdbcType;
 
@@ -95,4 +98,17 @@ public interface OrderMapper {
         "where id = #{id,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(Order record);
+    
+    @SelectProvider(type = com.springboot.entity.dyna.OrderDynaProvider.class, method = "selectProvider")
+    @Results({
+        @Result(column="id", property="id", jdbcType=JdbcType.VARCHAR, id=true),
+        @Result(column="userid", property="userid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="sellid", property="sellid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="createdate", property="createdate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="status", property="status", jdbcType=JdbcType.VARCHAR)
+    })
+    List<Order> findList(Map<String, Object> map);
+    
+    @SelectProvider(type = com.springboot.entity.dyna.OrderDynaProvider.class, method = "updateProvider")
+    int update(Map<String, Object> map);
 }

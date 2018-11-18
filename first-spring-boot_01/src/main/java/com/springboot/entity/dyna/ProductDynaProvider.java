@@ -24,6 +24,9 @@ public class ProductDynaProvider {
 				if (param.get("userId") != null) {
 					SET("userId=#{userId}");
 				}
+				if (param.get("quality") != null) {
+					SET("quality=#{quality}");
+				}
 				WHERE("id=#{id}");
 			}
 		}.toString();
@@ -48,6 +51,21 @@ public class ProductDynaProvider {
 				}
 				if (param.get("userId") != null) {
 					WHERE("userId=#{userId}");
+				}
+				if (param.get("img") != null) {
+					WHERE("img=#{img}");
+				}
+				if (param.get("hits") != null) {
+					WHERE("hits=#{hits}");
+				}
+				if (param.get("minPrice") != null) {
+					WHERE("min_price=#{minPrice}");
+				}
+				if (param.get("maxPrice") != null) {
+					WHERE("max_price=#{maxPrice}");
+				}
+				if (param.get("quality") != null) {
+					WHERE("quality=#{quality}");
 				}
 			}
 		}.toString();

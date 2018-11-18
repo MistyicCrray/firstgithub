@@ -1,6 +1,5 @@
 package com.springboot.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.springboot.entity.Order;
 import com.springboot.entity.Product;
 import com.springboot.entity.User;
+import com.springboot.service.OrderService;
 import com.springboot.service.ProductService;
 import com.springboot.tools.CurrentUser;
 import com.springboot.tools.LoginRequired;
@@ -29,6 +30,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
 
 	/**
 	 * 上架
@@ -91,9 +95,20 @@ public class ProductController {
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
 	
+	/**
+	 * 购买
+	 * @param user
+	 * @param proId
+	 * @return
+	 */
 	@LoginRequired
 	@RequestMapping(value = "/buy",method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @PathVariable String proId) {
+		Product product = productService.getById(proId);
+		Order order = new Order();
+		order.setSellid(user.getId());  // 卖家Id
+		order.setUserid(product.getUserid());  // 买家Id
+		orderService.add(order);
 		return ResultGenerator.genSuccessResult(productService.buyProduct(proId));
 	}
 }

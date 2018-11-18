@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.springboot.entity.Product;
 import com.springboot.mapper.ProductMapper;
 import com.springboot.service.ProductService;
+import com.springboot.tools.ServiceException;
 
 @Service
 public class ProductService {
@@ -65,7 +66,14 @@ public class ProductService {
 	 */
 	public int buyProduct(String proId) {
 		Product product = productMapper.selectByPrimaryKey(proId);
-		
+		if(product.getQuality()==0){
+			throw new ServiceException("该商品已售罄");
+		}
+		int q = product.getQuality();
+		q--;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("quality", q);
+		productMapper.update(map);
 		return 0;
 	}
 

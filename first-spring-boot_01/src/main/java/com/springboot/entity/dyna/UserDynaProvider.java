@@ -47,6 +47,12 @@ public class UserDynaProvider {
 					if (map.get("email") != null) {
 						WHERE("email=#{email}");
 					}
+					if (map.get("activeCode") != null) {
+						WHERE("activeCode=#{activeCode}");
+					}
+					if (map.get("activeDate") != null) {
+						WHERE("activeDate=#{activeDate}");
+					}
 				}
 			}
 		}.toString();
