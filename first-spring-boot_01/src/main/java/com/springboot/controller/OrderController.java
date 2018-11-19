@@ -93,7 +93,7 @@ public class OrderController {
 	public Result find(Integer pageNum,Integer size,@RequestParam(required = false) Map<String, Object> map,@CurrentUser User user) {
 		map.put("userid", user.getId());
 		Page<Order> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		List<Order> list = orderService.select(map);
+		List<Order> list = orderService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Order>(page.getTotal(), list));
 	}
 	

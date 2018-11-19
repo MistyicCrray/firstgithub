@@ -17,7 +17,7 @@ public class CategoryService {
 	@Autowired
 	private CategoryMapper categoryMapper;
 
-	public int addCategory(Category category) {
+	public int add(Category category) {
 		category.setId(UUIDUtils.get16UUID());
 		List<Category> list = categoryMapper.selectAll();
 		for (Category cate : list) {
@@ -28,19 +28,19 @@ public class CategoryService {
 		return categoryMapper.insert(category);
 	}
 
-	public int deleteCategory(String id) {
+	public int delete(String id) {
 		return categoryMapper.deleteByPrimaryKey(id);
 	}
 
-	public int updateCategory(Map<String, Object> map) {
+	public int update(Map<String, Object> map) {
 		return categoryMapper.update(map);
 	}
 
-	public List<Category> selectAll(Map<String, Object> map) {
+	public List<Category> findList(Map<String, Object> map) {
 		return categoryMapper.findList(map);
 	}
 
-	public Category selectById(String id) {
+	public Category findById(String id) {
 		return categoryMapper.selectByPrimaryKey(id);
 	}
 

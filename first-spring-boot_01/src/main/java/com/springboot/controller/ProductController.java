@@ -52,31 +52,31 @@ public class ProductController {
 	public Result add(@ModelAttribute Product product, @CurrentUser User user) {
 		product.setCreateby(user.getUsername());
 		product.setUserid(user.getId());
-		return ResultGenerator.genSuccessResult(productService.addProduct(product));
+		return ResultGenerator.genSuccessResult(productService.add(product));
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result get(Integer pageNum, Integer size, Product product,
 			@RequestParam(required = false) Map<String, Object> map) {
 		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		List<Product> list = productService.getAll(map);
+		List<Product> list = productService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id) {
-		return ResultGenerator.genSuccessResult(productService.deleteProduct(id));
+		return ResultGenerator.genSuccessResult(productService.delete(id));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		productService.getHits(id); // 增加浏览量
-		return ResultGenerator.genSuccessResult(productService.getById(id));
+		return ResultGenerator.genSuccessResult(productService.findById(id));
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map) {
-		return ResultGenerator.genSuccessResult(productService.updateProduct(map));
+		return ResultGenerator.genSuccessResult(productService.update(map));
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class ProductController {
 			@CurrentUser User user) {
 		map.put("userid", user.getId());
 		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		List<Product> list = productService.getAll(map);
+		List<Product> list = productService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
 
@@ -109,7 +109,7 @@ public class ProductController {
 	@LoginRequired
 	@RequestMapping(value = "/buy", method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @PathVariable String proId) {
-		Product product = productService.getById(proId);
+		Product product = productService.findById(proId);
 		Order order = new Order();
 		order.setSellid(user.getId()); // 卖家Id
 		order.setUserid(product.getUserid()); // 买家Id

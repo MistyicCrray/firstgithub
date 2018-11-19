@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.User;
+import com.springboot.service.OrderService;
+import com.springboot.service.ProductService;
+import com.springboot.service.ShoppingCartService;
 import com.springboot.service.UserService;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.MD5;
@@ -42,6 +46,13 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	@Autowired
+	private ShoppingCartService shoppingCartService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private ProductService productService;
 	
 	/**
 	 * 用户注册
@@ -68,7 +79,7 @@ public class UserController {
 		// 检测用户登录账号是否存在
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("loginCode", user.getLoginname());
-		List<User> list = userService.getUsers(map);
+		List<User> list = userService.findList(map);
 		if (list.size() != 0 && list.get(0).getState().equals("0")) {
 			throw new ServiceException("邮箱已被注册");
 		}
@@ -106,7 +117,7 @@ public class UserController {
 		message.setText("点击激活邮箱："   + "?id=" + user.getId()
 				+ "&activeCode=" + activeCode);
 		javaMailSender.send(message);
-		return ResultGenerator.genSuccessResult(userService.addUser(user,file));
+		return ResultGenerator.genSuccessResult(userService.add(user,file));
 
 	}
 	
@@ -119,7 +130,7 @@ public class UserController {
 	@RequestMapping(value = "/active", method = RequestMethod.GET)
 	public Result activeEmail(@RequestParam String id,
 			@RequestParam String activeCode) {
-		User user = userService.getById(id);
+		User user = userService.findById(id);
 		if (user == null) {
 			throw new ServiceException("用户还未注册，请前往注册页面");
 		}
@@ -142,7 +153,7 @@ public class UserController {
 	public Result getUsers(Integer pageNum, Integer size, @ModelAttribute User user,
 			@RequestParam(required = false) Map<String, Object> map) {
 		Page<User> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		return ResultGenerator.genSuccessResult(new TableData<User>(page.getTotal(), userService.getUsers(map)));
+		return ResultGenerator.genSuccessResult(new TableData<User>(page.getTotal(), userService.findList(map)));
 	}
 
 	/**
@@ -181,7 +192,18 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
-		return ResultGenerator.genSuccessResult(userService.getById(id));
+		User user = userService.findById(id);
+		if(user == null) {
+			return ResultGenerator.genFailResult("url有误");
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("user", user);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userid", user.getId());
+		map.put("shoppingCart", shoppingCartService.findList(paramMap));  // 购物车
+		map.put("order", orderService.findList(paramMap));  // 订单
+		map.put("product", productService.findList(paramMap));  // 上架的商品
+		return ResultGenerator.genSuccessResult(JSONObject.toJSON(map));
 	}
 
 	/**

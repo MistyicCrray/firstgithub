@@ -36,7 +36,7 @@ public class OrderService {
 	}
 
 	// 查找
-	public List<Order> select(Map<String, Object> map) {
+	public List<Order> findList(Map<String, Object> map) {
 		return orderMapper.findList(map);
 	}
 

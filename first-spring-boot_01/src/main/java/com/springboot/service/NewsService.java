@@ -16,24 +16,24 @@ public class NewsService{
 	@Autowired
 	private NewsMapper newsMapper;
 
-	public int addnews(News news) {
+	public int add(News news) {
 		news.setId(UUIDUtils.get16UUID());
 		return newsMapper.insert(news);
 	}
 
-	public int deletenews(String id) {
+	public int delete(String id) {
 		return newsMapper.deleteByPrimaryKey(id);
 	}
 
-	public int updatenews(Map<String, Object> map) {
+	public int update(Map<String, Object> map) {
 		return newsMapper.update(map);
 	}
 
-	public List<News> selectAll(Map<String, Object> map) {
+	public List<News> findList(Map<String, Object> map) {
 		return newsMapper.findList(map);
 	}
 
-	public News selectById(String id) {
+	public News findById(String id) {
 		return newsMapper.selectByPrimaryKey(id);
 	}
 

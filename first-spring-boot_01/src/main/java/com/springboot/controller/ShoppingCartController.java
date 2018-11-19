@@ -1,5 +1,7 @@
 package com.springboot.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,15 @@ public class ShoppingCartController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result add(@ModelAttribute ShoppingCart shoppingCart, @CurrentUser User user) {
 		shoppingCart.setUserid(user.getId());
+		// 如果购物车存在已经添加过的商品，则两个相加
+		Map<String, Object> map = new HashMap<>();
+		List<ShoppingCart> shoppingCarts = shoppingCartService.findList(map);
+		for (ShoppingCart shoppingCart2 : shoppingCarts) {
+			if (shoppingCart.getProductid().equals(shoppingCart2.getProductid())) {
+				shoppingCart.setQuantity(shoppingCart.getQuantity() + shoppingCart2.getQuantity());
+				shoppingCart.setTotal(shoppingCart.getTotal() + shoppingCart2.getTotal());
+			}
+		}
 		return ResultGenerator.genSuccessResult(shoppingCartService.add(shoppingCart));
 	}
 

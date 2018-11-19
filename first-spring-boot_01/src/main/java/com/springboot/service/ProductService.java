@@ -20,7 +20,7 @@ public class ProductService {
 	@Autowired
 	private ProductMapper productMapper;
 
-	public int addProduct(Product product) {
+	public int add(Product product) {
 		product.setId(UUIDUtils.get16UUID());
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
@@ -28,19 +28,19 @@ public class ProductService {
 		return productMapper.insert(product);
 	}
 
-	public int deleteProduct(String id) {
+	public int delete(String id) {
 		return productMapper.deleteByPrimaryKey(id);
 	}
 
-	public int updateProduct(Map<String, Object> map) {
+	public int update(Map<String, Object> map) {
 		return productMapper.update(map);
 	}
 
-	public List<Product> getAll(Map<String, Object> map) {
+	public List<Product> findList(Map<String, Object> map) {
 		return productMapper.findList(map);
 	}
 
-	public Product getById(String id) {
+	public Product findById(String id) {
 		return productMapper.selectByPrimaryKey(id);
 	}
 	

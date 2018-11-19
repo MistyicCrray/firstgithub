@@ -31,7 +31,7 @@ public class UserService {
 	* @param file
 	* @return String
 	 */
-	public String addUser(User user, MultipartFile file) {
+	public String add(User user, MultipartFile file) {
 		String password = (String) user.getPassword();
 		user.setPassword(MD5.md5(password));
 		user.setId(UUIDUtils.get16UUID());
@@ -70,7 +70,7 @@ public class UserService {
 	/**
 	 * 查询用户列表(管理员操作)
 	 */
-	public List<User> getUsers(Map<String, Object> map) {
+	public List<User> findList(Map<String, Object> map) {
 		return userMapper.findList(map);
 	}
 
@@ -85,7 +85,7 @@ public class UserService {
 	/**
 	 * 通过id查询
 	 */
-	public User getById(String id) {
+	public User findById(String id) {
 		return userMapper.selectByPrimaryKey(id);
 	}
 	

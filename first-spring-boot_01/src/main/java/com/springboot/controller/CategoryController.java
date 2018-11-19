@@ -40,7 +40,7 @@ public class CategoryController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result get(Integer pageNum, Integer size, Product product,@RequestParam Map<String, Object> map) {
 		Page<Category> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 40 : size);
-		List<Category> list = categoryService.selectAll(map);
+		List<Category> list = categoryService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Category>(page.getTotal(), list));
 	}
 	
@@ -53,7 +53,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result inset(@ModelAttribute Category category) {
-		return ResultGenerator.genSuccessResult(categoryService.addCategory(category));
+		return ResultGenerator.genSuccessResult(categoryService.add(category));
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map) {
-		return ResultGenerator.genSuccessResult(categoryService.updateCategory(map));
+		return ResultGenerator.genSuccessResult(categoryService.update(map));
 	}
 	
 	/**
@@ -77,6 +77,6 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public Result selectById(@PathVariable(value = "id") String id) {
-		return ResultGenerator.genSuccessResult(categoryService.selectById(id));
+		return ResultGenerator.genSuccessResult(categoryService.findById(id));
 	}
 }

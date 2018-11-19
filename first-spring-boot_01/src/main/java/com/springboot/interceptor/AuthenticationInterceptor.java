@@ -69,7 +69,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 				}
 
 				String id = claims.getId();
-				Object user = userService.getById(id);
+				Object user = userService.findById(id);
 				if (user == null) {
 //					response.setStatus(401);
 					throw new AuthorizationException("token无效，用户不存在，请重新登录");
