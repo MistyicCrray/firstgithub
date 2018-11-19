@@ -1,6 +1,5 @@
 package com.springboot.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +18,6 @@ public class NewsService{
 
 	public int addnews(News news) {
 		news.setId(UUIDUtils.get16UUID());
-		news.setCreatedate(new Date());
-		news.setUpdatedate(new Date());
 		return newsMapper.insert(news);
 	}
 

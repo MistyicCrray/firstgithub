@@ -19,7 +19,6 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		System.out.println("----------supportsParameter-----------" + parameter.getParameterType());
 		return parameter.getParameterType().isAssignableFrom(User.class)// 判断是否能转成UserBase 类型
 				&& parameter.hasParameterAnnotation(CurrentUser.class);// 是否有CurrentUser注解
 	}
@@ -27,7 +26,6 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		System.out.println("--------------resolveArgument-------------" + parameter);
 		User user = (User) webRequest.getAttribute(CurrentUserConstants.CURRENT_USER, RequestAttributes.SCOPE_REQUEST);
 		if (user != null) {
 			return user;

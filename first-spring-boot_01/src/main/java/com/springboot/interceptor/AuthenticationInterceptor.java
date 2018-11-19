@@ -21,12 +21,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 
 /**
- * 
- * @ClassName: AuthenticationInterceptor
- * @Description: TODO(身份验证拦截器)
- * @author zrl
- * @date 2018年8月31日 上午10:38:29
- *
+ * 身份验证拦截器 
  */
 public class AuthenticationInterceptor implements HandlerInterceptor {
 	public final static String ACCESS_TOKEN = "accessToken";
@@ -55,7 +50,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			if (null == accessToken) {
 				throw new AuthorizationException("无token，请重新登录");
 			} else if (accessToken.isEmpty()) {
-				throw new AuthorizationException("token为空传");
+				throw new AuthorizationException("token为空");
 			} else {
 				// 从Redis 中查看 token 是否过期
 				Claims claims;

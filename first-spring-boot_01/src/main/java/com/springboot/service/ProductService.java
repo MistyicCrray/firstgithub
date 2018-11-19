@@ -12,6 +12,7 @@ import com.springboot.entity.Product;
 import com.springboot.mapper.ProductMapper;
 import com.springboot.service.ProductService;
 import com.springboot.tools.ServiceException;
+import com.springboot.tools.UUIDUtils;
 
 @Service
 public class ProductService {
@@ -20,6 +21,7 @@ public class ProductService {
 	private ProductMapper productMapper;
 
 	public int addProduct(Product product) {
+		product.setId(UUIDUtils.get16UUID());
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
 		product.setHits(0);

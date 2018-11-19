@@ -38,6 +38,9 @@ public class ShoppingCartDynaProvider {
 				if (param.get("ischeck") != null) {
 					WHERE("ischeck=#{ischeck}");
 				}
+				if (param.get("productid") != null) {
+					WHERE("productid=#{productid}");
+				}
 			}
 		}.toString();
 	}
