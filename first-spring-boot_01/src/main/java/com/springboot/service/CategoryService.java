@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.entity.Category;
 import com.springboot.mapper.CategoryMapper;
+import com.springboot.tools.ServiceException;
+import com.springboot.tools.UUIDUtils;
 
 @Service
 public class CategoryService {
@@ -16,6 +18,13 @@ public class CategoryService {
 	private CategoryMapper categoryMapper;
 
 	public int addCategory(Category category) {
+		category.setId(UUIDUtils.get16UUID());
+		List<Category> list = categoryMapper.selectAll();
+		for (Category cate : list) {
+			if(category.getName().equals(cate.getName())) {
+				throw new ServiceException("该类型已存在");
+			}
+		}
 		return categoryMapper.insert(category);
 	}
 

@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.entity.News;
 import com.springboot.mapper.NewsMapper;
+import com.springboot.tools.UUIDUtils;
 
 @Service
 public class NewsService{
@@ -16,6 +18,9 @@ public class NewsService{
 	private NewsMapper newsMapper;
 
 	public int addnews(News news) {
+		news.setId(UUIDUtils.get16UUID());
+		news.setCreatedate(new Date());
+		news.setUpdatedate(new Date());
 		return newsMapper.insert(news);
 	}
 
