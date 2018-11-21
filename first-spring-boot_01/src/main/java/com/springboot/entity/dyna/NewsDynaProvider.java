@@ -6,7 +6,7 @@ import org.apache.ibatis.jdbc.SQL;
 
 public class NewsDynaProvider {
 
-	public String selectProvider(final Map<String, Object> map) {
+	public String selectProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
 				SELECT("*");
@@ -29,7 +29,7 @@ public class NewsDynaProvider {
 		}.toString();
 	}
 
-	public String updateProvider(final Map<String, Object> map) {
+	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
 				UPDATE("news");

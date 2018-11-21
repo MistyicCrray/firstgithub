@@ -5,10 +5,11 @@ import java.util.Map;
 import org.apache.ibatis.jdbc.SQL;
 
 public class ProductDynaProvider {
-	public String updateProvider(final Map<String, Object> param) {
+	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
 				UPDATE("product");
+				
 				if (param.get("name") != null) {
 					SET("name=#{name}");
 				}
@@ -27,12 +28,21 @@ public class ProductDynaProvider {
 				if (param.get("quality") != null) {
 					SET("quality=#{quality}");
 				}
-				WHERE("id=#{id}");
+				if (param.get("hits") != null) {
+					SET("hits=#{hits}");
+				}
+				if (param.get("maxPrice") != null) {
+					SET("max_price=#{maxPrice}");
+				}
+				if (param.get("minPrice") != null) {
+					SET("min_price=#{minPrice}");
+				}
+				WHERE("proid=#{proid}");
 			}
 		}.toString();
 	}
 	
-	public String selectProvider(final Map<String, Object> param) {
+	public String selectProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
 				SELECT("*");

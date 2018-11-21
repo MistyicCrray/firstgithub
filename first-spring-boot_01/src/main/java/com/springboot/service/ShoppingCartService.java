@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class ShoppingCartService {
 
 	// 增加
 	public int add(ShoppingCart shoppingCart) {
-		shoppingCart.setId(UUIDUtils.get16UUID());
+		shoppingCart.setCartid(UUIDUtils.get16UUID());
 		return shoppingCartMapper.insert(shoppingCart);
 	}
 
@@ -28,12 +29,13 @@ public class ShoppingCartService {
 	}
 
 	// 修改
-	public int update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map) {
 		return shoppingCartMapper.update(map);
 	}
 
 	// 查询列表
-	public List<ShoppingCart> findList(Map<String, Object> map) {
+	public List<Map<String,Object>> findList(Map<String, Object> map) {
+		map.put("createdate", new Date());
 		return shoppingCartMapper.findList(map);
 	}
 

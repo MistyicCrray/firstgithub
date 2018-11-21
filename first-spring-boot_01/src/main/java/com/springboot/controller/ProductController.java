@@ -1,5 +1,6 @@
 package com.springboot.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.Order;
 import com.springboot.entity.Product;
-import com.springboot.entity.ShoppingCart;
 import com.springboot.entity.User;
 import com.springboot.service.OrderService;
 import com.springboot.service.ProductService;
@@ -25,7 +25,9 @@ import com.springboot.tools.CurrentUser;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
+import com.springboot.tools.ServiceException;
 import com.springboot.tools.TableData;
+import com.springboot.tools.UUIDUtils;
 
 @RestController
 @RequestMapping("/product")
@@ -33,8 +35,10 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+
 	@Autowired
 	private OrderService orderService;
+
 	@Autowired
 	private ShoppingCartService shoppingCartService;
 
@@ -70,7 +74,7 @@ public class ProductController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
-		productService.getHits(id); // 增加浏览量
+//		productService.getHits(id); // 增加浏览量
 		return ResultGenerator.genSuccessResult(productService.findById(id));
 	}
 
@@ -107,20 +111,34 @@ public class ProductController {
 	 * @return
 	 */
 	@LoginRequired
-	@RequestMapping(value = "/buy", method = RequestMethod.POST)
+	@RequestMapping(value = "/buy/{proId}", method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @PathVariable String proId) {
 		Product product = productService.findById(proId);
-		Order order = new Order();
-		order.setSellid(user.getId()); // 卖家Id
-		order.setUserid(product.getUserid()); // 买家Id
+		if (product.getQuality() == 0) {
+			throw new ServiceException("该商品库存为0");
+		}
+
 		// 购物车如果有购买的商品，清除购物车的商品信息
 		Map<String, Object> map = new HashMap<>();
 		map.put("productid", proId);
-		List<ShoppingCart> list = shoppingCartService.findList(map);
+		List<Map<String, Object>> list = shoppingCartService.findList(map);
 		if (list.size() != 0) {
-			shoppingCartService.delete(list.get(0).getId());
+			String id = (String) list.get(0).get("cartid");
+			shoppingCartService.delete(id);
 		}
+		int i = product.getQuality() - 1; // 库存减一
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("proid", proId);
+		map1.put("quality", i);
+		productService.update(map1);
+		// 购买时生成订单
+		Order order = new Order();
+		order.setSellid(user.getId()); // 卖家Id
+		order.setUserid(product.getUserid()); // 买家Id
+		order.setId(UUIDUtils.getOrderIdByTime()); // 订单号
+		order.setCreatedate(new Date()); // 下单日期
+		order.setStatus("0");
 		orderService.add(order);
-		return ResultGenerator.genSuccessResult(productService.buyProduct(proId));
+		return ResultGenerator.genSuccessResult("success");
 	}
 }

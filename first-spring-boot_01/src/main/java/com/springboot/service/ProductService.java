@@ -20,19 +20,19 @@ public class ProductService {
 	@Autowired
 	private ProductMapper productMapper;
 
-	public int add(Product product) {
-		product.setId(UUIDUtils.get16UUID());
+	public Integer add(Product product) {
+		product.setProid(UUIDUtils.get16UUID());
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
 		product.setHits(0);
 		return productMapper.insert(product);
 	}
 
-	public int delete(String id) {
+	public Integer delete(String id) {
 		return productMapper.deleteByPrimaryKey(id);
 	}
 
-	public int update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map) {
 		return productMapper.update(map);
 	}
 
@@ -47,7 +47,7 @@ public class ProductService {
 	/**
 	 * 浏览量
 	 */
-	public void getHits(String id) {
+	public Integer getHits(String id) {
 		Product product = productMapper.selectByPrimaryKey(id);
 		if(product!=null) {
 			Integer i = product.getHits();
@@ -57,26 +57,11 @@ public class ProductService {
 				i++;
 			}
 			Map<String, Object> map = new HashMap<>();
-			map.put("id", id);
+			map.put("proid", id);
 			map.put("hits", i);
-			productMapper.update(map);
+			return productMapper.update(map);
 		}
-	}
-	
-	/**
-	 * 购买商品
-	 */
-	public int buyProduct(String proId) {
-		Product product = productMapper.selectByPrimaryKey(proId);
-		if(product.getQuality()==0){
-			throw new ServiceException("该商品已售罄");
-		}
-		int q = product.getQuality();
-		q--;
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("quality", q);
-		productMapper.update(map);
 		return 0;
 	}
-
+	
 }

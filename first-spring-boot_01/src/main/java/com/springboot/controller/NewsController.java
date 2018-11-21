@@ -83,7 +83,7 @@ public class NewsController {
 	 * @author hlx
 	 * @date 2018年11月19日下午5:21:54
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map) {
 		return ResultGenerator.genSuccessResult(newsService.update(map));
 	}

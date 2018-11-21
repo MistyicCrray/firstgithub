@@ -6,7 +6,7 @@ import org.apache.ibatis.jdbc.SQL;
 
 public class ShoppingCartDynaProvider {
 
-	public String updateProvider(final Map<String, Object> param) {
+	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
 				UPDATE("shoppingcart");
@@ -19,16 +19,17 @@ public class ShoppingCartDynaProvider {
 				if (param.get("ischeck") != null) {
 					SET("ischeck=#{ischeck}");
 				}
-				WHERE("id=#{id}");
+				WHERE("cartid=#{cartid}");
 			}
 		}.toString();
 	}
 
-	public String selectProvider(final Map<String, Object> param) {
+	public String selectProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
 				SELECT("*");
 				FROM("shoppingcart");
+				INNER_JOIN("product ON shoppingcart.productid=product.proid");
 				if (param.get("quantity") != null) {
 					WHERE("quantity=#{quantity}");
 				}
@@ -36,10 +37,13 @@ public class ShoppingCartDynaProvider {
 					WHERE("total=#{total}");
 				}
 				if (param.get("ischeck") != null) {
-					WHERE("ischeck=#{ischeck}");
+					WHERE("shoppingcart.ischeck=#{ischeck}");
 				}
 				if (param.get("productid") != null) {
-					WHERE("productid=#{productid}");
+					WHERE("shoppingcart.productid=#{productid}");
+				}
+				if (param.get("userid") != null) {
+					WHERE("shoppingcart.userid=#{userid}");
 				}
 			}
 		}.toString();

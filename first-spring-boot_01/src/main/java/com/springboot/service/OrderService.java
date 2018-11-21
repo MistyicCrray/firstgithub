@@ -4,11 +4,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.rowset.serial.SerialException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboot.entity.Order;
 import com.springboot.mapper.OrderMapper;
+import com.springboot.tools.ServiceException;
 import com.springboot.tools.UUIDUtils;
 
 @Service
@@ -18,10 +21,7 @@ public class OrderService {
 	private OrderMapper orderMapper;
 
 	// 添加
-	public int add(Order order) {
-		order.setId(UUIDUtils.getOrderIdByTime()); // 订单号
-		order.setCreatedate(new Date()); // 下单日期
-		order.setStatus("0");
+	public Integer add(Order order) {
 		return orderMapper.insert(order);
 	}
 

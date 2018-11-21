@@ -38,22 +38,26 @@ import com.springboot.tools.TableData;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
 	// 读取配置文件中的参数
 	@Value("${spring.mail.username}")
 	private String form;
+	
 	@Value("${local_url}")
 	private String domain;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+
 	@Autowired
 	private ShoppingCartService shoppingCartService;
+	
 	@Autowired
 	private OrderService orderService;
+	
 	@Autowired
 	private ProductService productService;
-	
+
 	/**
 	 * 用户注册
 	 * 
@@ -114,13 +118,12 @@ public class UserController {
 		// 邮件主题
 		message.setSubject("主题：激活邮箱");
 		// 邮件内容
-		message.setText("点击激活邮箱："   + "?id=" + user.getId()
-				+ "&activeCode=" + activeCode);
+		message.setText("点击激活邮箱：" + "?id=" + user.getId() + "&activeCode=" + activeCode);
 		javaMailSender.send(message);
-		return ResultGenerator.genSuccessResult(userService.add(user,file));
+		return ResultGenerator.genSuccessResult(userService.add(user, file));
 
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -128,8 +131,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/active", method = RequestMethod.GET)
-	public Result activeEmail(@RequestParam String id,
-			@RequestParam String activeCode) {
+	public Result activeEmail(@RequestParam String id, @RequestParam String activeCode) {
 		User user = userService.findById(id);
 		if (user == null) {
 			throw new ServiceException("用户还未注册，请前往注册页面");
@@ -158,6 +160,7 @@ public class UserController {
 
 	/**
 	 * 修改密码
+	 * 
 	 * @Title: updatePwd
 	 * @Description: TODO
 	 * @param id
@@ -193,21 +196,22 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		User user = userService.findById(id);
-		if(user == null) {
+		if (user == null) {
 			return ResultGenerator.genFailResult("url有误");
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("user", user);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("userid", user.getId());
-		map.put("shoppingCart", shoppingCartService.findList(paramMap));  // 购物车
-		map.put("order", orderService.findList(paramMap));  // 订单
-		map.put("product", productService.findList(paramMap));  // 上架的商品
+		map.put("shoppingCart", shoppingCartService.findList(paramMap)); // 购物车
+		map.put("order", orderService.findList(paramMap)); // 订单
+		map.put("product", productService.findList(paramMap)); // 上架的商品
 		return ResultGenerator.genSuccessResult(JSONObject.toJSON(map));
 	}
 
 	/**
 	 * 登录
+	 * 
 	 * @param map
 	 * @return
 	 */

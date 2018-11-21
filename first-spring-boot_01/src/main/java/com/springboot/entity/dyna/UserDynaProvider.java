@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.ibatis.jdbc.SQL;
 
 public class UserDynaProvider {
-	public String selectProvider(final Map<String, Object> map) {
+	public String selectProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
 				SELECT("*");
@@ -58,7 +58,7 @@ public class UserDynaProvider {
 		}.toString();
 	}
 
-	public String updateProvider(final Map<String, Object> map) {
+	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
 				UPDATE("user");

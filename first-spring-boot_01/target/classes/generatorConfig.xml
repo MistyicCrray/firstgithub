@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-	<classPathEntry location="E:/generator/mysql-connector-java-5.1.45-bin.jar" />
+	<classPathEntry location="f:/mysql-connector-java-5.1.25.jar" />
 	<context id="my" targetRuntime="MyBatis3Simple"
 		defaultModelType="hierarchical">
 		<property name="javaFileEncoding" value="UTF-8" />
@@ -26,23 +26,23 @@
 		</javaTypeResolver>
 
 		<javaModelGenerator targetPackage="com.springboot.entity"
-			targetProject="E:/generator/firstgithub/first-spring-boot_01/src/main/java">
+			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<sqlMapGenerator targetPackage="com.springboot.entity"
-			targetProject="E:/generator/firstgithub/first-spring-boot_01/src/main/java">
+			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="ANNOTATEDMAPPER"
 			targetPackage="com.springboot.mapper"
-			targetProject="E:/generator/firstgithub/first-spring-boot_01/src/main/java">
+			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
-		<table tableName="shoppingcart" domainObjectName="ShoppingCart"
+<!-- 		<table tableName="shoppingcart" domainObjectName="ShoppingCart"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>
@@ -57,15 +57,15 @@
 		<table tableName="order" domainObjectName="Order"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
+			selectByExampleQueryId="false"></table> -->
 		<table tableName="shoppingcart" domainObjectName="ShoppingCart"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>
-		<table tableName="user" domainObjectName="User"
+	<!-- 	<table tableName="user" domainObjectName="User"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
+			selectByExampleQueryId="false"></table> -->
 		<table tableName="product" domainObjectName="Product"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
