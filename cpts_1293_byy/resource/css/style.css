@@ -20,7 +20,21 @@ a{border:none;text-decoration: none;color:#000;}
 .pr{padding-right: 40px;}
 
 .h3{font-size: 22px;font-weight: bold;}
-
+.infor .item{ color: #323232; font-size: 14px; padding-bottom: 20px; line-height: 33px;}
+.infor .item span{ min-width: 130px; padding-right: 10px; text-align: right; vertical-align: top}
+.infor .item .form-control{width: 300px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;color: #555;background-color: #fff;background-image: none;border: 1px solid #ccc;border-radius: 4px;}
+.textHeight{ height: 100px;}
+.drowList{ display: inline-block; position: relative; background: #fff; margin-right: 5px;}
+.drowList i{display: inline-block;}
+.drowList > a{width: 140px; height: 33px; border-radius: 0; border: 1px solid #e1e1e1; line-height:33px;display: inline-block; position: relative; padding-left: 6px;}
+.drowList > a em{ position: absolute; right: 10px; top: 15px;}
+.infor .item .width01{ width: 200px;}
+.img_thumb{ display: inline-block; position: relative; min-width: 26px; min-width: 120px;top: 7px; margin-right: 15px;}
+.img_thumb i{position: absolute;top: -5px;right:-4px;z-index: 30;color: #333;font-size: 16px;background: #ccc; text-align: center;line-height: 15px;border-radius: 30px;padding: 0 5px 4px 5px; cursor: pointer;}
+.img_thumb b{display:block; position: relative;}
+.img_thumb img{width: 120px; border: 1px solid #ccc;}
+.img_thumb .input_fieldBtn{ position: absolute; bottom: 0;left: 0; z-index: 5; width: 100%; height: 26px; background: #007ab6; color: #fff;text-align: center; line-height: 26px;}
+.img_thumb .input_opt{ position: absolute; bottom: 0;left: 0; z-index: 10; width: 100%; height: 26px; background: #007ab6;opacity:0;}
 
 /*header*/
 header{width: 100%;height: 40px;background: #ffffff;border-bottom: 4px solid #007ab6}
@@ -36,7 +50,7 @@ header .top .right .gouwuche{margin:0 20px;background: #007ab6;width: 120px;text
 
 header .top .right .gouwuche:hover{color:#000;background: #666;}
 /*banner_x*/
-.banner_x {width: 1226px;height: 100px;}
+.banner_x {width: 1226px;height: 100px;background: #ffffff;}
 .banner_x .logo{background: url('../image/logo.png') no-repeat center center;width: 300px;height: 100px;}
 .banner_x .nav ul li{float: left;height: 100px;line-height: 100px;}
 .banner_x .nav ul li a{display:inline-block;color: #000;font-size: 16px;padding: 0 10px;}
@@ -177,7 +191,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_x .dlzc ul li a:hover{color:#007ab6; }
 .xiantiao{width: 100%;height: 2px;background:#007ab6; }
 /*购物车详单*/
-.gwcxqbj{width: 100%;height:400px;background: rgb(245,245,245);padding-bottom: 20px;}
+.gwcxqbj{width: 100%;background: rgb(245,245,245);padding-bottom: 20px;}
 .gwcxqbj .gwcxd{background: #fff;width: 1226px;height: auto;padding-top: 30px;}
 .gwcxqbj .gwcxd .top2{width:1226px;height: 70px;}
 .gwcxqbj .gwcxd .top2 .sub_top{width: 100px;height: 70px;line-height:36px;margin-right: 0px;margin-top:0px;margin-left: 30px;}
@@ -209,8 +223,10 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .jiesuandan .tishi ul li span{display:inline-block;color:#007ab6;margin:0 4px;}
 .jiesuandan .jiesuan{width: 500px;height: 50px;line-height: 50px;font-size: 14px;color:#007ab6;}
 .jiesuandan .jiesuan .jiesuanjiage span{font-size: 24px;font-weight: bold;}
-.jiesuandan .jiesuan .jsanniu .jsan{width: 200px;height: 50px;color:#fff;background:rgb(255,103,0); font-size: 20px;border:none;cursor:pointer;}
-.jiesuandan .jiesuan .jsanniu .jsan:hover{background: #007ab6;}
+.jiesuandan .jiesuan .jsanniu .jsan{width: 200px;height: 50px;color:#fff;background:#007ab6; font-size: 20px;border:none;cursor:pointer;}
+.jiesuandan .jiesuan .jsanniu .jsan:hover{background: #009ab6;}
+.btn{width: 200px;height: 50px;color:#fff;background:#007ab6; font-size: 20px;border:none;cursor:pointer;}
+.btn:hover{background: #009ab6;color: #ffffff;}
 /*个人中心*/
 .grzxbj{width: 100%;height:auto;background: rgb(245,245,245);padding-bottom: 20px;padding-top: 20px;}
 .grzxbj .selfinfo{width: 1226px;}
@@ -219,11 +235,11 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .grzxbj .selfinfo .lfnav .subddzx ul li{display: block;width: 194px;height: 40px;line-height: 40px;padding-left: 40px;}
 .grzxbj .selfinfo .lfnav .subddzx ul li a{color:rgb(117,117,117);}
 .grzxbj .selfinfo .lfnav .subddzx ul li a:hover{color:rgb(51,51,51);}
-.grzxbj .selfinfo .rtcont{width: 978px;height: 500px;background: #fff;}
+.grzxbj .selfinfo .rtcont{width: 978px;background: #fff;}
 .grzxbj .selfinfo .rtcont .ddzxbt{width: 938px;height: 60px;line-height: 60px;font-size: 22px;font-weight:bold;color:rgb(117,117,117);padding-left: 40px;border-bottom: 1px solid #ccc;}
 .grzxbj .selfinfo .rtcont .grzlbt{width:938px;height: 60px;line-height: 60px;font-size: 20px;color:rgb(117,117,117);}
 .grzxbj .selfinfo .rtcont .subgrzl{height: 45px;line-height: 45px;width: 900px;background: rgb(253,253,253);border:1px solid #aaa;margin-top: 10px;margin-bottom: 10px;border-radius: 3px;}
-.grzxbj .selfinfo .rtcont .subgrzl span:nth-of-type(1){display: inline-block;font-size: 15px;font-weight: bold;color:rgb(117,117,117);width: 70px;height: 45px;line-height: 45px;padding-left: 20px;}
+.grzxbj .selfinfo .rtcont .subgrzl span:nth-of-type(1){display: inline-block;font-size: 15px;font-weight: bold;color:rgb(117,117,117);width: 100px;height: 45px;line-height: 45px;padding-left: 20px;}
 .grzxbj .selfinfo .rtcont .subgrzl span:nth-of-type(2){display: inline-block;font-size: 15px;color:rgb(117,117,117);width: 480px;height: 45px;line-height: 45px;padding-left: 120px;
 }
 .grzxbj .selfinfo .rtcont .subgrzl span:nth-of-type(3){display: inline-block;font-size: 15px;width: 160px;height: 45px;line-height: 45px;text-align: right;}
@@ -239,3 +255,9 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .grzxbj .selfinfo .rtcont .ddxq .ztxx ul li a:hover{color:#007ab6;}
 /*footer*/
 footer{width: 100%;height: 120px;line-height: 30px;text-align: center;font-size: 12px;background: rgb(250,250,250);padding:30px 0;}
+/*表格*/
+table {width: 938px;border-collapse: collapse;margin: 0 auto;text-align: center;}
+table td,table th {border: 1px solid #cad9ea;color: #666;height: 30px;}
+table thead th {background-color: #CCE8EB;width: 100px;}
+table tr:nth-child(odd) {background: #fff;}		
+table tr:nth-child(even) {background: #F5FAFA;}

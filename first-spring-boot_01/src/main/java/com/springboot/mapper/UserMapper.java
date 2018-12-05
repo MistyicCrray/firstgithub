@@ -159,5 +159,5 @@ public interface UserMapper {
     List<User> findList(Map<String, Object> map);
     
     @SelectProvider(type = com.springboot.entity.dyna.UserDynaProvider.class, method = "updateProvider")
-    int update(Map<String, Object> map);
+    Integer update(Map<String, Object> map);
 }

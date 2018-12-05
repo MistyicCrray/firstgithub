@@ -1,388 +1,376 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="author" content="order by dede58.com"/>
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-    <link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
-    <title>去哪儿买商城</title>
-    <link rel="stylesheet" type="text/css" href="resource/css/style.css">
-    <link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
-</head>
-<style type="text/css">
-    .banner {
-        float: right;
-    }
-    .nav{
-        float: left;
-    }
-</style>
-<body>
-<div id="app">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="order by dede58.com" />
+		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<title>去哪儿买商城</title>
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+	</head>
 
-    <!-- start header -->
-    <header>
-        <div class="top center">
-            <div class="left fl">
-                <ul>
-                    <li class="drodown-show">
-                        <a href="#"><i class="fa fa-star"></i>我的收藏</a>
-                    </li>
-                    <li class="drodown-show">
-                        <a href="#"><i class="fa fa-phone"></i>联系客服</a>
-                    </li>
-                    <div class="clear"></div>
-                </ul>
-            </div>
-            <div class="right fr">
-                <div class="gouwuche fr">
-                    <a href="">购物车</a>
-                </div>
-                <div class="fr">
-                    <ul v-if="islogin">
-                        <li>
-                            <a href="#"><i class="fa fa-user"></i>{{user.userName}}</a>
-                        </li>
-                        <li>|</li>
-                        <li>
-                            <a href="#" :click="logout">
-                                </i>退出登录</a>
-                        </li>
-                        <li>
-                            <a href="">消息通知</a>
-                        </li>
-                    </ul>
-                    <ul v-else>
-                        <li>
-                            <a href="login.html" target="_blank">登录</a>
-                        </li>
-                        <li>|</li>
-                        <li>
-                            <a href="register.html" target="_blank">注册</a>
-                        </li>
-                        <li>|</li>
-                    </ul>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </header>
-    <!--end header -->
+	<body>
+		<div id="app">
+			<!-- start header -->
+			<header>
+				<div class="top center">
+					<div class="left fl">
+						<ul>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+							</li>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
+							</li>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<div class="right fr">
+						<div class="gouwuche fr">
+							<a href="gouwuche.html">购物车</a>
+						</div>
+						<div class="fr">
+							<ul v-if="islogin">
+								<li>
+									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+								</li>
+								<li>|</li>
+								<li v-on:click="logout">
+									<a href="#">
+										</i>退出登录</a>
+								</li>
+								<li>
+									<a href="">消息通知</a>
+								</li>
+							</ul>
+							<ul v-else>
+								<li>
+									<a href="login.html" target="_blank">登录</a>
+								</li>
+								<li>|</li>
+								<li>
+									<a href="register.html" target="_blank">注册</a>
+								</li>
+								<li>|</li>
+							</ul>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</header>
+			<!--end header -->
 
-    <!-- start banner_x -->
-    <div class="banner_x center">
-        <a href="index.html" target="_blank">
-            <div class="logo fl"></div>
-        </a>
+			<!-- start banner_x -->
+			<div class="banner_x center">
+				<a href="index.html" target="_blank">
+					<div class="logo fl"></div>
+				</a>
 
-        <div class="nav fl">
-            <ul>
-                <li class="active">
-                    <a href="index.html">主页</a>
-                </li>
-                <li>
-                    <a href="about.html">手机二手</a>
-                </li>
-                <li>
-                    <a href="shop.html">拍卖场</a>
-                </li>
-                <li>
-                    <a href="self_info.html">我的发布</a>
-                </li>
-            </ul>
-        </div>
-        <div class="search fr">
-            <form action="" method="post">
-                <div class="text fl">
-                    <input type="text" class="shuru" placeholder="小米6&nbsp;小米MIX现货">
-                </div>
-                <div class="submit fl">
-                    <input type="submit" class="sousuo" value="搜索"/>
-                </div>
-                <div class="clear"></div>
-            </form>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <!-- end banner_x -->
+				<div class="nav fl">
+					<ul>
+						<li class="active">
+							<a href="index.html">主页</a>
+						</li>
+						<li>
+							<a href="about.html">手机二手</a>
+						</li>
+						<li>
+							<a href="shop.html">拍卖场</a>
+						</li>
+						<li>
+							<a href="self_info.html">我的发布</a>
+						</li>
+					</ul>
+				</div>
+				<div class="search fr">
+					<form action="" method="post">
+						<div class="text fl">
+							<input type="text" class="shuru" placeholder="小米6&nbsp;小米MIX现货">
+						</div>
+						<div class="submit fl">
+							<input type="submit" class="sousuo" value="搜索" />
+						</div>
+						<div class="clear"></div>
+					</form>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<!-- end banner_x -->
 
-    <!-- start banner_y -->
-    <div class="banner_y center">
-        <div class="nav">
-            <ul>
-                <li v-for="item1 in categories" v-if="item1.parentid==null">
-                    <a :href="['liebiao.html?cateid=' + item1.id]">{{item1.name}}</a>
+			<!-- start banner_y -->
+			<div class="banner_y center">
+				<div class="nav">
+					<ul>
+						<li v-for="item1 in categories" v-if="item1.parentid==null">
+							<a :href="['liebiao.html?cateid=' + item1.id]">{{item1.name}}</a>
 
-                    <div class="pop">
-                        <div class="left fl">
-                            <div>
-                                <div class="xuangou_left fl" v-for="item2 in categories"
-                                     v-if="item1.id==item2.parentid">
-                                    <a :href="['liebiao.html?cateid=' + item2.id]">
-                                        <span class="fl">{{item2.name}}</span>
+							<div class="pop">
+								<div class="left fl">
+									<div>
+										<div class="xuangou_left fl" v-for="item2 in categories" v-if="item1.id==item2.parentid">
+											<a :href="['liebiao.html?cateid=' + item2.id]">
+												<span class="fl">{{item2.name}}</span>
 
-                                        <div class="clear"></div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="banner">
-            <img src="resource/image/banner_02.jpg">
-        </div>
-    </div>
-    <!-- start danpin -->
-    <div class="danpin center">
-        <!--新品-->
-        <div class="biaoti center">最新上架二手</div>
-        <div class="main center">
-            <div class="mingxing fl" v-for="item in products">
-                <div class="sub_mingxing">
-                    <a :href="['xiangqing.html?id=' + item.id]"><img :src="item.img" alt=""></a>
-                </div>
-                <div class="pinpai">
-                    <a href="">{{item.name}}</a>
-                </div>
-                <div class="youhui">暂无优惠</div>
-                <div class="jiage">{{item.price}}元</div>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="peijian w">
-        <div class="biaoti center">配件</div>
-        <div class="main center">
-            <div class="content">
-                <div class="remen fl">
-                    <a href=""><img src="resource/image/peijian1.jpg"></a>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span>新品</span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian2.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">小米6 硅胶保护套</a>
-                    </div>
-                    <div class="jiage">49元</div>
-                    <div class="pingjia">372人评价</div>
-                    <div class="piao">
-                        <a href="">
-                            <span>发货速度很快！很配小米6！</span>
-                            <span>来至于mi狼牙的评价</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:#fff"></span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian3.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">小米手机4c 小米4c 智能</a>
-                    </div>
-                    <div class="jiage">29元</div>
-                    <div class="pingjia">372人评价</div>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:red">享6折</span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian4.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">红米NOTE 4X 红米note4X</a>
-                    </div>
-                    <div class="jiage">19元</div>
-                    <div class="pingjia">372人评价</div>
-                    <div class="piao">
-                        <a href="">
-                            <span>发货速度很快！很配小米6！</span>
-                            <span>来至于mi狼牙的评价</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:#fff"></span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian5.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">小米支架式自拍杆</a>
-                    </div>
-                    <div class="jiage">89元</div>
-                    <div class="pingjia">372人评价</div>
-                    <div class="piao">
-                        <a href="">
-                            <span>发货速度很快！很配小米6！</span>
-                            <span>来至于mi狼牙的评价</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="content">
-                <div class="remen fl">
-                    <a href=""><img src="resource/image/peijian6.png"></a>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:#fff"></span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian7.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">小米指环支架</a>
-                    </div>
-                    <div class="jiage">19元</div>
-                    <div class="pingjia">372人评价</div>
-                    <div class="piao">
-                        <a href="">
-                            <span>发货速度很快！很配小米6！</span>
-                            <span>来至于mi狼牙的评价</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:#fff"></span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian8.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">米家随身风扇</a>
-                    </div>
-                    <div class="jiage">19.9元</div>
-                    <div class="pingjia">372人评价</div>
-                </div>
-                <div class="remen fl">
-                    <div class="xinpin"><span style="background:#fff"></span></div>
-                    <div class="tu">
-                        <a href=""><img src="resource/image/peijian9.jpg"></a>
-                    </div>
-                    <div class="miaoshu">
-                        <a href="">红米4X 高透软胶保护套</a>
-                    </div>
-                    <div class="jiage">59元</div>
-                    <div class="pingjia">775人评价</div>
-                </div>
-                <div class="remenlast fr">
-                    <div class="hongmi">
-                        <a href=""><img src="resource/image/hongmin4.png" alt=""></a>
-                    </div>
-                    <div class="liulangengduo">
-                        <a href=""><img src="resource/image/liulangengduo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
-    <footer class="mt20 center">
-        <div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-        <div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-        <div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-    </footer>
-</div>
+												<div class="clear"></div>
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- start danpin -->
+			<div class="danpin center">
+				<!--新品-->
+				<div class="biaoti center">最新上架二手</div>
+				<div class="main center">
+					<div class="mingxing fl" v-for="item in products">
+						<div class="sub_mingxing">
+							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="item.img" alt=""></a>
+						</div>
+						<div class="pinpai">
+							<a href="">{{item.name}}</a>
+						</div>
+						<div class="youhui">暂无优惠</div>
+						<div class="jiage">{{item.price}}元</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="peijian w">
+				<div class="biaoti center">配件</div>
+				<div class="main center">
+					<div class="content">
+						<div class="remen fl">
+							<a href=""><img src="resource/image/peijian1.jpg"></a>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span>新品</span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian2.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">小米6 硅胶保护套</a>
+							</div>
+							<div class="jiage">49元</div>
+							<div class="pingjia">372人评价</div>
+							<div class="piao">
+								<a href="">
+									<span>发货速度很快！很配小米6！</span>
+									<span>来至于mi狼牙的评价</span>
+								</a>
+							</div>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:#fff"></span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian3.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">小米手机4c 小米4c 智能</a>
+							</div>
+							<div class="jiage">29元</div>
+							<div class="pingjia">372人评价</div>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:red">享6折</span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian4.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">红米NOTE 4X 红米note4X</a>
+							</div>
+							<div class="jiage">19元</div>
+							<div class="pingjia">372人评价</div>
+							<div class="piao">
+								<a href="">
+									<span>发货速度很快！很配小米6！</span>
+									<span>来至于mi狼牙的评价</span>
+								</a>
+							</div>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:#fff"></span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian5.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">小米支架式自拍杆</a>
+							</div>
+							<div class="jiage">89元</div>
+							<div class="pingjia">372人评价</div>
+							<div class="piao">
+								<a href="">
+									<span>发货速度很快！很配小米6！</span>
+									<span>来至于mi狼牙的评价</span>
+								</a>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="content">
+						<div class="remen fl">
+							<a href=""><img src="resource/image/peijian6.png"></a>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:#fff"></span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian7.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">小米指环支架</a>
+							</div>
+							<div class="jiage">19元</div>
+							<div class="pingjia">372人评价</div>
+							<div class="piao">
+								<a href="">
+									<span>发货速度很快！很配小米6！</span>
+									<span>来至于mi狼牙的评价</span>
+								</a>
+							</div>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:#fff"></span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian8.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">米家随身风扇</a>
+							</div>
+							<div class="jiage">19.9元</div>
+							<div class="pingjia">372人评价</div>
+						</div>
+						<div class="remen fl">
+							<div class="xinpin"><span style="background:#fff"></span></div>
+							<div class="tu">
+								<a href=""><img src="resource/image/peijian9.jpg"></a>
+							</div>
+							<div class="miaoshu">
+								<a href="">红米4X 高透软胶保护套</a>
+							</div>
+							<div class="jiage">59元</div>
+							<div class="pingjia">775人评价</div>
+						</div>
+						<div class="remenlast fr">
+							<div class="hongmi">
+								<a href=""><img src="resource/image/hongmin4.png" alt=""></a>
+							</div>
+							<div class="liulangengduo">
+								<a href=""><img src="resource/image/liulangengduo.png" alt=""></a>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+			<footer class="mt20 center">
+				<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
+				<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+				<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+			</footer>
+		</div>
 
-<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
-<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
-<script type="text/javascript" src="resource/js/vue-main.js"></script>
-<script type="text/javascript" src="resource/js/moment.min.js"></script>
-<script src="resource/js/jquery.min.js"></script>
-<script type="text/javascript" src="resource/js/slide.js"></script>
-<script type="text/javascript">
-    axios.defaults.baseURL = "http://localhost:8080";
-    var vm = new Vue({
-        el: '#app',
-        data: {
-            products: "",
-            pageNum: 1,
-            pageSize: 5,
-            total: 0,
-            pages: 0,
-            inputPage: '',
-            user: sessionStorage,
-            islogin: sessionStorage.length > 0,
-            categories: "",
-            carts: ""
-        },
-        created: function () {
-            this.getProduct();
-            this.getCategory();
-        },
-        methods: {
-            // 获取购物车信息
-            getCarts: function () {
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/slide.js"></script>
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					products: "",
+					pageNum: 1,
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					inputPage: '',
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					categories: "",
+					carts: ""
+				},
+				created: function() {
+					this.getProduct();
+					this.getCategory();
+				},
+				methods: {
+					// 获取购物车信息
+					getCarts: function() {
 
-            },
-            // 获取类别信息
-            getCategory: function () {
-                var _this = this;
-                axios.get('/category', {
-                    params: {
-                        size: 1000,
-                        pageNum: 1
-                    }
-                }).then(function (response) {
-                    _this.categories = response.data.data.rows;
-                })
-            },
-            getlocal: function () {
-                console.info(localStorage.getItem("userName") + localStorage.getItem("password"));
-            },
-            logout: function () {
-                logout();
-                location.href = "login.html";
-            },
-            // 获取商品信息
-            getProduct: function (pageIndex) {
-                pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
-                var _this = this;
-                axios.get('/product', {
-                    params: {
-                        pageNum: pageIndex,
-                        size: _this.pageSize
-                    }
-                }).then(function (response) {
-                    _this.products = response.data.data.rows;
-                    _this.pageNum = pageIndex;
-                    _this.total = response.data.data.total;
-                    _this.pages = Math.ceil(_this.total / _this.pageSize);
-                })
-            },
-            edit: function (id) {
-                location.href = "update.html?id=" + id;
-            },
-            pageClick: function (page) {
-                this.search(page);
-            },
-            prePage: function () {
-                this.pageNum--;
-                if (this.pageNum < 1) {
-                    this.pageNum = 1;
-                    return;
-                }
-                this.search(this.pageNum);
-            },
-            nextPage: function () {
-                this.pageNum++;
-                if (this.pageNum > this.pages) {
-                    this.pageNum = this.pages;
-                    return;
-                }
-                this.search(this.pageNum);
-            }
-        },
-        mounted: function () {
-            this.getlocal();
-        }
-    });
-</script>
+					},
+					// 获取类别信息
+					getCategory: function() {
+						var _this = this;
+						axios.get('/category', {
+							params: {
+								size: 1000,
+								pageNum: 1
+							}
+						}).then(function(response) {
+							_this.categories = response.data.data.rows;
+						})
+					},
+					getlocal: function() {
+						console.info(localStorage.getItem("userName") + localStorage.getItem("password"));
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					// 获取商品信息
+					getProduct: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/product', {
+							params: {
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(response) {
+							console.info(response);
+							_this.products = response.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = response.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					edit: function(id) {
+						location.href = "update.html?id=" + id;
+					},
+					pageClick: function(page) {
+						this.getProduct(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if(this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getProduct(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if(this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getProduct(this.pageNum);
+					}
+				},
+				mounted: function() {
+					this.getlocal();
+				}
+			});
+		</script>
 
-</body>
+	</body>
 
 </html>

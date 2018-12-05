@@ -9,7 +9,7 @@ public class ProductDynaProvider {
 		return new SQL() {
 			{
 				UPDATE("product");
-				
+
 				if (param.get("name") != null) {
 					SET("name=#{name}");
 				}
@@ -22,8 +22,8 @@ public class ProductDynaProvider {
 				if (param.get("color") != null) {
 					SET("color=#{color}");
 				}
-				if (param.get("userId") != null) {
-					SET("userId=#{userId}");
+				if (param.get("userid") != null) {
+					SET("userid=#{userid}");
 				}
 				if (param.get("quality") != null) {
 					SET("quality=#{quality}");
@@ -41,17 +41,20 @@ public class ProductDynaProvider {
 			}
 		}.toString();
 	}
-	
+
 	public String selectProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
 				SELECT("*");
 				FROM("product");
+				if (param.get("proid") != null) {
+					WHERE("proid=#{proid}");
+				}
 				if (param.get("name") != null) {
 					WHERE("name=#{name}");
 				}
-				if (param.get("category") != null) {
-					WHERE("category=#{category}");
+				if (param.get("cateid") != null) {
+					WHERE("category=ANY(SELECT ID FROM CATEGORY WHERE PARENTID=#{cateid}) OR category=#{cateid}");
 				}
 				if (param.get("price") != null) {
 					WHERE("price=#{price}");
@@ -59,8 +62,8 @@ public class ProductDynaProvider {
 				if (param.get("color") != null) {
 					WHERE("color=#{color}");
 				}
-				if (param.get("userId") != null) {
-					WHERE("userId=#{userId}");
+				if (param.get("userid") != null) {
+					WHERE("userid=#{userid}");
 				}
 				if (param.get("img") != null) {
 					WHERE("img=#{img}");

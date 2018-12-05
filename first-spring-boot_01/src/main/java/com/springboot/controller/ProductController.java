@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -53,10 +55,12 @@ public class ProductController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@ModelAttribute Product product, @CurrentUser User user) {
+	public Result add(@ModelAttribute Product product, @CurrentUser User user,
+			@RequestParam(required = false) MultipartFile file) {
 		product.setCreateby(user.getUsername());
 		product.setUserid(user.getId());
-		return ResultGenerator.genSuccessResult(productService.add(product));
+		product.setUpdateby(user.getId());
+		return ResultGenerator.genSuccessResult(productService.add(product,file));
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -68,13 +72,13 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public Result delete(@PathVariable String id) {
+	public Result delete(@PathVariable(value = "id") String id) {
 		return ResultGenerator.genSuccessResult(productService.delete(id));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
-//		productService.getHits(id); // 增加浏览量
+		productService.getHits(id); // 增加浏览量
 		return ResultGenerator.genSuccessResult(productService.findById(id));
 	}
 
@@ -87,8 +91,10 @@ public class ProductController {
 	 *
 	 * @Title: getByUser
 	 * @Description: TODO 查询自己的上架的商品
-	 * @param pageNum 当前页
-	 * @param size    每页显示条数
+	 * @param pageNum
+	 *            当前页
+	 * @param size
+	 *            每页显示条数
 	 * @param map
 	 * @param user
 	 * @return Result
@@ -111,34 +117,40 @@ public class ProductController {
 	 * @return
 	 */
 	@LoginRequired
-	@RequestMapping(value = "/buy/{proId}", method = RequestMethod.POST)
-	public Result buyProduct(@CurrentUser User user, @PathVariable String proId) {
-		Product product = productService.findById(proId);
-		if (product.getQuality() == 0) {
-			throw new ServiceException("该商品库存为0");
+	@RequestMapping(value = "/buy", method = RequestMethod.POST)
+	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map) {
+		System.out.println(map);
+		for (Map<String, Object> productMap : map) {
+			Map<String, Integer> integerMap = new HashMap<>();
+			integerMap.put("quality", (Integer) productMap.get("quality"));
+			// integerMap.put("quantity", (Integer) productMap.get("quantity"));
+			String string = productMap.get("quantity").toString();
+			int i = integerMap.get("quality") - Integer.parseInt(string); // 减库存
+			if (i < 0) {
+				throw new ServiceException(
+						"商品" + productMap.get("name") + "库存还剩余:" + productMap.get("quality") + "，请减少购买数量!");
+			}
+			Map<String, Object> map1 = new HashMap<>();
+			map1.put("proid", productMap.get("proid"));
+			map1.put("quality", i);
+			productService.update(map1); // 修改库存量
+			Map<String, Object> shoppingMap = new HashMap<>();
+			shoppingMap.put("productid", productMap.get("productid"));
+			List<Map<String, Object>> list = shoppingCartService.findList(shoppingMap);
+			if (list.size() != 0) {
+				String id = (String) list.get(0).get("cartid");
+				shoppingCartService.delete(id);
+			}
+			Product product = productService.findById((String) productMap.get("proid"));
+			// 购买时生成订单
+			Order order = new Order();
+			order.setSellid(product.getUserid()); // 卖家Id
+			order.setUserid(user.getId()); // 买家Id
+			order.setId(UUIDUtils.getOrderIdByTime()); // 订单号
+			order.setCreatedate(new Date()); // 下单日期
+			order.setStatus("0");
+			orderService.add(order);
 		}
-
-		// 购物车如果有购买的商品，清除购物车的商品信息
-		Map<String, Object> map = new HashMap<>();
-		map.put("productid", proId);
-		List<Map<String, Object>> list = shoppingCartService.findList(map);
-		if (list.size() != 0) {
-			String id = (String) list.get(0).get("cartid");
-			shoppingCartService.delete(id);
-		}
-		int i = product.getQuality() - 1; // 库存减一
-		Map<String, Object> map1 = new HashMap<>();
-		map1.put("proid", proId);
-		map1.put("quality", i);
-		productService.update(map1);
-		// 购买时生成订单
-		Order order = new Order();
-		order.setSellid(user.getId()); // 卖家Id
-		order.setUserid(product.getUserid()); // 买家Id
-		order.setId(UUIDUtils.getOrderIdByTime()); // 订单号
-		order.setCreatedate(new Date()); // 下单日期
-		order.setStatus("0");
-		orderService.add(order);
 		return ResultGenerator.genSuccessResult("success");
 	}
 }

@@ -464,4 +464,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
     }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", gender=" + gender + ", img="
+				+ img + ", createTime=" + createTime + ", state=" + state + ", loginname=" + loginname + ", activecode="
+				+ activecode + ", activedate=" + activedate + ", adreess=" + adreess + ", tel=" + tel
+				+ ", lastlogintime=" + lastlogintime + ", email=" + email + "]";
+	}
 }

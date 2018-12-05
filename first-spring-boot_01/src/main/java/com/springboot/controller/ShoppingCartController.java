@@ -26,9 +26,9 @@ public class ShoppingCartController {
 
 	@Autowired
 	private ShoppingCartService shoppingCartService;
-
+	
 	/**
-	 * 添加购物车
+	 * 添加购物车以及购物车操作
 	 * 
 	 * @Title: add
 	 * @Description: TODO
@@ -45,15 +45,15 @@ public class ShoppingCartController {
 		map.put("productid", shoppingCart.getProductid());
 		List<Map<String, Object>> shoppingCarts = shoppingCartService.findList(map);
 		Map<String, Object> shopMap = new HashMap<>();
-		if(shoppingCarts.size() != 0) {
+		if (shoppingCarts.size() != 0) {
 			for (Map<String, Object> shoppingCart2 : shoppingCarts) {
 				if (shoppingCart.getProductid().equals(shoppingCart2.get("proid"))) {
 					Map<String, Float> floatMap = new HashMap<>();
 					Map<String, Integer> integerMap = new HashMap<>();
 					floatMap.put("total", (Float) shoppingCart2.get("total"));
 					integerMap.put("quantity", (Integer) shoppingCart2.get("quantity"));
-					shopMap.put("total", floatMap.get("total")+shoppingCart.getTotal());
-					shopMap.put("quantity", integerMap.get("quantity")+shoppingCart.getQuantity());
+					shopMap.put("total", floatMap.get("total") + shoppingCart.getTotal());
+					shopMap.put("quantity", integerMap.get("quantity") + shoppingCart.getQuantity());
 					shopMap.put("cartid", shoppingCart2.get("cartid"));
 					return ResultGenerator.genSuccessResult(shoppingCartService.update(shopMap));
 				}
@@ -75,7 +75,7 @@ public class ShoppingCartController {
 	 * @date 2018年11月19日下午4:47:12
 	 */
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id, @CurrentUser User user) {
 		return ResultGenerator.genSuccessResult(shoppingCartService.delete(id));
 	}
@@ -93,6 +93,7 @@ public class ShoppingCartController {
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map) {
+		System.out.println(map);
 		return ResultGenerator.genSuccessResult(shoppingCartService.update(map));
 	}
 
@@ -110,9 +111,10 @@ public class ShoppingCartController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Result find(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,@CurrentUser User user) {
+	public Result find(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
 		map.put("userid", user.getId());
-		return ResultGenerator.genSuccessResult(shoppingCartService.findList(map));
+		List<Map<String, Object>> list = shoppingCartService.findList(map);
+		return ResultGenerator.genSuccessResult(list);
 	}
 
 	/**
@@ -129,6 +131,19 @@ public class ShoppingCartController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {
 		return ResultGenerator.genSuccessResult(shoppingCartService.findById(id));
+	}
+
+	/**
+	 * 确认订单
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/comfirm", method = RequestMethod.GET)
+	public Result comfirmOrder(@CurrentUser User user) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userid", user.getId());
+		map.put("ischeck", "0");
+		List<Map<String, Object>> shopList = shoppingCartService.findList(map);
+		return ResultGenerator.genSuccessResult(shopList);
 	}
 
 }

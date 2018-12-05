@@ -60,7 +60,7 @@ public interface ShoppingCartMapper {
 	 *
 	 * @mbggenerated Wed Nov 21 11:12:59 CST 2018
 	 */
-	@Select({ "select", "cartid, userid, quantity, total, productid, createdate, ischeck", "from shoppingcart" })
+	@Select({ })
 	@Results({ @Result(column = "cartid", property = "cartid", jdbcType = JdbcType.VARCHAR, id = true),
 			@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "quantity", property = "quantity", jdbcType = JdbcType.INTEGER),
@@ -82,6 +82,7 @@ public interface ShoppingCartMapper {
 			"ischeck = #{ischeck,jdbcType=VARCHAR}", "where cartid = #{cartid,jdbcType=VARCHAR}" })
 	int updateByPrimaryKey(ShoppingCart record);
 
+	// 连表查询
 	@SelectProvider(type = com.springboot.entity.dyna.ShoppingCartDynaProvider.class, method = "selectProvider")
 	@Results({ @Result(column = "cartid", property = "cartid", jdbcType = JdbcType.VARCHAR, id = true),
 			@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
@@ -110,6 +111,17 @@ public interface ShoppingCartMapper {
 			@Result(column = "max_price", property = "maxPrice", jdbcType = JdbcType.REAL),
 			@Result(column = "quality", property = "quality", jdbcType = JdbcType.INTEGER) })
 	List<Map<String,Object>> findList(Map<String, Object> map);
+	
+	// 不连表查询
+	@SelectProvider(type = com.springboot.entity.dyna.ShoppingCartDynaProvider.class, method = "selectBySql")
+	@Results({ @Result(column = "cartid", property = "cartid", jdbcType = JdbcType.VARCHAR, id = true),
+		@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
+		@Result(column = "quantity", property = "quantity", jdbcType = JdbcType.INTEGER),
+		@Result(column = "total", property = "total", jdbcType = JdbcType.REAL),
+		@Result(column = "productid", property = "productid", jdbcType = JdbcType.VARCHAR),
+		@Result(column = "createdate", property = "createdate", jdbcType = JdbcType.TIMESTAMP),
+		@Result(column = "ischeck", property = "ischeck", jdbcType = JdbcType.VARCHAR) })
+	List<ShoppingCart> findBySql(Map<String, Object> map);
 
 	@SelectProvider(type = com.springboot.entity.dyna.ShoppingCartDynaProvider.class, method = "updateProvider")
 	Integer update(Map<String, Object> map);

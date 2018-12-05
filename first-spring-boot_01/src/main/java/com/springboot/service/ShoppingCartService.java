@@ -20,6 +20,7 @@ public class ShoppingCartService {
 	// 增加
 	public int add(ShoppingCart shoppingCart) {
 		shoppingCart.setCartid(UUIDUtils.get16UUID());
+		shoppingCart.setIscheck("1"); // 选中状态
 		return shoppingCartMapper.insert(shoppingCart);
 	}
 
@@ -34,7 +35,7 @@ public class ShoppingCartService {
 	}
 
 	// 查询列表
-	public List<Map<String,Object>> findList(Map<String, Object> map) {
+	public List<Map<String, Object>> findList(Map<String, Object> map) {
 		map.put("createdate", new Date());
 		return shoppingCartMapper.findList(map);
 	}

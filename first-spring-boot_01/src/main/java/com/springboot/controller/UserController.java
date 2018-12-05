@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,11 +42,11 @@ import com.springboot.tools.TableData;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
+
 	// 读取配置文件中的参数
 	@Value("${spring.mail.username}")
 	private String form;
-	
+
 	@Value("${local_url}")
 	private String domain;
 
@@ -51,10 +55,10 @@ public class UserController {
 
 	@Autowired
 	private ShoppingCartService shoppingCartService;
-	
+
 	@Autowired
 	private OrderService orderService;
-	
+
 	@Autowired
 	private ProductService productService;
 
@@ -66,9 +70,13 @@ public class UserController {
 	 * @param user
 	 * @param file
 	 * @return Result
+	 * @throws MessagingException
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result insertUser(@ModelAttribute User user, @RequestParam(required = false) MultipartFile file) {
+	public Result insertUser(@RequestBody User user, @RequestParam(required = false) MultipartFile file)
+			throws MessagingException {
+		MimeMessage meMimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper messageHelper = new MimeMessageHelper(meMimeMessage, true, "UTF-8");
 		// 生成六位数字验证码
 		String activeCode = "";
 		activeCode += (int) (Math.random() * 9 + 1);
@@ -82,45 +90,51 @@ public class UserController {
 		}
 		// 检测用户登录账号是否存在
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("loginCode", user.getLoginname());
+		map.put("loginname", user.getLoginname());
 		List<User> list = userService.findList(map);
-		if (list.size() != 0 && list.get(0).getState().equals("0")) {
-			throw new ServiceException("邮箱已被注册");
+		if (list.size() != 0) {
+			if (list.get(0).getState().equals("0")) {
+				throw new ServiceException("邮箱已被注册");
+			}
+			// 如账号存在并且没激活则重新发送邮件，并且更新该用户数据
+			if (list.get(0).getState().equals("4")) {
+				Map<String, Object> userMap = new HashMap<String, Object>();
+				userMap.put("activeCode", activeCode);
+				userMap.put("activeDate", now.getTime());
+				userMap.put("id", list.get(0).getId());
+				userMap.put("password", MD5.md5(user.getPassword()));
+				// 发送者
+				messageHelper.setFrom(form);
+				// 接收者
+				messageHelper.setTo(user.getLoginname());
+				// 邮件主题
+				meMimeMessage.setSubject("激活邮箱");
+				// 邮件内容
+				meMimeMessage.setContent("点击激活邮箱：<a href='" + domain + "?id=" + list.get(0).getId() + "&activeCode="
+						+ activeCode + "'>" + domain + "?id=" + list.get(0).getId() + "&activeCode=" + activeCode
+						+ "</a>该链接48小时内有效", "text/html;charset=UTF-8");
+				javaMailSender.send(meMimeMessage);
+				userService.update(userMap, file);
+				return ResultGenerator.genSuccessResult("success");
+			}
 		}
-		// 如账号存在并且没激活则重新发送邮件
-		if (list.size() != 0 && list.get(0).getState().equals("4")) {
-			Map<String, Object> userMap = new HashMap<String, Object>();
-			userMap.put("activeCode", activeCode);
-			userMap.put("activeDate", now.getTime());
-			userMap.put("id", list.get(0).getId());
-			SimpleMailMessage message = new SimpleMailMessage();
-			// 发送者
-			message.setFrom(form);
-			// 接收者
-			message.setTo(user.getLoginname());
-			// 邮件主题
-			message.setSubject("激活邮箱");
-			// 邮件内容
-			message.setText("点击激活邮箱：" + domain + "?id=" + list.get(0).getId() + "&activeCode=" + activeCode);
-			javaMailSender.send(message);
-			userService.update(userMap);
-			return ResultGenerator.genSuccessResult("success");
-		}
-
 		user.setId(com.springboot.tools.UUIDUtils.get16UUID());
-		user.setPassword(user.getPassword()); // 密码
+		user.setActivecode(activeCode);
+		user.setActivedate(now.getTime()); // 存入过期时间,两天后过期
 		user.setState("4"); // 未激活状态
-		SimpleMailMessage message = new SimpleMailMessage();
 		// 发送者
-		message.setFrom(form);
+		messageHelper.setFrom(form);
 		// 接收者
-		message.setTo(user.getLoginname());
+		messageHelper.setTo(user.getLoginname());
 		// 邮件主题
-		message.setSubject("主题：激活邮箱");
+		meMimeMessage.setSubject("激活邮箱");
 		// 邮件内容
-		message.setText("点击激活邮箱：" + "?id=" + user.getId() + "&activeCode=" + activeCode);
-		javaMailSender.send(message);
-		return ResultGenerator.genSuccessResult(userService.add(user, file));
+		meMimeMessage.setContent(
+				"点击激活邮箱：<a href='" + domain + "?id=" + user.getId() + "&activeCode=" + activeCode + "'>" + domain
+						+ "?id=" + user.getId() + "&activeCode=" + activeCode + "</a>该链接48小时内有效",
+				"text/html;charset=UTF-8");
+		javaMailSender.send(meMimeMessage);
+		return ResultGenerator.genSuccessResult(userService.add(user));
 
 	}
 
@@ -181,7 +195,7 @@ public class UserController {
 			return ResultGenerator.genSuccessResult("新密码和旧密码不能相同");
 		}
 		map.put("password", MD5.md5(newPassword));
-		userService.update(map);
+		userService.updatePassword(map);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 
@@ -196,9 +210,6 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		User user = userService.findById(id);
-		if (user == null) {
-			return ResultGenerator.genFailResult("url有误");
-		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("user", user);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -216,12 +227,29 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
-	public Result Login(@RequestParam(required = false) Map<String, Object> map) {
+	public Result Login(@RequestBody(required = false) Map<String, Object> map,
+			@RequestParam(required = false) MultipartFile file) {
 		map.put("password", MD5.md5((String) map.get("password")));
 		if (userService.login(map) == null) {
 			throw new ServiceException("用户名或密码错误");
 		}
+		List<User> users = userService.findList(map);
+		if (users.size() != 0) {
+			if (users.get(0).getState().equals("2"))
+				throw new ServiceException("用户未激活");
+		}
+		Map<String, Object> userMap = new HashMap<>();
+		userMap.put("id", users.get(0).getId());
+		userMap.put("lastLoginTime", new Date());
+		userService.update(userMap, file);
 		return ResultGenerator.genSuccessResult(userService.login(map));
+	}
 
+	@LoginRequired
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+	public Result update(@PathVariable String id, @RequestParam(required = false) MultipartFile file) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", id);
+		return ResultGenerator.genSuccessResult(userService.update(map, file));
 	}
 }

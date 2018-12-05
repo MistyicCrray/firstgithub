@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.entity.Product;
 import com.springboot.mapper.ProductMapper;
 import com.springboot.service.ProductService;
-import com.springboot.tools.ServiceException;
+import com.springboot.tools.FileUtil;
 import com.springboot.tools.UUIDUtils;
 
 @Service
@@ -20,11 +22,14 @@ public class ProductService {
 	@Autowired
 	private ProductMapper productMapper;
 
-	public Integer add(Product product) {
+	public Integer add(Product product, MultipartFile file) {
 		product.setProid(UUIDUtils.get16UUID());
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
 		product.setHits(0);
+		if (file != null) {
+			product.setImg((String) FileUtil.uploadImage(file).get("filePath"));
+		}
 		return productMapper.insert(product);
 	}
 
@@ -43,13 +48,13 @@ public class ProductService {
 	public Product findById(String id) {
 		return productMapper.selectByPrimaryKey(id);
 	}
-	
+
 	/**
 	 * 浏览量
 	 */
 	public Integer getHits(String id) {
 		Product product = productMapper.selectByPrimaryKey(id);
-		if(product!=null) {
+		if (product != null) {
 			Integer i = product.getHits();
 			if (i == null || i == 0) {
 				i = 1;
@@ -63,5 +68,5 @@ public class ProductService {
 		}
 		return 0;
 	}
-	
+
 }

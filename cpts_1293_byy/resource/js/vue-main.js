@@ -1,12 +1,9 @@
-﻿axios.defaults.baseURL = '/hm';
+﻿axios.defaults.baseURL = '/first-spring-boot_01';
 if(localStorage.length > 0 && sessionStorage.length <= 0) {
 
-	sessionStorage.setItem("accessToken", localStorage.accessToken);
-	sessionStorage.setItem("userCode", localStorage.userCode);
-	sessionStorage.setItem("userName", localStorage.userName);
-	sessionStorage.setItem("userType", localStorage.userType);
-	sessionStorage.setItem("refCode", localStorage.refCode);
-	sessionStorage.setItem("menus", localStorage.menus);
+	sessionStorage.setItem("userId", resultdata.data.userInfo.id);
+	sessionStorage.setItem("username", resultdata.data.userInfo.username);
+	sessionStorage.setItem("accessToken", resultdata.data.accessToken);
 }
 
 // http request 拦截器
@@ -76,3 +73,50 @@ function GetQueryString(name) {
 	if(r != null) return unescape(r[2]);
 	return null;
 }
+
+/*点击小图弹出大图*/
+$(document).on('click', '.busin_img > a', function() {
+	console.log('点击小图显示大图')
+	var img = $(this).find('img');
+	var imgsrc1 = img.attr('src');
+	console.info(imgsrc1);
+	var imgHtml = '<img class="imgshowbox" src="' + imgsrc1 + '"/>';
+	top.layer.open({
+		type: 1,
+		title: false, //不显示标题
+		shadeClose: true,
+		closeBtn: 1,
+		move: true,
+		area: ['600px', ''],
+		// area: [img.width + 'px', img.height+'px'],
+		content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+		cancel: function() {}
+	})
+})
+$(function() {
+	//上传图片的缩略图
+	$('.input_opt').change(function(e) {
+		var imgName = e.target.files[0].name; //获取上传的文件名 
+		var paren = $(this).parent('.img_thumb');
+		var divObj = paren.find('b');
+		// console.log(imgName+'获取的888文件名');
+		paren.find('i').remove();
+		divObj.html('');
+		var file = e.target.files[0];
+		if(window.FileReader) {
+			var reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onloadend = function(e) {
+				divObj.append('<img src="' + e.target.result + '">');
+				paren.append('<i>x</i>');
+			}
+		}
+	})
+	$(document).on('click', '.img_thumb >i', function() {
+		$(this).parent('p').find('b').html('');
+		// console.log($(this).siblings('.input_opt').val()+'获取22226的长度');
+		$(this).siblings('.input_opt').val('');
+		// console.log($(this).siblings('.input_opt').val()+'获取688866的长度');
+		$(this).remove();
+	})
+})

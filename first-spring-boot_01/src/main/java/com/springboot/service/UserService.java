@@ -1,10 +1,12 @@
 package com.springboot.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,31 +17,27 @@ import com.springboot.tools.FileUtil;
 import com.springboot.tools.MD5;
 import com.springboot.tools.ServiceException;
 import com.springboot.tools.TokenUtil;
-import com.springboot.tools.UUIDUtils;
 
 @Service
 public class UserService {
 
 	@Autowired
 	private UserMapper userMapper;
-
+	
 	/**
 	 * 用户注册
-	* @Title: addUser 
-	* @Description: TODO 
-	* @param user
-	* @param file
-	* @return String
+	 * 
+	 * @Title: addUser
+	 * @Description: TODO
+	 * @param user
+	 * @param file
+	 * @return String
 	 */
-	public String add(User user, MultipartFile file) {
-		String password = (String) user.getPassword();
+	public String add(User user) {
+		String password = user.getPassword();
 		user.setPassword(MD5.md5(password));
-		user.setId(UUIDUtils.get16UUID());
-		user.setState("0");
-		if (file != null) {
-			user.setImg("d:/data/upload/images" + (String) FileUtil.uploadImage(file).get("filePath"));
-			System.out.println(user.getImg());
-		}
+		user.setCreateTime(new Date());
+		user.setEmail(user.getLoginname());
 		if (userMapper.insert(user) != 1) {
 			throw new ServiceException();
 		} else {
@@ -49,10 +47,11 @@ public class UserService {
 
 	/**
 	 * 登录信息
-	* @Title: login 
-	* @Description: TODO 
-	* @param map
-	* @return Map<String,Object>
+	 * 
+	 * @Title: login
+	 * @Description: TODO
+	 * @param map
+	 * @return Map<String,Object>
 	 */
 	public Map<String, Object> login(Map<String, Object> map) {
 
@@ -77,8 +76,18 @@ public class UserService {
 	/**
 	 * 修改密码
 	 */
-	public int update(Map<String, Object> map) {
+	public Integer updatePassword(Map<String, Object> map) {
 		map.put("newPassword", MD5.md5((String) map.get("newPassword")));
+		return userMapper.update(map);
+	}
+
+	/**
+	 * 修改信息
+	 */
+	public Integer update(Map<String, Object> map, MultipartFile file) {
+		if (file != null) {
+			map.put("img", (String) FileUtil.uploadImage(file).get("filePath"));
+		}
 		return userMapper.update(map);
 	}
 
@@ -88,13 +97,13 @@ public class UserService {
 	public User findById(String id) {
 		return userMapper.selectByPrimaryKey(id);
 	}
-	
+
 	// 删除
-	public int delete(String id){
+	public int delete(String id) {
 		return userMapper.deleteByPrimaryKey(id);
 	}
-	
-	public int updateByUser(User user){
+
+	public int updateByUser(User user) {
 		return userMapper.updateByPrimaryKey(user);
 	}
 
