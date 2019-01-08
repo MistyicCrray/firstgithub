@@ -23,8 +23,8 @@ public class OrderDynaProvider {
 					if (map.get("status") != null) {
 						WHERE("status=#{status}");
 					}
-					if (map.get("createdate") != null) {
-						WHERE("createdate=#{createdate}");
+					if (map.get("create_time") != null) {
+						WHERE("create_time=#{create_time}");
 					}
 				}
 			}
@@ -45,8 +45,17 @@ public class OrderDynaProvider {
 					if (map.get("status") != null) {
 						SET("status=#{status}");
 					}
-					if (map.get("createdate") != null) {
-						SET("createdate=#{createdate}");
+					if (map.get("updateTime") != null) {
+						SET("update_time=#{updateTime}");
+					}
+					if (map.get("confirmTime") != null) {
+						SET("confirm_time=#{confirmTime}");
+					}
+					if (map.get("status") != null) {
+						SET("status=#{status}");
+					}
+					if (map.get("addressId") != null) {
+						SET("address_id=#{addressId}");
 					}
 				}
 				WHERE("id=#{id}");

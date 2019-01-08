@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.entity.Address;
 import com.springboot.mapper.AddressMapper;
+import com.springboot.tools.ServiceException;
 import com.springboot.tools.UUIDUtils;
 
 @Service
@@ -25,8 +26,19 @@ public class AddressService {
 	 * @return
 	 */
 	public int add(Address address) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userid", address.getUserid());
+		List<Address> addrList = addressMapper.findList(map);
+		if (addrList.size() >= 5) {
+			throw new ServiceException("您的地址已达五条，不可继续添加");
+		}
+		// 如果是第一条则是默认地址
+		if (addrList.size() == 0) {
+			address.setStatus("0"); // 默认地址
+		} else {
+			address.setStatus("1"); // 非默认地址
+		}
 		address.setAddrid(UUIDUtils.get16UUID());
-		address.setStatus("1"); // 非默认地址
 		address.setCreatedate(new Date());
 		return addressMapper.insert(address);
 	}
@@ -38,6 +50,7 @@ public class AddressService {
 	 * @return
 	 */
 	public Integer update(Map<String, Object> map) {
+		// 如果传进来的status不等于空，则修改为默认地址
 		if (map.get("status") != "") {
 			Map<String, Object> addrmap = new HashMap<String, Object>();
 			addrmap.put("status", "0");
@@ -51,7 +64,7 @@ public class AddressService {
 	}
 
 	/**
-	 * 添加地址
+	 * 删除地址
 	 * 
 	 * @param id
 	 * @return

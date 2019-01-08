@@ -28,11 +28,10 @@ public class AddressController {
 	@Autowired
 	private AddressService addressService;
 
-	@RequestMapping(value = "", method = RequestMethod.POST)
 	@LoginRequired
+	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result add(@RequestBody Address address, @CurrentUser User user) {
 		address.setUserid(user.getId());
-		System.out.println(address.getProvince());
 		return ResultGenerator.genSuccessResult(addressService.add(address));
 	}
 
@@ -43,8 +42,9 @@ public class AddressController {
 	}
 
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam Map<String, Object> map, @CurrentUser User user) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map, @CurrentUser User user) {
+		map.put("addrid", id);
 		return ResultGenerator.genSuccessResult(addressService.update(map));
 	}
 
@@ -59,8 +59,7 @@ public class AddressController {
 	public Result findList(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user,
 			Integer pageNum, Integer size) {
 		map.put("userid", user.getId());
-		Page<Address> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
-				"status");
+		Page<Address> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size, "status");
 		return ResultGenerator.genSuccessResult(new TableData<Address>(page.getTotal(), addressService.findList(map)));
 	}
 }

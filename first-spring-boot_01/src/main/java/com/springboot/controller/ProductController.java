@@ -60,13 +60,14 @@ public class ProductController {
 		product.setCreateby(user.getUsername());
 		product.setUserid(user.getId());
 		product.setUpdateby(user.getId());
-		return ResultGenerator.genSuccessResult(productService.add(product,file));
+		return ResultGenerator.genSuccessResult(productService.add(product, file));
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result get(Integer pageNum, Integer size, Product product,
 			@RequestParam(required = false) Map<String, Object> map) {
-		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
+				"createdate desc,hits desc");
 		List<Product> list = productService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
@@ -82,8 +83,12 @@ public class ProductController {
 		return ResultGenerator.genSuccessResult(productService.findById(id));
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map) {
+	@LoginRequired
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user,
+			@PathVariable String id) {
+		map.put("updateby", user.getId());
+		map.put("proid", id);
 		return ResultGenerator.genSuccessResult(productService.update(map));
 	}
 
@@ -91,10 +96,8 @@ public class ProductController {
 	 *
 	 * @Title: getByUser
 	 * @Description: TODO 查询自己的上架的商品
-	 * @param pageNum
-	 *            当前页
-	 * @param size
-	 *            每页显示条数
+	 * @param pageNum 当前页
+	 * @param size    每页显示条数
 	 * @param map
 	 * @param user
 	 * @return Result
@@ -117,9 +120,12 @@ public class ProductController {
 	 * @return
 	 */
 	@LoginRequired
-	@RequestMapping(value = "/buy", method = RequestMethod.POST)
-	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map) {
-		System.out.println(map);
+	@RequestMapping(value = "/buy/{addrid}", method = RequestMethod.POST)
+	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map,
+			@PathVariable(value = "addrid") String addrid) {
+		
+		
+		
 		for (Map<String, Object> productMap : map) {
 			Map<String, Integer> integerMap = new HashMap<>();
 			integerMap.put("quality", (Integer) productMap.get("quality"));
@@ -131,6 +137,9 @@ public class ProductController {
 						"商品" + productMap.get("name") + "库存还剩余:" + productMap.get("quality") + "，请减少购买数量!");
 			}
 			Map<String, Object> map1 = new HashMap<>();
+			if (i == 0) {
+				map1.put("status", "2"); // 售罄
+			}
 			map1.put("proid", productMap.get("proid"));
 			map1.put("quality", i);
 			productService.update(map1); // 修改库存量
@@ -146,11 +155,16 @@ public class ProductController {
 			Order order = new Order();
 			order.setSellid(product.getUserid()); // 卖家Id
 			order.setUserid(user.getId()); // 买家Id
-			order.setId(UUIDUtils.getOrderIdByTime()); // 订单号
-			order.setCreatedate(new Date()); // 下单日期
+			order.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
+			order.setCreateTime(new Date()); // 下单日期
 			order.setStatus("0");
+			order.setQuantity(Integer.parseInt(string)); // 数量
+			order.setPayment(Integer.parseInt(string) * product.getPrice()); // 小计
+			order.setProductid(product.getProid());
+			order.setAddressId(addrid);
 			orderService.add(order);
 		}
+
 		return ResultGenerator.genSuccessResult("success");
 	}
 }

@@ -43,75 +43,79 @@ public class OrderController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result add(@ModelAttribute Order order, @CurrentUser User user) {
 		order.setUserid(user.getId());
-		order.setCreatedate(new Date());
+		order.setCreateTime(new Date());
 		return ResultGenerator.genSuccessResult(orderService.add(order));
 	}
 
 	/**
 	 * 删除
-	* @Title: delete 
-	* @Description: TODO 
-	* @param id
-	* @return Result
+	 * 
+	 * @Title: delete
+	 * @Description: TODO
+	 * @param id
+	 * @return Result
 	 */
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id, @CurrentUser User user) {
 		return ResultGenerator.genSuccessResult(orderService.delete(id));
 	}
-	
+
 	/**
 	 * 修改
-	* @Title: update 
-	* @Description: TODO 
-	* @param map
-	* @param user
-	* @return Result
-	* @author hlx
-	* @date 2018年11月19日下午3:32:47
+	 * 
+	 * @Title: update
+	 * @Description: TODO
+	 * @param map
+	 * @param user
+	 * @return Result
+	 * @author hlx
+	 * @date 2018年11月19日下午3:32:47
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false)Map<String, Object> map, @CurrentUser User user) {
+	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
 		return ResultGenerator.genSuccessResult(orderService.update(map));
 	}
-	
+
 	/**
 	 * 列表
-	* @Title: find 
-	* @Description: TODO 
-	* @param pageNum
-	* @param size
-	* @param map
-	* @param user
-	* @return Result
-	* @author hlx
-	* @date 2018年11月19日下午3:36:22
+	 * 
+	 * @Title: find
+	 * @Description: TODO
+	 * @param pageNum
+	 * @param size
+	 * @param map
+	 * @param user
+	 * @return Result
+	 * @author hlx
+	 * @date 2018年11月19日下午3:36:22
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Result find(Integer pageNum,Integer size,@RequestParam(required = false) Map<String, Object> map,@CurrentUser User user) {
+	public Result find(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User user) {
 		map.put("userid", user.getId());
 		Page<Order> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<Order> list = orderService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Order>(page.getTotal(), list));
 	}
-	
+
 	/**
-	* 删除
-	* @Title: findById 
-	* @Description: TODO 
-	* @param id
-	* @param user
-	* @return Result
-	* @author hlx
-	* @date 2018年11月19日下午3:38:30
+	 * 删除
+	 * 
+	 * @Title: findById
+	 * @Description: TODO
+	 * @param id
+	 * @param user
+	 * @return Result
+	 * @author hlx
+	 * @date 2018年11月19日下午3:38:30
 	 */
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public Result findById(@PathVariable String id,@CurrentUser User user) {
+	public Result findById(@PathVariable String id, @CurrentUser User user) {
 		return ResultGenerator.genSuccessResult(orderService.findById(id));
 	}
-	
-	
+
 }

@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.entity.Product;
 import com.springboot.entity.ShoppingCart;
 import com.springboot.entity.User;
+import com.springboot.service.ProductService;
 import com.springboot.service.ShoppingCartService;
 import com.springboot.tools.CurrentUser;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
+import com.springboot.tools.ServiceException;
 
 @RestController
 @RequestMapping("/shoppingCart")
@@ -26,7 +29,9 @@ public class ShoppingCartController {
 
 	@Autowired
 	private ShoppingCartService shoppingCartService;
-	
+	@Autowired
+	private ProductService productService;
+
 	/**
 	 * 添加购物车以及购物车操作
 	 * 
@@ -48,12 +53,10 @@ public class ShoppingCartController {
 		if (shoppingCarts.size() != 0) {
 			for (Map<String, Object> shoppingCart2 : shoppingCarts) {
 				if (shoppingCart.getProductid().equals(shoppingCart2.get("proid"))) {
-					Map<String, Float> floatMap = new HashMap<>();
-					Map<String, Integer> integerMap = new HashMap<>();
-					floatMap.put("total", (Float) shoppingCart2.get("total"));
-					integerMap.put("quantity", (Integer) shoppingCart2.get("quantity"));
-					shopMap.put("total", floatMap.get("total") + shoppingCart.getTotal());
-					shopMap.put("quantity", integerMap.get("quantity") + shoppingCart.getQuantity());
+					shopMap.put("total",
+							Float.parseFloat(shoppingCart2.get("total").toString()) + shoppingCart.getTotal());
+					shopMap.put("quantity",
+							Integer.parseInt(shoppingCart2.get("quantity").toString()) + shoppingCart.getQuantity());
 					shopMap.put("cartid", shoppingCart2.get("cartid"));
 					return ResultGenerator.genSuccessResult(shoppingCartService.update(shopMap));
 				}
@@ -93,6 +96,14 @@ public class ShoppingCartController {
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map) {
+		if (map.get("proid") != null) {
+			Product product = productService.findById(map.put("proid", map.get("proid")).toString());
+			if (map.get("quantity") != null) {
+				if (Integer.parseInt(map.get("quantity").toString()) > product.getQuality()) {
+					throw new ServiceException("数量已超过库存");
+				}
+			}
+		}
 		System.out.println(map);
 		return ResultGenerator.genSuccessResult(shoppingCartService.update(map));
 	}

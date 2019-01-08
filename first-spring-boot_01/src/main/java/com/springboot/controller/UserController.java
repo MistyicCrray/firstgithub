@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.StringUtil;
 import com.springboot.entity.User;
 import com.springboot.service.OrderService;
 import com.springboot.service.ProductService;
@@ -34,6 +32,7 @@ import com.springboot.tools.LoginRequired;
 import com.springboot.tools.MD5;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
+import com.springboot.tools.SendEmailUtil;
 import com.springboot.tools.ServiceException;
 import com.springboot.tools.TableData;
 
@@ -75,8 +74,6 @@ public class UserController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result insertUser(@RequestBody User user, @RequestParam(required = false) MultipartFile file)
 			throws MessagingException {
-		MimeMessage meMimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper messageHelper = new MimeMessageHelper(meMimeMessage, true, "UTF-8");
 		// 生成六位数字验证码
 		String activeCode = "";
 		activeCode += (int) (Math.random() * 9 + 1);
@@ -103,17 +100,11 @@ public class UserController {
 				userMap.put("activeDate", now.getTime());
 				userMap.put("id", list.get(0).getId());
 				userMap.put("password", MD5.md5(user.getPassword()));
-				// 发送者
-				messageHelper.setFrom(form);
-				// 接收者
-				messageHelper.setTo(user.getLoginname());
-				// 邮件主题
-				meMimeMessage.setSubject("激活邮箱");
-				// 邮件内容
-				meMimeMessage.setContent("点击激活邮箱：<a href='" + domain + "?id=" + list.get(0).getId() + "&activeCode="
+				// 发送邮件
+				SendEmailUtil.send("点击激活邮箱：<a href='" + domain + "?id=" + list.get(0).getId() + "&activeCode="
 						+ activeCode + "'>" + domain + "?id=" + list.get(0).getId() + "&activeCode=" + activeCode
-						+ "</a>该链接48小时内有效", "text/html;charset=UTF-8");
-				javaMailSender.send(meMimeMessage);
+						+ "</a>该链接48小时内有效", user.getLoginname(), "激活邮箱", javaMailSender, form);
+
 				userService.update(userMap, file);
 				return ResultGenerator.genSuccessResult("success");
 			}
@@ -122,33 +113,30 @@ public class UserController {
 		user.setActivecode(activeCode);
 		user.setActivedate(now.getTime()); // 存入过期时间,两天后过期
 		user.setState("4"); // 未激活状态
-		// 发送者
-		messageHelper.setFrom(form);
-		// 接收者
-		messageHelper.setTo(user.getLoginname());
-		// 邮件主题
-		meMimeMessage.setSubject("激活邮箱");
-		// 邮件内容
-		meMimeMessage.setContent(
+		// 发送邮件
+		SendEmailUtil.send(
 				"点击激活邮箱：<a href='" + domain + "?id=" + user.getId() + "&activeCode=" + activeCode + "'>" + domain
 						+ "?id=" + user.getId() + "&activeCode=" + activeCode + "</a>该链接48小时内有效",
-				"text/html;charset=UTF-8");
-		javaMailSender.send(meMimeMessage);
+				user.getLoginname(), "激活邮箱", javaMailSender, form);
 		return ResultGenerator.genSuccessResult(userService.add(user));
 
 	}
 
 	/**
+	 * 邮箱激活
 	 * 
 	 * @param id
 	 * @param activeCode
 	 * @return
 	 */
-	@RequestMapping(value = "/active", method = RequestMethod.GET)
-	public Result activeEmail(@RequestParam String id, @RequestParam String activeCode) {
+	@RequestMapping(value = "/active/{id}/{activeCode}", method = RequestMethod.GET)
+	public Result activeEmail(@PathVariable String id, @PathVariable String activeCode) {
 		User user = userService.findById(id);
 		if (user == null) {
 			throw new ServiceException("用户还未注册，请前往注册页面");
+		}
+		if (user.getState().equals("0") && StringUtil.isEmpty(user.getActivecode())) {
+			throw new ServiceException("该邮箱已激活");
 		}
 		if (!activeCode.equals(user.getActivecode())) {
 			throw new ServiceException("激活码错误");
@@ -169,7 +157,8 @@ public class UserController {
 	public Result getUsers(Integer pageNum, Integer size, @ModelAttribute User user,
 			@RequestParam(required = false) Map<String, Object> map) {
 		Page<User> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		return ResultGenerator.genSuccessResult(new TableData<User>(page.getTotal(), userService.findList(map)));
+		List<User> findList = userService.findList(map);
+		return ResultGenerator.genSuccessResult(new TableData<User>(page.getTotal(), findList));
 	}
 
 	/**
@@ -210,14 +199,15 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		User user = userService.findById(id);
-		Map<String, Object> map = new HashMap<>();
-		map.put("user", user);
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("userid", user.getId());
-		map.put("shoppingCart", shoppingCartService.findList(paramMap)); // 购物车
-		map.put("order", orderService.findList(paramMap)); // 订单
-		map.put("product", productService.findList(paramMap)); // 上架的商品
-		return ResultGenerator.genSuccessResult(JSONObject.toJSON(map));
+		/*
+		 * Map<String, Object> map = new HashMap<>(); map.put("user", user); Map<String,
+		 * Object> paramMap = new HashMap<String, Object>(); paramMap.put("userid",
+		 * user.getId()); map.put("shoppingCart",
+		 * shoppingCartService.findList(paramMap)); // 购物车 map.put("order",
+		 * orderService.findList(paramMap)); // 订单 map.put("product",
+		 * productService.findList(paramMap)); // 上架的商品
+		 */
+		return ResultGenerator.genSuccessResult(user);
 	}
 
 	/**
@@ -235,9 +225,14 @@ public class UserController {
 		}
 		List<User> users = userService.findList(map);
 		if (users.size() != 0) {
-			if (users.get(0).getState().equals("2"))
+			if (users.get(0).getState().equals("2")) {
 				throw new ServiceException("用户未激活");
+			}
+			if (users.get(0).getState().equals("1")) {
+				throw new ServiceException("用户已被冻结");
+			}
 		}
+
 		Map<String, Object> userMap = new HashMap<>();
 		userMap.put("id", users.get(0).getId());
 		userMap.put("lastLoginTime", new Date());
@@ -245,11 +240,42 @@ public class UserController {
 		return ResultGenerator.genSuccessResult(userService.login(map));
 	}
 
+	/**
+	 * 修改用户信息
+	 * 
+	 * @param id
+	 * @param file
+	 * @return
+	 */
 	@LoginRequired
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-	public Result update(@PathVariable String id, @RequestParam(required = false) MultipartFile file) {
-		Map<String, Object> map = new HashMap<>();
+	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map,
+			@RequestParam(required = false) MultipartFile img) {
 		map.put("id", id);
-		return ResultGenerator.genSuccessResult(userService.update(map, file));
+		map.remove("password");
+		return ResultGenerator.genSuccessResult(userService.update(map, img));
 	}
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	public Result delete(@PathVariable String id) {
+		return ResultGenerator.genSuccessResult(userService.delete(id));
+	}
+
+	/**
+	 * 添加管理用户
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public Result addAdmin(@RequestBody User user) {
+		return ResultGenerator.genSuccessResult(userService.add(user));
+	}
+
 }

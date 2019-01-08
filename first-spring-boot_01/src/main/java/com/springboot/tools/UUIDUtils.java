@@ -38,6 +38,10 @@ public class UUIDUtils {
 		return result;
 	}
 
+	/**
+	 * 生成订单编号
+	 * @return
+	 */
 	public static String getOrderIdByTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String newDate = sdf.format(new Date());

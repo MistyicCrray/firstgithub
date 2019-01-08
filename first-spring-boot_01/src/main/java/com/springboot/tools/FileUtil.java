@@ -30,11 +30,6 @@ public class FileUtil {
 		FileUtil.uploadFilePath = uploadFilePath;
 	}
 
-	public static void main(String[] args) {
-		String dirName = "d:/zzw/topic/";
-		FileUtil.createDir(dirName);
-	}
-
 	public static String fileUp(MultipartFile file, String filePath, String fileName) {
 		String extName = "";
 		try {
@@ -214,7 +209,7 @@ public class FileUtil {
 				map.put("filePath", fileName + "." + suffix);
 				return map;
 			} else {
-				throw new ServiceException("文件类型不支持?");
+				throw new ServiceException("文件类型不支持");
 			}
 		} else {
 			throw new ServiceException("文件为空");

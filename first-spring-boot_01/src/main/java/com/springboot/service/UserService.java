@@ -23,7 +23,7 @@ public class UserService {
 
 	@Autowired
 	private UserMapper userMapper;
-	
+
 	/**
 	 * 用户注册
 	 * 
@@ -54,7 +54,7 @@ public class UserService {
 	 * @return Map<String,Object>
 	 */
 	public Map<String, Object> login(Map<String, Object> map) {
-
+		System.out.println(map);
 		if (userMapper.findList(map).size() == 0 || userMapper.findList(map) == null) {
 			throw new ServiceException("用户名或密码错误");
 		} else {
@@ -88,6 +88,9 @@ public class UserService {
 		if (file != null) {
 			map.put("img", (String) FileUtil.uploadImage(file).get("filePath"));
 		}
+		if (map.get("password") != null) {
+			map.put("password", MD5.md5(map.get("password").toString()));
+		}
 		return userMapper.update(map);
 	}
 
@@ -106,5 +109,4 @@ public class UserService {
 	public int updateByUser(User user) {
 		return userMapper.updateByPrimaryKey(user);
 	}
-
 }

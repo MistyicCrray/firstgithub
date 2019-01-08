@@ -37,6 +37,12 @@ public class ProductDynaProvider {
 				if (param.get("minPrice") != null) {
 					SET("min_price=#{minPrice}");
 				}
+				if (param.get("updateby") != null) {
+					SET("updateby=#{updateby}");
+				}
+				if (param.get("status") != null) {
+					SET("status=#{status}");
+				}
 				WHERE("proid=#{proid}");
 			}
 		}.toString();

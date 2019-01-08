@@ -26,17 +26,14 @@ public class UserDynaProvider {
 					if (map.get("img") != null) {
 						WHERE("img=#{img}");
 					}
-					if (map.get("create_time") != null) {
-						WHERE("create_time=#{create_time}");
-					}
 					if (map.get("state") != null) {
 						WHERE("state=#{state}");
 					}
 					if (map.get("address") != null) {
 						WHERE("address=#{address}");
 					}
-					if (map.get("phone") != null) {
-						WHERE("phone=#{phone}");
+					if (map.get("tel") != null) {
+						WHERE("tel=#{tel}");
 					}
 					if (map.get("createdate") != null) {
 						WHERE("createdate=#{createdate}");
@@ -52,6 +49,12 @@ public class UserDynaProvider {
 					}
 					if (map.get("activeDate") != null) {
 						WHERE("activeDate=#{activeDate}");
+					}
+					if (map.get("usertype") != null) {
+						WHERE("usertype=#{usertype}");
+					}
+					if (map.get("adreess") != null) {
+						WHERE("adreess=#{adreess}");
 					}
 				}
 			}
@@ -74,20 +77,11 @@ public class UserDynaProvider {
 				if (map.get("img") != null) {
 					SET("img=#{img}");
 				}
-				if (map.get("create_time") != null) {
-					SET("create_time=#{create_time}");
-				}
 				if (map.get("state") != null) {
 					SET("state=#{state}");
 				}
-				if (map.get("address") != null) {
-					SET("address=#{address}");
-				}
 				if (map.get("tel") != null) {
 					SET("tel=#{tel}");
-				}
-				if (map.get("createdate") != null) {
-					SET("createdate=#{createdate}");
 				}
 				if (map.get("loginname") != null) {
 					SET("loginName=#{loginname}");
@@ -95,10 +89,12 @@ public class UserDynaProvider {
 				if (map.get("email") != null) {
 					SET("email=#{email}");
 				}
+				if (map.get("adreess") != null) {
+					SET("adreess=#{adreess}");
+				}
 				if (map.get("lastLoginTime") != null) {
 					SET("lastLoginTime=#{lastLoginTime}");
 				}
-			
 				WHERE("id=#{id}");
 			}
 		}.toString();
