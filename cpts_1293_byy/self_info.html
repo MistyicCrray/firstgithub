@@ -5,10 +5,32 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>小米商城-个人中心</title>
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 	</head>
+	<style type="text/css">
+		.upload_img {
+			position: relative;
+		}
+		
+		#image {
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 95px;
+			width: 100px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 9;
+		}
+		
+		#avatar {
+			height: 95px;
+			width: 100px;
+		}
+	</style>
 
 	<body>
 		<div id="main">
@@ -33,7 +55,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -100,18 +122,6 @@
 						</li>
 					</ul>
 				</div>
-				<div class="search fr">
-					<form action="" method="post">
-						<div class="text fl">
-							<input type="text" class="shuru" placeholder="小米6&nbsp;小米MIX现货">
-						</div>
-						<div class="submit fl">
-							<input type="submit" class="sousuo" value="搜索" />
-						</div>
-						<div class="clear"></div>
-					</form>
-					<div class="clear"></div>
-				</div>
 			</div>
 			<!-- end banner_x -->
 			<!-- self_info -->
@@ -125,13 +135,13 @@
 									<a href="./dingdanzhongxin.html">我的订单</a>
 								</li>
 								<li>
-									<a href="">意外保</a>
+									<a href="">我卖出的</a>
 								</li>
 								<li>
-									<a href="">团购订单</a>
+									<a href="">我买到的</a>
 								</li>
 								<li>
-									<a href="">评价晒单</a>
+									<a href="">我发布的</a>
 								</li>
 							</ul>
 						</div>
@@ -142,62 +152,86 @@
 									<a href="./self_info.html" style="color:#ff6700;font-weight:bold;">我的个人中心</a>
 								</li>
 								<li>
-									<a href="">消息通知</a>
+									<a href="">我卖出的</a>
 								</li>
 								<li>
-									<a href="">优惠券</a>
+									<a href="">我买到的</a>
 								</li>
 								<li>
-									<a href="">收货地址</a>
+									<a href="my_release_product.html">我发布的</a>
+								</li>
+								<li>
+									<a href="address.html">收货地址</a>
 								</li>
 							</ul>
 						</div>
 					</div>
 					<div class="rtcont fr infor">
 						<div class="grzlbt ml40">我的资料</div>
-						<div class="ml40 item" v-if="user.img==null">
-							<span>头像</span>
-							<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
-							<button class="btn btn-danger" v-on:click="uploadImg">上传</button>
-						</div>
-						<div class="ml40 item" v-if="user.img!=null">
-							<span>身份证正面照片</span>
-							<div class="busin_img">
-								<a><img v-bind:src="baseUrl+user.img"><em>点击查看大图</em></a><button class="btn btn-cancel">删除</button>
+						<form id="update" @submit.prevent="editUser">
+							<div class="form-horizontal">
+								<div class="ml40 item upload_img">
+									<input type="file" v-on:change="uploadImg()" name="img" accept="image/png, image/jpeg, image/gif, image/jpg" id="image" />
+									<img v-bind:src="user.img==null?'resource/image/logo_01.png':baseUrl+user.img" id="avatar" />
+								</div>
+								<div class="form-group">
+									<label for="username" class="col-sm-2 control-label">昵称</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" id="username" name="username" placeholder="昵称" v-model="userInfo">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="tel" class="col-sm-2 control-label">手机号</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" id="tel" name="tel" placeholder="手机号" v-model="user.tel">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="email" class="col-sm-2 control-label">邮箱</label>
+									<div class="col-sm-6">
+										<input type="email" class="form-control" id="email" name="email" placeholder="邮箱" v-model="user.email">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="gender" class="col-sm-2 control-label">性别</label>
+									<div class="col-sm-6">
+										<!--<input type="text" class="form-control" id="gender" placeholder="性别" v-model="user.gender">-->
+										<select v-model="user.gender" class="form-control" name="gender">
+											<option value="0">男</option>
+											<option value="1">女</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group center">
+									<label for="inputEmail3" class="col-sm-2 control-label"></label>
+									<div class="col-sm-5">
+										<input type="button" class="form-control" v-on:click="editUser()" value="保存">
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="ml40 item"><span>昵称</span><input class="form-control" type="text" v-model="user.username"></div>
-						<div class="ml40 item"><span>手机号</span><input class="form-control" type="text" v-model="user.tel"></div>
-						<div class=" ml40 item"><span>邮箱</span><input class="form-control" type="text" v-model="user.email"></div>
-						<div class=" ml40 item"><span>性别</span><input class="form-control" type="text" v-model="user.gender"></div>
-						<div class=" ml40 item"><span></span><input class="btn" type="button" v-on:click="editUser" value="保存"></div>
+						</form>
 					</div>
-					<div class="clear"></div>
 				</div>
 			</div>
+			<div class="clear"></div>
+		</div>
+		</div>
 		</div>
 		<!-- self_info -->
 
-		<!--<footer class="mt20 center">
-			<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>-->
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script src="https://huangchanghuan.github.io/city-picker/js/city-picker.data.js"></script>
-		<script type="text/javascript" src="resource/js/city-picker.js"></script>
 		<script>
 			var vue = new Vue({
 				el: "#main",
 				data: {
 					user: {},
 					islogin: sessionStorage.length > 0,
-					baseUrl: '/cpts_1293_byy/',
+					baseUrl: '/images/',
+					userInfo: sessionStorage.username
 				},
 				methods: {
 					getUser: function() {
@@ -205,25 +239,32 @@
 						axios.get('/user/' + sessionStorage.getItem("userId"))
 							.then(function(res) {
 								console.info(res);
-								_this.user = res.data.data.user;
+								_this.user = res.data.data;
 							})
 					},
 					editUser: function() {
 						var _this = this;
-						axios.put('/user/update/' + sessionStorage.getItem("userId"), _this.user).then(function(res) {
-							alert("保存成功");
-							_this.getUser();
-						})
+						axios.put('/user/update/' + sessionStorage.getItem("userId"), $("#update").serialize())
+							.then(function() {
+								alert("修改成功");
+								_this.getUser();
+								sessionStorage.setItem("username", _this.user.username);
+							})
 					},
 					uploadImg: function() {
 						var _this = this;
 						var formData = new FormData();
-						formData.append('file', $('#file')[0].files[0]);
-						axios.put('/user/update/' + sessionStorage.getItem("userId"), formData).then(function(res) {
-							alert("保存成功");
-							_this.getUser();
-						})
-					}
+						formData.append("img", $("#image")[0].files[0]);
+						axios.put('/user/update/' + sessionStorage.getItem("userId"), formData)
+							.then(function() {
+								alert("修改成功");
+								_this.getUser();
+							})
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
 				},
 				created: function() {
 					this.getUser();

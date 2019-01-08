@@ -5,10 +5,10 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>收货地址</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="resource/css/city-picker.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/main.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 	</head>
@@ -41,7 +41,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -152,8 +152,8 @@
 					<div class="rtcont fr">
 						<div class="ddzxbt">上架商品</div>
 						<div style="position: relative;" class="ml40 infor">
-							<div>新增收货地址
-								<form id="addProduct" @submit.prevent="submit">
+							<div>
+								<form id="addProduct">
 									<div class="item"><span>商品名称:</span><input type="text" class="form-control" v-model="product.name" name="name"></div>
 									<div class="item"><span>选择种类</span>
 										<select v-model="product.category" class="form-control" name="category">
@@ -163,12 +163,12 @@
 										</select>
 									</div>
 									<div class="item"><span>单价:</span><input type="text" class="form-control" v-model="product.price" name="price"></div>
-									<div class="item"><span>数量:</span><input type="text" class="form-control" v-model="product.quality"></div>
+									<div class="item"><span>数量:</span><input type="text" class="form-control" v-model="product.quality" name="quality"></div>
 									<div class="item"><span>图片:</span>
 										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
 									</div>
 									<div class="ml40 "><span>详情:</span><textarea class="form-control" id="content" name="detail"></textarea></div>
-									<div class="mt10 item"><button class="btn">上架</button></div>
+									<div class="mt10 item"><button class="btn" v-on:click="submit()">上架</button></div>
 								</form>
 							</div>
 						</div>
@@ -214,13 +214,6 @@
 					<div class="clear"></div>
 				</div>
 			</div>
-			<!-- self_info -->
-
-			<!--<footer class="mt20 center">
-				<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-				<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014] 0059-0009号</div>
-				<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-			</footer>-->
 		</div>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
@@ -229,9 +222,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script src="https://huangchanghuan.github.io/city-picker/js/city-picker.data.js"></script>
-		<script type="text/javascript" src="resource/js/city-picker.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript">
 			//初始化编辑器
@@ -299,6 +289,8 @@
 					submit: function() {
 						var _this = this;
 						var formData = new FormData($("#addProduct")[0]);
+						var content = editor.html(); //获取编辑器内容
+						formData.append("detail", content);
 						axios.post('/product', formData)
 							.then(function(res) {
 								alert("上架成功");
@@ -333,6 +325,10 @@
 							return;
 						}
 						this.getProducts(this.pageNum);
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
 					},
 				},
 				filters: {

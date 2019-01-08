@@ -5,8 +5,89 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>小米6立即购买-小米商城</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/main.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 	</head>
+	<style type="text/css">
+		ul,
+		li {
+			list-style: none;
+		}
+		
+		a {
+			text-decoration: none;
+		}
+		
+		a:hover {
+			cursor: pointer;
+			text-decoration: none;
+		}
+		
+		a:link {
+			text-decoration: none;
+		}
+		
+		img {
+			vertical-align: middle;
+		}
+		
+		.btn-numbox {
+			overflow: hidden;
+			margin-top: 20px;
+		}
+		
+		.btn-numbox li {
+			float: left;
+		}
+		
+		.btn-numbox li .number,
+		.kucun {
+			display: inline-block;
+			font-size: 12px;
+			color: #808080;
+			vertical-align: sub;
+			margin-right: 60px;
+		}
+		
+		.btn-numbox .count {
+			overflow: hidden;
+			margin: 0 16px 0 -20px;
+		}
+		
+		.btn-numbox .count .num-jian,
+		.input-num,
+		.num-jia {
+			display: inline-block;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			text-align: center;
+			font-size: 18px;
+			color: #999;
+			cursor: pointer;
+			border: 1px solid #e6e6e6;
+		}
+		
+		.btn-numbox .count .input-num {
+			width: 40px;
+			height: 26px;
+			color: #333;
+			border-left: 0;
+			border-right: 0;
+		}
+		
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+		}
+		
+		input[type="number"] {
+			-moz-appearance: textfield;
+		}
+	</style>
 
 	<body>
 		<!-- start header -->
@@ -15,44 +96,11 @@
 				<div class="top center">
 					<div class="left fl">
 						<ul>
-							<li>
-								<a href="http://www.mi.com/" target="_blank">小米商城</a>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
 							</li>
-							<li>|</li>
-							<li>
-								<a href="">MIUI</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">米聊</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">游戏</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">多看阅读</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">云服务</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">金融</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">小米商城移动版</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">问题反馈</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">Select Region</a>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
 							</li>
 							<div class="clear"></div>
 						</ul>
@@ -62,18 +110,28 @@
 							<a href="gouwuche.html">购物车</a>
 						</div>
 						<div class="fr">
-							<ul>
+							<ul v-if="islogin">
 								<li>
-									<a href="./login.html" target="_blank">登录</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
-								<li>
-									<a href="./register.html" target="_blank">注册</a>
+								<li v-on:click="logout">
+									<a href="#">
+										</i>退出登录</a>
 								</li>
-								<li>|</li>
 								<li>
 									<a href="">消息通知</a>
 								</li>
+							</ul>
+							<ul v-else>
+								<li>
+									<a href="login.html" target="_blank">登录</a>
+								</li>
+								<li>|</li>
+								<li>
+									<a href="register.html" target="_blank">注册</a>
+								</li>
+								<li>|</li>
 							</ul>
 						</div>
 						<div class="clear"></div>
@@ -126,67 +184,42 @@
 			<!-- end banner_x -->
 
 			<!-- xiangqing -->
-			<form action="post" method="">
-				<div class="xiangqing">
-					<div class="neirong w">
-						<div class="xiaomi6 fl">{{product.name}}</div>
-						<nav class="fr">
-							<li>
-								<a href="">概述</a>
+			<div class="jieshao mt20 w">
+				<div class="left fl"><img v-bind:src="'/images/' + product.img" style="width: 562px;"></div>
+				<div class="right fr">
+					<div class="jiage ml20 mt10">{{product.name}}</div>
+					<div class="jiage ml20 mt10">{{product.price}}元</div>
+					<div class="jiage ml20 mt10">总计：{{product.price * quantity | numFilter}}元</div>
+					<div class="xiadan ml20 mt20">
+						<ul class="btn-numbox">
+							<li><span class="jiage">数量</span></li>
+							<li class="ml20">
+								<ul class="count">
+									<li><span id="num-jian" class="num-jian" v-on:click="minus">-</span></li>
+									<li><input type="number" class="input-num" disabled="" id="input-num" value="0" v-on:input="quantityFilter" v-model="quantity" /></li>
+									<li><span id="num-jia" class="num-jia" v-on:click="add">+</span></li>
+								</ul>
 							</li>
-							<li>|</li>
-							<li>
-								<a href="">变焦双摄</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">设计</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">参数</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">F码通道</a>
-							</li>
-							<li>|</li>
-							<li>
-								<a href="">用户评价</a>
-							</li>
-							<div class="clear"></div>
-						</nav>
-						<div class="clear"></div>
+							<li><span class="kucun">（库存:{{product.quality}}）</span></li>
+						</ul>
+					</div>
+					<div class="xiadan ml20 mt20">
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="account" value="立即选购" />
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addCart" value="加入购物车" />
 					</div>
 				</div>
-
-				<div class="jieshao mt20 w">
-					<div class="left fl"><img src="./image/liebiao_xiaomi6.jpg"></div>
-					<div class="right fr">
-						<div class="h3 ml20 mt20">{{product.name}}</div>
-						<div class="jiage ml20 mt10">{{product.price}}元</div>
-						<div class="xiadan ml20 mt20">
-							<input class="jrgwc" type="button" name="jrgwc" v-on:click="account" value="立即选购" />
-							<input class="jrgwc" type="button" name="jrgwc" v-on:click="addCart" value="加入购物车" />
-						</div>
-						<div class="jianjie mr40 ml20 mt10"><p id="detail"></p></div>
-					</div>
-					<div class="clear"></div>
+				<div class="clear"></div>
+				<div class="jianjie mr40 ml20 mt10">
+					<p id="detail"></p>
 				</div>
-			</form>
-			<!-- footer -->
-			<footer class="mt20 center">
-
-				<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-				<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-				<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-
-			</footer>
+			</div>
 		</div>
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script>
 			var id = GetQueryString("id");
@@ -194,29 +227,68 @@
 				el: "#main",
 				data: {
 					product: {},
-					cart: {}
+					cart: {},
+					islogin: sessionStorage.length > 0,
+					user: sessionStorage,
+					quantity: 0
 				},
 				created: function() {
 					var _this = this;
 					axios.get('/product/' + id).then(function(res) {
-						console.info(res);
 						_this.product = res.data.data;
-						document.getElementById("detail").innerHTML = res.data.data.detail;						
+						document.getElementById("detail").innerHTML = res.data.data.detail;
 					})
 				},
 				methods: {
 					addCart: function() {
 						var _this = this;
+						if(_this.quantity == 0) {
+							alert("请选择数量");
+							return;
+						}
 						_this.cart.productid = id;
-						_this.cart.quantity = 1;
+						_this.cart.quantity = _this.quantity;
 						_this.cart.total = _this.product.price * _this.cart.quantity;
 						axios.post('/shoppingCart', _this.cart).then(function(res) {
 							alert("添加成功");
 						})
 					},
 					account: function() {
-						var _this =this;
-						location.href="comfirm_order.html?proid=" + _this.product.proid + "&quantity=" + 2;
+						var _this = this;
+						if(_this.quantity == 0) {
+							alert("请选择数量");
+							return;
+						}
+						location.href = "comfirm_order.html?proid=" + _this.product.proid + "&quantity=" + _this.quantity;
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					add: function() {
+						var _this = this;
+						_this.quantity++;
+						if(_this.quantity > _this.product.quality) {
+							_this.quantity = _this.product.quality
+						}
+					},
+					minus: function() {
+						var _this = this;
+						if(_this.quantity > 0) {
+							_this.quantity--;
+						}
+					},
+					quantityFilter: function() {
+						var _this = this;
+						if(_this.quantity < 0) {
+							_this.quantity = 0;
+						}
+					}
+				},
+				filters: {
+					numFilter: function(value) { // 截取当前数据到小数点后两位
+						let realVal = Number(value).toFixed(2);   // num.toFixed(2)获取的是字符串
+						return Number(realVal);
 					}
 				}
 			})

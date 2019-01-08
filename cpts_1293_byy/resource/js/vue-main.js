@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 					//        });
 
 					logout();
-					parent.location.href = "../../login.html?returnUrl=" + top.location.href;
+					parent.location.href = "login.html?returnUrl=" + top.location.href;
 					break;
 
 				default:

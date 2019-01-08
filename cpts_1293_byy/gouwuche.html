@@ -5,12 +5,20 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>我的购物车-小米商城</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<script src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
 	</head>
+
+	<style type="text/css">
+		#productImg {
+			height: 120px;
+			width: 120px;
+		}
+	</style>
 
 	<body>
 		<!-- start header -->
@@ -28,7 +36,7 @@
 				<div class="dlzc fr">
 					<ul v-if="islogin">
 						<li>
-							<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+							<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 						</li>
 						<li>|</li>
 						<li v-on:click="logout">
@@ -53,14 +61,12 @@
 			<div class="gwcxqbj">
 				<div class="gwcxd center">
 					<div class="top2 center">
-						<div class="sub_top fl">
-							<input type="checkbox" value="quanxuan" class="quanxuan" />全选
-						</div>
+						<div class="sub_top fl"></div>
 						<div class="sub_top fl">商品名称</div>
 						<div class="sub_top fl">单价</div>
 						<div class="sub_top fl">数量</div>
 						<div class="sub_top fl">小计</div>
-						<div class="sub_top fr">操作</div>
+						<div class="sub_top fl">操作</div>
 						<div class="clear"></div>
 					</div>
 					<div class="content2 center" v-for="(item,index) in shoppingCarts">
@@ -68,17 +74,22 @@
 							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" checked="checked" v-if="item.ischeck=='0'" />
 							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" v-if="item.ischeck=='1'" />
 						</div>
-						<div class="sub_content fl"><img src="./image/gwc_xiaomi6.jpg"></div>
-						<div class="sub_content fl ft20">{{item.name}}</div>
+						<div class="sub_content fl"><img id="productImg" v-bind:src="'/images/' + item.img"></div>
+						<div class="sub_content fl">
+							<a v-bind:href="'xiangqing.html?id=' + item.proid">{{item.name}}</a>
+						</div>
 						<div class="sub_content fl ">{{item.price}}元</div>
 						<div class="sub_content fl">
-							<input class="shuliang" type="number" v-on:input="updateCart(item.cartid,item.quantity,item.price)" v-model="item.quantity" step="1" min="1">
+							<input class="shuliang" type="number" v-on:input="updateCart(item.proid,item.cartid,item.quantity,item.price)" v-model="item.quantity" step="1" min="1">
 						</div>
 						<div class="sub_content fl">{{item.total}}元</div>
 						<div class="sub_content fl">
-							<a href="#" v-on:click="delCart(item.cartid)">×</a>
+							<a href="javascript:void(0)" v-on:click="delCart(item.cartid)">×</a>
 						</div>
 						<div class="clear"></div>
+					</div>
+					<div v-if="shoppingCarts==''" class="content2 center">
+						<h1 class="center">您的购物车空空如也</h1>
 					</div>
 				</div>
 				<div class="jiesuandan mt20 center">
@@ -94,23 +105,16 @@
 					</div>
 					<div class="jiesuan fr">
 						<div class="jiesuanjiage fl">合计（不含运费）：<span>{{total}}元</span></div>
-						<div class="jsanniu fr"><input class="jsan" type="button" name="jiesuan" v-on:click="account" value="去结算" v-if="ischeck>0" /></div>
-						<div class="jsanniu fr"><input class="jsan" type="button" name="jiesuan" value="去结算" v-if="ischeck<=0" /></div>
+						<div class="jsanniu fr"><input class="btn" type="button" name="jiesuan" v-on:click="account" value="去结算" v-if="ischeck>0" /></div>
+						<div class="jsanniu fr"><input class="btn" disabled="disabled" type="button" name="jiesuan" value="去结算" v-if="ischeck<=0" /></div>
 						<div class="clear"></div>
 					</div>
 					<div class="clear"></div>
 				</div>
-
 			</div>
 		</div>
 
-		<!-- footer -->
-		<footer class="center">
-
-			<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
@@ -122,7 +126,7 @@
 				data: {
 					shoppingCarts: "",
 					productNum: '',
-					total: 0,
+					total: 0.00,
 					ischeck: 0,
 					inputPage: '',
 					current: 0,
@@ -158,13 +162,14 @@
 							})
 						}
 					},
-					updateCart: function(id, quantity, price) {
+					updateCart: function(proid, id, quantity, price) {
 						var _this = this;
 						if(quantity == "" || quantity == null || quantity == undefined) {
 							quantity = 1;
 						}
 						var total = quantity * price;
 						var params = new URLSearchParams();
+						params.append("proid", proid);
 						params.append("cartid", id);
 						params.append("quantity", quantity);
 						params.append("total", total);
@@ -197,7 +202,7 @@
 						location.href = "login.html";
 					},
 					account: function() {
-						location.href="comfirm_order.html";
+						location.href = "comfirm_order.html";
 					}
 				}
 			})

@@ -4,11 +4,11 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
+		<title>去哪儿买商城</title>
 		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
-		<title>去哪儿买商城</title>
-		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 	</head>
 
 	<body>
@@ -34,7 +34,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -132,10 +132,10 @@
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
-							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="item.img" alt=""></a>
+							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
-							<a href="">{{item.name}}</a>
+							<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
 						</div>
 						<div class="youhui">暂无优惠</div>
 						<div class="jiage">{{item.price}}元</div>
@@ -269,13 +269,9 @@
 					</div>
 				</div>
 			</div>
-			<footer class="mt20 center">
-				<div class="mt20">小米商城|MIUI|米聊|多看书城|小米路由器|视频电话|小米天猫店|小米淘宝直营店|小米网盟|小米移动|隐私政策|Select Region</div>
-				<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-				<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-			</footer>
 		</div>
 
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>

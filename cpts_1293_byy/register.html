@@ -5,6 +5,8 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>用户注册</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/login.css">
 	</head>
@@ -27,7 +29,7 @@
 							</div>
 							<div class="username">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;&nbsp;<input class="shurukuang" v-model="inputtext.password" type="password" placeholder="请输入你的密码" /><span>请输入6位以上字符</span></div>
 
-							<div class="username">确认密码:&nbsp;&nbsp;<input class="shurukuang" type="password" placeholder="请确认你的密码" id="confirmPassword"/><span>两次密码要输入一致哦</span></div>
+							<div class="username">确认密码:&nbsp;&nbsp;<input class="shurukuang" type="password" placeholder="请确认你的密码" id="confirmPassword" /><span>两次密码要输入一致哦</span></div>
 							<div class="username">手&nbsp;&nbsp;机&nbsp;&nbsp;号:&nbsp;&nbsp;<input class="shurukuang" type="text" v-model="inputtext.tel" placeholder="请填写正确的手机号" /><span>填写下手机号吧，方便我们联系您！</span>
 							</div>
 						</div>
@@ -42,10 +44,7 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript">
-			axios.defaults.baseURL = 'http://localhost:8080';
 			var vm = new Vue({
 				el: "#main",
 				data: {
@@ -58,6 +57,10 @@
 							alert("邮箱不能为空");
 							return false;
 						}
+						if(!_this.email(_this.inputtext.loginname)) {
+							alert("邮箱格式不正确");
+							return;
+						}
 						if(_this.inputtext.password == null || _this.inputtext.password == "") {
 							alert("密码不能为空");
 							return false;
@@ -67,14 +70,22 @@
 							return false;
 						}
 						if(_this.inputtext.password != $("#confirmPassword").val()) {
-							alert("密码与验证码不一致");
+							alert("密码与验证密码不一致");
 							return false;
 						}
-						console.info(_this.inputtext);
 						axios.post('/user', _this.inputtext)
 							.then(function(res) {
-								alert('注册成功');
+								alert('注册成功，激活链接已发往邮箱，请前往邮箱激活，链接有效期48小时');
+								window.location = "login.html"
 							})
+					},
+					verifyEmail: function(value) {
+						mailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+						if(mailReg.test(value)) {
+							return true;
+						} else {
+							return false;
+						}
 					}
 				}
 			})

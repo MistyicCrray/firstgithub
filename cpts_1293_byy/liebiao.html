@@ -5,6 +5,8 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>小米手机列表</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 	</head>
@@ -33,7 +35,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -80,9 +82,12 @@
 			<div class="danpin center">
 				<div class="main center">
 					<div class="row">
+						<div class="col-md-1" v-for=""></div>
+					</div>
+					<div class="row">
 						<div class="col-md-3" v-for="item in products">
 							<div class="thumbnail">
-								<a v-bind:href="'xiangqing.html?id='+item.proid"><img src="resource/image/pinpai4.png" alt=""></a>
+								<a v-bind:href="'xiangqing.html?id='+item.proid"><img v-bind:src="'/images/' + item.img" alt=""></a>
 								<div class="caption">
 									<a class="h3" v-bind:href="'xiangqing.html?id='+item.proid">{{item.name}}</a>
 									<p class="h3">{{item.price}}元</p>
@@ -118,6 +123,7 @@
 		</footer>-->
 		</div>
 		<!-- end danpin -->
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
@@ -176,7 +182,11 @@
 							return;
 						}
 						this.getProducts(this.pageNum);
-					}
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
 				},
 				created: function() {
 					this.getProducts();

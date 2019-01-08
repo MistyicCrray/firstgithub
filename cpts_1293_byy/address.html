@@ -5,11 +5,13 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
 		<title>收货地址</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="resource/css/city-picker.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/main.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/city-picker.css">
 	</head>
 	<style type="text/css">
 		.jiesuandan {
@@ -40,7 +42,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="#"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -151,21 +153,56 @@
 					<div class="rtcont fr">
 						<div class="ddzxbt">收货地址</div>
 						<div style="position: relative;" class="ml40 infor">
-							<div>新增收货地址
-								<div class="item"><span>地址信息:</span>
-									<div style="position: relative;">
-										<input readonly type="text" data-toggle="city-picker" id="addr" placeholder="点击从下拉面板中选择省/市/区县/镇">
+							<div data-toggle="distpicker" class="form-inline mb20 ml160 mt20">
+								<div class="form-group">
+									<label class="sr-only" for="province">Province</label>
+									<select class="form-control" id="province" v-model="inputtext.province"></select>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="city">City</label>
+									<select class="form-control" id="city" v-model="inputtext.city"></select>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="district">District</label>
+									<select class="form-control" id="district" v-model="inputtext.region"></select>
+								</div>
+							</div>
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label for="address" class="col-sm-2 control-label">详细地址:</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" id="address" placeholder="详细地址" v-model="inputtext.address">
 									</div>
 								</div>
-								<div class="item"><span>详细地址:</span><input type="text" class="form-control" v-model="inputtext.address" placeholder="详细地址"></div>
-								<div class="item"><span>邮政编码:</span><input type="text" class="form-control" v-model="inputtext.postal" placeholder="邮政编码"></div>
-								<div class="item"><span>收货人姓名:</span><input type="text" class="form-control" v-model="inputtext.consignee" placeholder="收货人姓名"></div>
-								<div class="item"><span>手机号码:</span><input type="text" class="form-control" v-model="inputtext.phone" placeholder="手机号码"></div>
-								<div class="item"><button class="btn" v-on:click="addAddress">保存</button></div>
+								<div class="form-group">
+									<label for="postal" class="col-sm-2 control-label">邮政编码:</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" id="postal" placeholder="邮政编码" v-model="inputtext.postal">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="consignee" class="col-sm-2 control-label">收货人姓名:</label>
+									<div class="col-sm-6">
+										<input type="email" class="form-control" id="consignee" placeholder="收货人姓名" v-model="inputtext.consignee">
+									</div>
+								</div>
+								<div class="form-group mt20">
+									<label for="phone" class="col-sm-2 control-label">手机号码:</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" id="phone" placeholder="手机号码" v-model="inputtext.phone">
+										</select>
+									</div>
+								</div>
+								<div class="form-group center">
+									<label for="inputEmail3" class="col-sm-2 control-label"></label>
+									<div class="col-sm-5">
+										<input type="button" class="form-control btn-default" v-on:click="addAddress" value="保存">
+									</div>
+								</div>
 							</div>
 						</div>
 						<div style="margin-top: 50px;">
-							<table v-if="address!=null">
+							<table v-if="address!=''">
 								<tr>
 									<td>收货人</td>
 									<td>所在地区 </td>
@@ -182,7 +219,7 @@
 									<td>{{item.postal}}</td>
 									<td>{{item.phone}}</td>
 									<td>
-										<a href="javascript:void(0)" v-on:click="edit()">修改</a>&nbsp;&nbsp;&nbsp;
+										<a href="javascript:void(0)" v-on:click="editAddress(item.addrid)">修改</a>&nbsp;&nbsp;&nbsp;
 										<a href="javascript:void(0)" v-on:click="del(item.addrid)">删除</a>
 									</td>
 									<td>
@@ -198,12 +235,14 @@
 			</div>
 		</div>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script src="resource/js/bootstrap.min.js"></script>
+		<script src="resource/js/distpicker.data.js"></script>
+		<script src="resource/js/distpicker.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script src="https://huangchanghuan.github.io/city-picker/js/city-picker.data.js"></script>
-		<script type="text/javascript" src="resource/js/city-picker.js"></script>
+		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript">
 			var vue = new Vue({
 				el: "#main",
@@ -213,7 +252,6 @@
 					total: 0,
 					inputtext: {},
 					address: ""
-
 				},
 				created: function() {
 					this.search();
@@ -228,11 +266,21 @@
 					},
 					addAddress: function() {
 						var _this = this;
-						var str = $("#addr").val();
-						var address = str.split("/")
-						_this.inputtext.province = address[0];
-						_this.inputtext.city = address[1];
-						_this.inputtext.region = address[2];
+						if($("#address").val() == "" || $("#address").val() == null) {
+							alert("请填写详细地址");
+							return;
+						}
+						if($("#consignee").val() == "" || $("#consignee").val() == null) {
+							alert("请填写收货人姓名");
+							return;
+						}
+						if($("#phone").val() == "" || $("#phone").val() == null) {
+							alert("请填写手机号码");
+							return;
+						}
+						if($("#postal").val() == "" || $("#postal").val() == null) {
+							_this.inputtext.postal = '000000';
+						}
 						axios.post('/address', _this.inputtext)
 							.then(function(res) {
 								alert("保存成功");
@@ -255,13 +303,33 @@
 					setDefault: function(eve) {
 						var _this = this;
 						if(confirm("是否设置此地址为默认地址？")) {
-							axios.put('/address?status=0&' + 'addrid=' + eve)
+							axios.put('/address/' + eve, {
+									status: "0",
+								})
 								.then(function(res) {
-									alert("修改成功");
+									alert("设置成功");
 									_this.search();
 								})
 						}
-					}
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					editAddress: function(addrid) {
+						layer.open({
+							type: 2,
+							title: '修改地址信息',
+							shadeClose: true,
+							scrollbar: true,
+							closeBtn: 1,
+							area: ['800px', '450px'],
+							content: ['editAddress.html?addrid=' + addrid],
+							end: function() {
+								location.href = "address.html";
+							}
+						})
+					},
 				}
 			})
 		</script>
