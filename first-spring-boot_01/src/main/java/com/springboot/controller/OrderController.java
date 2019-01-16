@@ -1,6 +1,7 @@
 package com.springboot.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.springboot.entity.Address;
 import com.springboot.entity.Order;
+import com.springboot.entity.Product;
 import com.springboot.entity.User;
+import com.springboot.service.AddressService;
 import com.springboot.service.OrderService;
+import com.springboot.service.ProductService;
+import com.springboot.service.UserService;
 import com.springboot.tools.CurrentUser;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
@@ -29,6 +35,15 @@ public class OrderController {
 
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private AddressService addressService;
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 添加订单
@@ -102,7 +117,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 删除
+	 * 查询
 	 * 
 	 * @Title: findById
 	 * @Description: TODO
@@ -112,10 +127,28 @@ public class OrderController {
 	 * @author hlx
 	 * @date 2018年11月19日下午3:38:30
 	 */
-	@LoginRequired
+//	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public Result findById(@PathVariable String id, @CurrentUser User user) {
-		return ResultGenerator.genSuccessResult(orderService.findById(id));
+	public Result findById(@PathVariable String id) {
+		Order order = orderService.findById(id);
+		Product product = productService.findById(order.getProductid());
+		User sell = userService.findById(order.getSellid()); // 卖家
+		User buy = userService.findById(order.getUserid()); // 买家
+		Address address = addressService.findById(order.getAddressId());
+
+		Map<String, Object> orderMap = new HashMap<String, Object>();
+		orderMap.put("product", product);
+		orderMap.put("sell", sell);
+		orderMap.put("buy", buy);
+		orderMap.put("address", address);
+		orderMap.put("order", order);
+
+		return ResultGenerator.genSuccessResult(orderMap);
+	}
+
+	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+	public Result findListBy(Map<String, Object> map) {
+		return ResultGenerator.genSuccessResult(orderService.findListBy(map));
 	}
 
 }

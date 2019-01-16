@@ -11,10 +11,10 @@
 	<body>
 		<div id="main">
 			<div class="rtcont fr">
-				<div class="ddzxbt">上架商品</div>
+				<div class="ddzxbt">修改商品</div>
 				<div style="position: relative;" class="ml40 infor">
 					<div>
-						<form id="addProduct" @submit.prevent="submit">
+						<form id="addProduct">
 							<div class="item"><span>商品名称:</span><input type="text" class="form-control" v-model="product.name" name="name"></div>
 							<div class="item"><span>选择种类</span>
 								<select v-model="product.category" class="form-control" name="category">
@@ -34,7 +34,7 @@
 								</div>
 							</div>
 							<div class="ml40 "><span>详情:</span><textarea class="form-control" id="content" name="detail"></textarea></div>
-							<div class="mt10 item"><button class="btn">上架</button></div>
+							<div class="mt10 item"><button type="button" v-on:click="submit" class="btn">上架</button></div>
 						</form>
 					</div>
 				</div>
@@ -48,8 +48,6 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
-		<script src="https://huangchanghuan.github.io/city-picker/js/city-picker.data.js"></script>
-		<script type="text/javascript" src="resource/js/city-picker.js"></script>
 		<script>
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　
@@ -79,6 +77,15 @@
 						axios.get('/category')
 							.then(function(res) {
 								_this.categories = res.data.data.rows;
+							})
+					},
+					submit: function() {
+						var _this = this;
+						axios.get('/product/' + id, $("#addProduct").serialize())
+							.then(function(res) {
+								alert("修改成功");
+								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+								parent.layer.close(index); // 关闭layer
 							})
 					},
 				},

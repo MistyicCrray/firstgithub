@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+	</head>
+
+	<body>
+		<div id="main">
+			<form id="edit">
+				<div style="position: relative;" class="ml40 infor">
+					<div data-toggle="distpicker" class="form-inline mb20 ml160" id="target">
+						<div class="form-group">
+							<label class="sr-only" for="province"></label>
+							<select class="form-control" id="province" v-bind:value="inputtext.province" name="province">
+								<option>{{inputtext.province}}</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="city"></label>
+							<select class="form-control" id="city" v-bind:value="inputtext.city" name="city">
+								<option>{{inputtext.city}}</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="district"></label>
+							<select class="form-control" id="district" v-bind:value="inputtext.region" name="region">
+								<option>{{inputtext.region}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label for="address" class="col-sm-2 control-label">详细地址:</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="address" placeholder="详细地址" v-model="inputtext.address" name="address">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="postal" class="col-sm-2 control-label">邮政编码:</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="postal" placeholder="邮政编码" v-model="inputtext.postal" name="postal">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="consignee" class="col-sm-2 control-label">收货人姓名:</label>
+							<div class="col-sm-6">
+								<input type="email" class="form-control" id="consignee" placeholder="收货人姓名" v-model="inputtext.consignee" name="consignee">
+							</div>
+						</div>
+						<div class="form-group mt20">
+							<label for="phone" class="col-sm-2 control-label">手机号码:</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="phone" placeholder="手机号码" v-model="inputtext.phone" name="phone">
+								</select>
+							</div>
+						</div>
+						<div class="form-group center">
+							<label for="inputEmail3" class="col-sm-2 control-label"></label>
+							<div class="col-sm-5">
+								<input type="button" class="form-control btn-default" v-on:click="update()" value="保存">
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript" src="resource/js/layer.js"></script>
+		<script src="resource/js/distpicker.data.js"></script>
+		<script src="resource/js/distpicker.js"></script>
+		<script type="text/javascript">
+			var addrid = GetQueryString("addrid");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					inputtext: {},
+				},
+				methods: {
+					update: function() {
+						var _this = this;
+						axios.put("/address/" + addrid, _this.inputtext)
+							.then(function(res) {
+								console.info(_this.inputtext);
+								alert("保存成功");
+								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+								parent.layer.close(index); // 关闭layer
+							})
+					}
+				},
+				created: function() {
+					var _this = this;
+					axios.get("/address/" + addrid)
+						.then(function(res) {
+							_this.inputtext = res.data.data;
+						})
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>邮箱激活</title>
+	</head>
+
+	<body>
+		<div id="app">
+
+		</div>
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script>
+			var activeCode = GetQueryString("activeCode");
+			var userId = GetQueryString("id");
+			var vue = new Vue({
+				el: "#app",
+				data: {
+
+				},
+				methods: {
+					active: function() {
+						axios.get('/user/active/' + userId + '/' + activeCode)
+							.then(function(res) {
+								alert("邮箱激活成功");
+								console.info(res);
+								location.href="login.html";
+							})
+					}
+				},
+				created: function() {
+					this.active();
+				}
+			})
+		</script>
+	</body>
+
+</html>
