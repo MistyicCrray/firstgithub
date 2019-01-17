@@ -68,4 +68,8 @@ public class ProductService {
 		return 0;
 	}
 
+	public List<Product> searchList(String key) {
+		return productMapper.search(key);
+	}
+
 }

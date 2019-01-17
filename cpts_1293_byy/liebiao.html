@@ -134,6 +134,7 @@
 
 		<script type="text/javascript">
 			var id = GetQueryString("cateid");
+			var search = GetQueryString("search");
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -150,19 +151,31 @@
 					getProducts: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
-						axios.get('/product', {
-								params: {
-									cateid: id = null ? "" : id,
-									pageNum: pageIndex,
-									size: _this.pageSize
-								}
-							})
-							.then(function(res) {
-								_this.products = res.data.data.rows;
-								_this.pageNum = pageIndex;
-								_this.total = res.data.data.total;
-								_this.pages = Math.ceil(_this.total / _this.pageSize);
-							})
+						if(id != null) {
+							axios.get('/product', {
+									params: {
+										cateid: id = "" ? null : id,
+										pageNum: pageIndex,
+										size: _this.pageSize
+									}
+								})
+								.then(function(res) {
+									_this.products = res.data.data.rows;
+									_this.pageNum = pageIndex;
+									_this.total = res.data.data.total;
+									_this.pages = Math.ceil(_this.total / _this.pageSize);
+								});
+						} else {
+							console.info(search)
+							axios.post('/search?keyword=' + search + "&pageNum=" + pageIndex + "&size=" + _this.pageSize)
+								.then(function(res) {
+									_this.products = res.data.data.rows;
+									_this.pageNum = pageIndex;
+									_this.total = res.data.data.total;
+									_this.pages = Math.ceil(_this.total / _this.pageSize);
+								})
+						}
+
 					},
 					pageClick: function(page) {
 						this.getProducts(page);

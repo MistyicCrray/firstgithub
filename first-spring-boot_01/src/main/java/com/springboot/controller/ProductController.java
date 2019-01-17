@@ -123,9 +123,6 @@ public class ProductController {
 	@RequestMapping(value = "/buy/{addrid}", method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map,
 			@PathVariable(value = "addrid") String addrid) {
-		
-		
-		
 		for (Map<String, Object> productMap : map) {
 			Map<String, Integer> integerMap = new HashMap<>();
 			integerMap.put("quality", (Integer) productMap.get("quality"));
@@ -153,9 +150,9 @@ public class ProductController {
 			Product product = productService.findById((String) productMap.get("proid"));
 			// 购买时生成订单
 			Order order = new Order();
+			order.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
 			order.setSellid(product.getUserid()); // 卖家Id
 			order.setUserid(user.getId()); // 买家Id
-			order.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
 			order.setCreateTime(new Date()); // 下单日期
 			order.setStatus("0");
 			order.setQuantity(Integer.parseInt(string)); // 数量

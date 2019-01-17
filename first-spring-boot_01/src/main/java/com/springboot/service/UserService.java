@@ -54,7 +54,6 @@ public class UserService {
 	 * @return Map<String,Object>
 	 */
 	public Map<String, Object> login(Map<String, Object> map) {
-		System.out.println(map);
 		if (userMapper.findList(map).size() == 0 || userMapper.findList(map) == null) {
 			throw new ServiceException("用户名或密码错误");
 		} else {

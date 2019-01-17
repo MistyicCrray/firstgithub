@@ -40,6 +40,7 @@ public class UUIDUtils {
 
 	/**
 	 * 生成订单编号
+	 * 
 	 * @return
 	 */
 	public static String getOrderIdByTime() {
@@ -51,5 +52,19 @@ public class UUIDUtils {
 			result += random.nextInt(10);
 		}
 		return newDate + result;
+	}
+
+	/**
+	 * 生成6位随机数字
+	 * @return
+	 */
+	public static String getActiveCode() {
+		// 生成六位数字验证码
+		String activeCode = "";
+		activeCode += (int) (Math.random() * 9 + 1);
+		for (int i = 0; i < 5; i++) {
+			activeCode += (int) (Math.random() * 10);
+		}
+		return activeCode;
 	}
 }

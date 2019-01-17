@@ -145,4 +145,26 @@ public interface ProductMapper {
 
 	@UpdateProvider(type = com.springboot.entity.dyna.ProductDynaProvider.class, method = "updateProvider")
 	Integer update(Map<String, Object> map);
+
+	@Results({ @Result(column = "proid", property = "proid", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "category", property = "category", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "price", property = "price", jdbcType = JdbcType.DOUBLE),
+			@Result(column = "detail", property = "detail", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "createdate", property = "createdate", jdbcType = JdbcType.TIMESTAMP),
+			@Result(column = "updatedate", property = "updatedate", jdbcType = JdbcType.TIMESTAMP),
+			@Result(column = "createby", property = "createby", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "updateby", property = "updateby", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "color", property = "color", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "img", property = "img", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "hits", property = "hits", jdbcType = JdbcType.INTEGER),
+			@Result(column = "min_price", property = "minPrice", jdbcType = JdbcType.REAL),
+			@Result(column = "faver", property = "faver", jdbcType = JdbcType.INTEGER),
+			@Result(column = "status", property = "status", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "sellpoint", property = "sellpoint", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "max_price", property = "maxPrice", jdbcType = JdbcType.REAL),
+			@Result(column = "quality", property = "quality", jdbcType = JdbcType.INTEGER) })
+	@SelectProvider(type = com.springboot.entity.dyna.ProductDynaProvider.class, method = "searchList")
+	List<Product> search(String key);
 }

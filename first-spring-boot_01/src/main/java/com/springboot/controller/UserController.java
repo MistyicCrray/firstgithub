@@ -35,6 +35,7 @@ import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.SendEmailUtil;
 import com.springboot.tools.ServiceException;
 import com.springboot.tools.TableData;
+import com.springboot.tools.UUIDUtils;
 
 @RestController
 @RequestMapping("/user")
@@ -74,12 +75,7 @@ public class UserController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result insertUser(@RequestBody User user, @RequestParam(required = false) MultipartFile file)
 			throws MessagingException {
-		// 生成六位数字验证码
-		String activeCode = "";
-		activeCode += (int) (Math.random() * 9 + 1);
-		for (int i = 0; i < 5; i++) {
-			activeCode += (int) (Math.random() * 10);
-		}
+		String activeCode = UUIDUtils.getActiveCode();
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DATE, 2); // 存入过期时间
 		if (!user.getLoginname().matches("^\\w+@(\\w+\\.)+\\w+$")) {
@@ -109,7 +105,7 @@ public class UserController {
 				return ResultGenerator.genSuccessResult("success");
 			}
 		}
-		user.setId(com.springboot.tools.UUIDUtils.get16UUID());
+		user.setId(UUIDUtils.get16UUID());
 		user.setActivecode(activeCode);
 		user.setActivedate(now.getTime()); // 存入过期时间,两天后过期
 		user.setState("4"); // 未激活状态
@@ -174,14 +170,18 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public Result updatePwd(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map) {
 		map.put("id", id);
+		User user = userService.findById(id);
 		String oldPassword = (String) map.get("oldPassword");
 		String newPassword = (String) map.get("newPassword");
 		String confirmPassword = (String) map.get("confirmPassword");
+		if (!MD5.md5(oldPassword).equals(user.getPassword())) {
+			return ResultGenerator.genFailResult("输入的密码不正确");
+		}
 		if (!newPassword.equals(confirmPassword)) {
-			return ResultGenerator.genSuccessResult("两次输入密码不一致");
+			return ResultGenerator.genFailResult("两次输入密码不一致");
 		}
 		if (newPassword.equals(oldPassword)) {
-			return ResultGenerator.genSuccessResult("新密码和旧密码不能相同");
+			return ResultGenerator.genFailResult("新密码和旧密码不能相同");
 		}
 		map.put("password", MD5.md5(newPassword));
 		userService.updatePassword(map);
@@ -275,7 +275,21 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result addAdmin(@RequestBody User user) {
+		user.setUsertype("admin");
 		return ResultGenerator.genSuccessResult(userService.add(user));
+	}
+
+	/**
+	 * 重置密码
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/reset/{id}", method = RequestMethod.POST)
+	public Result resetPwd(@PathVariable String id) {
+		User user = userService.findById(id);
+		user.setPassword(MD5.md5("123456"));
+		return ResultGenerator.genSuccessResult(userService.updateByUser(user));
 	}
 
 }

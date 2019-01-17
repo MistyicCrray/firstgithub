@@ -89,4 +89,16 @@ public class ProductDynaProvider {
 			}
 		}.toString();
 	}
+
+	public String searchList(String key) {
+		return new SQL() {
+			{
+				SELECT("*");
+				FROM("product");
+				WHERE("proid LIKE '%" + key + "%' OR" + " name LIKE '%" + key
+						+ "%' OR category=(SELECT ID FROM CATEGORY WHERE name LIKE '%" + key + "%') OR detail LIKE '%"
+						+ key + "%'");
+			}
+		}.toString();
+	}
 }

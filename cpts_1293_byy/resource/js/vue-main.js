@@ -67,11 +67,10 @@ function logout() {
 	localStorage.clear();
 }
 
-function GetQueryString(name) {
-	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-	var r = window.location.search.substr(1).match(reg);
-	if(r != null) return unescape(r[2]);
-	return null;
+function GetQueryString(key) {
+	var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+	var result = window.location.search.substr(1).match(reg);
+	return result ? decodeURIComponent(result[2]) : null;
 }
 
 /*点击小图弹出大图*/

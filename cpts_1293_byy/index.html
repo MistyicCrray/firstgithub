@@ -86,12 +86,12 @@
 					</ul>
 				</div>
 				<div class="search fr">
-					<form action="" method="post">
+					<form>
 						<div class="text fl">
-							<input type="text" class="shuru" placeholder="小米6&nbsp;小米MIX现货">
+							<input type="text" class="shuru" placeholder="" v-model="search">
 						</div>
 						<div class="submit fl">
-							<input type="submit" class="sousuo" value="搜索" />
+							<input type="button" v-on:click="searchForm" class="sousuo" value="搜索" />
 						</div>
 						<div class="clear"></div>
 					</form>
@@ -291,7 +291,8 @@
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
 					categories: "",
-					carts: ""
+					carts: "",
+					search: ''
 				},
 				created: function() {
 					this.getProduct();
@@ -359,6 +360,9 @@
 							return;
 						}
 						this.getProduct(this.pageNum);
+					},
+					searchForm: function() {
+						location.href = "liebiao.html?search=" + this.search;
 					}
 				},
 				mounted: function() {

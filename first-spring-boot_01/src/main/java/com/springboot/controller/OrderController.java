@@ -147,8 +147,21 @@ public class OrderController {
 	}
 
 	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-	public Result findListBy(Map<String, Object> map) {
-		return ResultGenerator.genSuccessResult(orderService.findListBy(map));
+	public Result findListBy(@PathVariable String id) {
+		Order order = orderService.findById(id);
+		Address address = addressService.findById(order.getAddressId()); // 地址信息
+		Product product = productService.findById(order.getProductid()); // 商品信息
+		User seller = userService.findById(order.getSellid()); // 卖家信息
+		User buyer = userService.findById(order.getUserid()); // 买家信息
+		buyer.setPassword("");
+		seller.setPassword("");
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("order", order);
+		resultMap.put("address", address);
+		resultMap.put("product", product);
+		resultMap.put("seller", seller);
+		resultMap.put("buyer", buyer);
+		return ResultGenerator.genSuccessResult(resultMap);
 	}
 
 }

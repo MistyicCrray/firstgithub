@@ -144,6 +144,19 @@
 								</tr>
 							</table>
 						</div>
+						<div class="ddzxbt">选择支付银行</div>
+						<div style="margin-top: 50px;">
+							<table>
+								<tr>
+									<td></td>
+									<td>银行</td>
+								</tr>
+								<tr v-for="b in bank">
+									<td><input type="radio" name="pd_FrpId" v-model="pd_FrpId" v-bind:value="b.pd_FrpId" /></td>
+									<td>{{b.text}}</td>
+								</tr>
+							</table>
+						</div>
 						<div class="ddzxbt">确认订单信息</div>
 						<div class="ddxq">
 							<div class="ddbh fl">名称</div>
@@ -201,7 +214,41 @@
 					islogin: sessionStorage.length > 0,
 					total: 0,
 					address: "",
-					addrId: ''
+					addrId: '',
+					pd_FrpId: '',
+					bank: [{
+							pd_FrpId: 'ICBC-NET-B2C',
+							text: "工商银行"
+						},
+						{
+							pd_FrpId: 'CMBCHINA-NET-B2C',
+							text: "招商银行"
+						},
+						{
+							pd_FrpId: 'ABC-NET-B2C',
+							text: "建设银行"
+						},
+						{
+							pd_FrpId: 'BCCB-NET-B2C',
+							text: "北京银行"
+						},
+						{
+							pd_FrpId: 'BOC-NET-B2C',
+							text: "中国银行"
+						},
+						{
+							pd_FrpId: 'ICBC-NET-B2C',
+							text: "工商银行"
+						},
+						{
+							pd_FrpId: 'ABC-NET-B2C',
+							text: "中国农业银行"
+						},
+						{
+							pd_FrpId: 'POST-NET-B2C',
+							text: "中国邮政"
+						},
+					]
 				},
 				methods: {
 					confirm: function() {
@@ -250,9 +297,9 @@
 						}
 						axios.post('/product/buy/' + _this.addrId, _this.products)
 							.then(function(res) {
-								alert("购买成功");
-								console.info(_this.addrId);
+								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01;
 							})
+
 					},
 					getAddress: function() {
 						var _this = this;
@@ -278,7 +325,7 @@
 					editAddress: function(addrid) {
 						layer.open({
 							type: 2,
-							title: '修改地址信息', //不显示标题
+							title: '修改地址信息',
 							shadeClose: true,
 							scrollbar: true,
 							closeBtn: 1,
