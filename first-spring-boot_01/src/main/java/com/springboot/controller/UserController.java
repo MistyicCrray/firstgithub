@@ -24,9 +24,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import com.springboot.entity.User;
-import com.springboot.service.OrderService;
-import com.springboot.service.ProductService;
-import com.springboot.service.ShoppingCartService;
 import com.springboot.service.UserService;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.MD5;
@@ -52,15 +49,6 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-
-	@Autowired
-	private ShoppingCartService shoppingCartService;
-
-	@Autowired
-	private OrderService orderService;
-
-	@Autowired
-	private ProductService productService;
 
 	/**
 	 * 用户注册
@@ -199,14 +187,6 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		User user = userService.findById(id);
-		/*
-		 * Map<String, Object> map = new HashMap<>(); map.put("user", user); Map<String,
-		 * Object> paramMap = new HashMap<String, Object>(); paramMap.put("userid",
-		 * user.getId()); map.put("shoppingCart",
-		 * shoppingCartService.findList(paramMap)); // 购物车 map.put("order",
-		 * orderService.findList(paramMap)); // 订单 map.put("product",
-		 * productService.findList(paramMap)); // 上架的商品
-		 */
 		return ResultGenerator.genSuccessResult(user);
 	}
 

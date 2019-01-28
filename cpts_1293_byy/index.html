@@ -9,7 +9,18 @@
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/swiper.min.css">
 	</head>
+
+	<style type="text/css">
+		.nav {
+			float: left;
+		}
+		
+		.lunbo {
+			display: flex;
+		}
+	</style>
 
 	<body>
 		<div id="app">
@@ -106,14 +117,12 @@
 					<ul>
 						<li v-for="item1 in categories" v-if="item1.parentid==null">
 							<a :href="['liebiao.html?cateid=' + item1.id]">{{item1.name}}</a>
-
 							<div class="pop">
 								<div class="left fl">
 									<div>
 										<div class="xuangou_left fl" v-for="item2 in categories" v-if="item1.id==item2.parentid">
 											<a :href="['liebiao.html?cateid=' + item2.id]">
 												<span class="fl">{{item2.name}}</span>
-
 												<div class="clear"></div>
 											</a>
 										</div>
@@ -124,6 +133,14 @@
 						</li>
 					</ul>
 				</div>
+				<div class="lunbo swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
+						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
+						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
+					</div>
+					<div class="swiper-pagination"></div>
+				</div>
 			</div>
 			<!-- start danpin -->
 			<div class="danpin center">
@@ -132,7 +149,7 @@
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
-							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
+							<a><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
 							<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
@@ -276,8 +293,8 @@
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/slide.js"></script>
+		<script type="text/javascript" src="resource/js/swiper.min.js"></script>
 		<script type="text/javascript">
 			var vm = new Vue({
 				el: '#app',
@@ -292,16 +309,40 @@
 					islogin: sessionStorage.length > 0,
 					categories: "",
 					carts: "",
-					search: ''
+					search: '',
+					banner: []
 				},
 				created: function() {
 					this.getProduct();
 					this.getCategory();
+					this.$nextTick(function() {
+						swiper = new Swiper('.swiper-container', {
+							pagination: {
+								el: '.swiper-pagination',
+							},
+							autoplay: true,
+							initialSlide: 0,
+							observer: true, //修改swiper自己或子元素时，自动初始化swiper
+							observeParents: true //修改swiper的父元素时，自动初始化swiper
+						});
+
+					})
 				},
 				methods: {
 					// 获取购物车信息
 					getCarts: function() {
 
+					},
+					getBanner: function() {
+						var _this = this;
+						axios.get('/banner', {
+							params: {
+								size: 5,
+								pageNum: 1
+							}
+						}).then(function(res) {
+							_this.banner = res.data.data.rows;
+						})
 					},
 					// 获取类别信息
 					getCategory: function() {

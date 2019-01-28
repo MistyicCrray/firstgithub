@@ -11,7 +11,7 @@
 	<body>
 		<div id="main">
 			<div class="rtcont fr">
-				<div class="ddzxbt">修改商品</div>
+				<div class="ddzxbt">上架商品</div>
 				<div style="position: relative;" class="ml40 infor">
 					<div>
 						<form id="addProduct">
@@ -24,14 +24,9 @@
 								</select>
 							</div>
 							<div class="item"><span>单价:</span><input type="text" class="form-control" v-model="product.price" name="price"></div>
-							<div class="item"><span>数量:</span><input type="text" class="form-control" v-model="product.quality"></div>
+							<div class="item"><span>数量:</span><input type="text" class="form-control" v-model="product.quality" name="quality"></div>
 							<div class="item" v-if="product.img==null"><span>图片:</span>
 								<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
-							</div>
-							<div class="item" v-if="product.img!=null"><span>图片:</span>
-								<div class="busin_img">
-									<a><img v-bind:src="product.img"><em>点击查看大图</em></a><button class="btn btn-cancel" v-on:click="delImg(inputtext.frontIdcard)">删除</button>
-								</div>
 							</div>
 							<div class="ml40 "><span>详情:</span><textarea class="form-control" id="content" name="detail"></textarea></div>
 							<div class="mt10 item"><button type="button" v-on:click="submit" class="btn">上架</button></div>
@@ -56,7 +51,6 @@
 					height: '200px'
 				});
 			});
-			var id = GetQueryString("proid");
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -64,14 +58,6 @@
 					categories: ""
 				},
 				methods: {
-					getProduct: function() {
-						var _this = this;
-						axios.get('/product/' + id)
-							.then(function(res) {
-								_this.product = res.data.data;
-								editor.html(_this.product.detail);
-							})
-					},
 					getCategory: function() {
 						var _this = this;
 						axios.get('/category')
@@ -81,16 +67,22 @@
 					},
 					submit: function() {
 						var _this = this;
-						axios.get('/product/' + id, $("#addProduct").serialize())
+						var formData = new FormData();
+						formData.append("detail", editor.html());
+						formData.append("name", _this.product.name);
+						formData.append("category", _this.product.category);
+						formData.append("price", _this.product.price);
+						formData.append("quality", _this.product.quality);
+						formData.append("file", $("#file")[0].files[0]);
+						axios.post('/product', formData)
 							.then(function(res) {
-								alert("修改成功");
+								alert("上架成功");
 								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
 								parent.layer.close(index); // 关闭layer
-							})
+							});
 					},
 				},
 				created: function() {
-					this.getProduct();
 					this.getCategory();
 				}
 			})

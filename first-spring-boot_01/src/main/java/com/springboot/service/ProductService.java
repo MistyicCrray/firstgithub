@@ -26,6 +26,11 @@ public class ProductService {
 		product.setCreatedate(new Date());
 		product.setUpdatedate(new Date());
 		product.setHits(0);
+		if (product.getQuality().equals(0)) {
+			product.setStatus("2");
+		} else {
+			product.setStatus("0");
+		}
 		if (file != null) {
 			product.setImg((String) FileUtil.uploadImage(file).get("filePath"));
 		}

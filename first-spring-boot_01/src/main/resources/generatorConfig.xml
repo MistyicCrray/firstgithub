@@ -3,7 +3,8 @@
   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-	<classPathEntry location="f:/mysql-connector-java-5.1.25.jar" />
+	<classPathEntry
+		location="f:/mysql-connector-java-5.1.25.jar" />
 	<context id="my" targetRuntime="MyBatis3Simple"
 		defaultModelType="hierarchical">
 		<property name="javaFileEncoding" value="UTF-8" />
@@ -25,48 +26,44 @@
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="com.springboot.entity"
-			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
+		<javaModelGenerator
+			targetPackage="com.springboot.entity"
+			targetProject="F:/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<sqlMapGenerator targetPackage="com.springboot.entity"
-			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
+			targetProject="F:/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="ANNOTATEDMAPPER"
 			targetPackage="com.springboot.mapper"
-			targetProject="E:/hlx/github/firstgithub/first-spring-boot_01/src/main/java">
+			targetProject="F:/firstgithub/first-spring-boot_01/src/main/java">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
-<!-- 		<table tableName="shoppingcart" domainObjectName="ShoppingCart"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
-		<table tableName="category" domainObjectName="Category"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
-		<table tableName="news" domainObjectName="News"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
-		<table tableName="order" domainObjectName="Order"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
+		<!-- <table tableName="shoppingcart" domainObjectName="ShoppingCart" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
+			selectByExampleQueryId="false"></table> <table tableName="category" domainObjectName="Category" 
+			enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" 
+			enableSelectByExample="false" selectByExampleQueryId="false"></table> <table 
+			tableName="news" domainObjectName="News" enableCountByExample="false" enableUpdateByExample="false" 
+			enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table> 
+			<table tableName="order" domainObjectName="Order" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
 			selectByExampleQueryId="false"></table> -->
-		<table tableName="shoppingcart" domainObjectName="ShoppingCart"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table>
-	<!-- 	<table tableName="user" domainObjectName="User"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
+		<!-- <table tableName="shoppingcart" domainObjectName="ShoppingCart" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
 			selectByExampleQueryId="false"></table> -->
-		<table tableName="product" domainObjectName="Product"
+		<!-- <table tableName="user" domainObjectName="User" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
+			selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="product" domainObjectName="Product" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
+			selectByExampleQueryId="false"></table> -->
+		<table tableName="banner" domainObjectName="Banner"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>

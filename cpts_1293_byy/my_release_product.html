@@ -160,7 +160,14 @@
 					</div>
 					<div class="rtcont fr infor">
 						<div class="grzlbt ml40">我的发布的</div>
-						<div style="margin-top: 50px;">
+						<div v-if="product.length==0">
+							您尚未发布商品
+							<a href="javascript:void(0)" style="color: #0000FF;" v-on:click="addProduct()">立即发布</a>
+						</div>
+						<div class="grzlbt ml40">
+							<a href="javascript:void(0)" style="color: #0000FF; text-align: right;" v-on:click="addProduct()">发布新的商品</a>
+						</div>
+						<div style="margin-top: 50px;" v-if="product.length!=0">
 							<table>
 								<tr>
 									<td>商品名</td>
@@ -178,7 +185,8 @@
 									<td v-for="opt in categories" v-if="item.category==opt.id">{{opt.name}}</td>
 									<td>￥{{item.price}}</td>
 									<td>{{item.createdate | dateFilter}}</td>
-									<td><img v-bind:src="'/images/' + item.img" style="width: 20px; height: 20px;"></td>
+									<td v-if="item.img!=null"><img v-bind:src="'/images/' + item.img" style="width: 20px; height: 20px;"></td>
+									<td v-if="item.img==null">暂无图片</td>
 									<td>{{item.hits}}</td>
 									<td>{{item.quality}}</td>
 									<td>{{item.status | optionStatusFilter}}</td>
@@ -279,8 +287,8 @@
 								}
 							})
 							.then(function(res) {
-								console.info(res);
 								_this.product = res.data.data.rows;
+								console.info(_this.product);
 								_this.pageNum = pageIndex;
 								_this.total = res.data.data.total;
 								_this.pages = Math.ceil(_this.total / _this.pageSize);
@@ -340,7 +348,21 @@
 							scrollbar: true,
 							closeBtn: 1,
 							area: ['800px', '450px'],
-							content: ['editProduct.html?proid=' + proid],
+							content: ['edit_product.html?proid=' + proid],
+							end: function() {
+								location.href = "my_release_product.html";
+							}
+						})
+					},
+					addProduct: function(proid) {
+						layer.open({
+							type: 2,
+							title: '修改商品信息',
+							shadeClose: true,
+							scrollbar: true,
+							closeBtn: 1,
+							area: ['800px', '450px'],
+							content: ['add_product.html'],
 							end: function() {
 								location.href = "my_release_product.html";
 							}

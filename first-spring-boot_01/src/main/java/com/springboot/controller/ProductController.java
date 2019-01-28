@@ -1,12 +1,13 @@
 package com.springboot.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,14 +53,19 @@ public class ProductController {
 	 * @param product
 	 * @param user
 	 * @return Result
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@ModelAttribute Product product, @CurrentUser User user,
-			@RequestParam(required = false) MultipartFile file) {
+	public Result add(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user,
+			@RequestParam(required = false) MultipartFile file)
+			throws IllegalAccessException, InvocationTargetException {
+		Product product = new Product();
 		product.setCreateby(user.getUsername());
 		product.setUserid(user.getId());
 		product.setUpdateby(user.getId());
+		BeanUtils.populate(product, map);
 		return ResultGenerator.genSuccessResult(productService.add(product, file));
 	}
 
@@ -107,7 +113,7 @@ public class ProductController {
 	public Result getByUser(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,
 			@CurrentUser User user) {
 		map.put("userid", user.getId());
-		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size, "createdate");
 		List<Product> list = productService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
@@ -124,11 +130,10 @@ public class ProductController {
 	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map,
 			@PathVariable(value = "addrid") String addrid) {
 		for (Map<String, Object> productMap : map) {
-			Map<String, Integer> integerMap = new HashMap<>();
-			integerMap.put("quality", (Integer) productMap.get("quality"));
-			// integerMap.put("quantity", (Integer) productMap.get("quantity"));
-			String string = productMap.get("quantity").toString();
-			int i = integerMap.get("quality") - Integer.parseInt(string); // 减库存
+			Integer quantity = Integer.parseInt(productMap.get("quantity").toString());
+			Integer quality = Integer.parseInt(productMap.get("quality").toString());
+			int i = quality - quantity; // 减库存
+			// 如果库存小于0则提醒买家
 			if (i < 0) {
 				throw new ServiceException(
 						"商品" + productMap.get("name") + "库存还剩余:" + productMap.get("quality") + "，请减少购买数量!");
@@ -154,14 +159,13 @@ public class ProductController {
 			order.setSellid(product.getUserid()); // 卖家Id
 			order.setUserid(user.getId()); // 买家Id
 			order.setCreateTime(new Date()); // 下单日期
-			order.setStatus("0");
-			order.setQuantity(Integer.parseInt(string)); // 数量
-			order.setPayment(Integer.parseInt(string) * product.getPrice()); // 小计
+			order.setStatus("0"); // 未发货待付款状态
+			order.setQuantity(quantity); // 数量
+			order.setPayment(quantity * product.getPrice()); // 小计
 			order.setProductid(product.getProid());
 			order.setAddressId(addrid);
 			orderService.add(order);
 		}
-
 		return ResultGenerator.genSuccessResult("success");
 	}
 }
