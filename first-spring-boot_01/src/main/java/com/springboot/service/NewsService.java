@@ -11,7 +11,7 @@ import com.springboot.mapper.NewsMapper;
 import com.springboot.tools.UUIDUtils;
 
 @Service
-public class NewsService{
+public class NewsService {
 
 	@Autowired
 	private NewsMapper newsMapper;

@@ -134,11 +134,16 @@
 					</ul>
 				</div>
 				<div class="lunbo swiper-container">
+					<div class="swiper-button-prev"></div>
 					<div class="swiper-wrapper">
-						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
-						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
-						<div class="swiper-slide"><img src="resource/image/11111.png" /></div>
+
+						<div class="swiper-slide"><img width="990px" height="460px" src="resource/image/1.jpg" /></div>
+						<div class="swiper-slide"><img width="990px" height="460px" src="resource/image/2.jpg" /></div>
+						<div class="swiper-slide"><img width="990px" height="460px" src="resource/image/3.jpg" /></div>
+						<div class="swiper-slide"><img width="990px" height="460px" src="resource/image/4.jpg" /></div>
+						<div class="swiper-slide"><img width="990px" height="460px" src="resource/image/5d.jpg" /></div>
 					</div>
+					<div class="swiper-button-next"></div>
 					<div class="swiper-pagination"></div>
 				</div>
 			</div>
@@ -149,7 +154,7 @@
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
-							<a><img :src="'/images/' + item.img" alt=""></a>
+							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
 							<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
@@ -317,13 +322,17 @@
 					this.getCategory();
 					this.$nextTick(function() {
 						swiper = new Swiper('.swiper-container', {
+							navigation: {
+								nextEl: '.swiper-button-next',
+								prevEl: '.swiper-button-prev',
+							},
 							pagination: {
 								el: '.swiper-pagination',
+								spaceBetween: 10,
+								slidesPerView: 4,
+								watchSlidesVisibility: true,
 							},
 							autoplay: true,
-							initialSlide: 0,
-							observer: true, //修改swiper自己或子元素时，自动初始化swiper
-							observeParents: true //修改swiper的父元素时，自动初始化swiper
 						});
 
 					})
@@ -356,9 +365,7 @@
 							_this.categories = response.data.data.rows;
 						})
 					},
-					getlocal: function() {
-						console.info(localStorage.getItem("userName") + localStorage.getItem("password"));
-					},
+					getlocal: function() {},
 					logout: function() {
 						logout();
 						location.href = "login.html";
