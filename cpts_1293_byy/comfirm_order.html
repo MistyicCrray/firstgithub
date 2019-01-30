@@ -12,8 +12,22 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 	</head>
 	<style type="text/css">
-		.jiesuandan {
-			width: 938px;
+		.yhxz li {
+			margin: 0 20px 20px 0;
+			float: left;
+			text-align: center;
+			width: 198px;
+			border: 1px solid #e1e1e1;
+			cursor: pointer;
+		}
+		
+		.contract_ico {
+			margin: 18px auto;
+			display: block;
+		}
+		
+		.yhxz li.curr {
+			border-color: #c20000;
 		}
 	</style>
 
@@ -145,17 +159,14 @@
 							</table>
 						</div>
 						<div class="ddzxbt">选择支付银行</div>
-						<div style="margin-top: 50px;">
-							<table>
-								<tr>
-									<td></td>
-									<td>银行</td>
-								</tr>
-								<tr v-for="b in bank">
-									<td><input type="radio" name="pd_FrpId" v-model="pd_FrpId" v-bind:value="b.pd_FrpId" /></td>
-									<td>{{b.text}}</td>
-								</tr>
-							</table>
+						<div style="margin-top: 50px;padding-bottom:200px;">
+
+							<ul class="yhxz">
+								<li v-for="item,index in bank" :class="{curr:chooseKey==index}" v-on:click="switch_chosekey(index);getbank(item.pd_FrpId)">
+									<img class="contract_ico" v-bind:src="'resource/yhimage/' + item.text" />
+								</li>
+							</ul>
+
 						</div>
 						<div class="ddzxbt">确认订单信息</div>
 						<div class="ddxq">
@@ -218,42 +229,39 @@
 					pd_FrpId: '',
 					bank: [{
 							pd_FrpId: 'ICBC-NET-B2C',
-							text: "工商银行"
+							text: "zggsyh.png"
 						},
 						{
 							pd_FrpId: 'CMBCHINA-NET-B2C',
-							text: "招商银行"
+							text: "zhyh.png"
 						},
 						{
-							pd_FrpId: 'ABC-NET-B2C',
-							text: "建设银行"
-						},
-						{
-							pd_FrpId: 'BCCB-NET-B2C',
-							text: "北京银行"
+							pd_FrpId: 'CCB-NET-B2C',
+							text: "zgjsyh.png"
 						},
 						{
 							pd_FrpId: 'BOC-NET-B2C',
-							text: "中国银行"
-						},
-						{
-							pd_FrpId: 'ICBC-NET-B2C',
-							text: "工商银行"
+							text: "zgyh.png"
 						},
 						{
 							pd_FrpId: 'ABC-NET-B2C',
-							text: "中国农业银行"
+							text: "nyyh.png"
 						},
 						{
 							pd_FrpId: 'POST-NET-B2C',
-							text: "中国邮政"
+							text: "zgyz.png"
 						},
-					]
+					],
+					chooseKey: ""
 				},
 				methods: {
+					getbank: function(pd_FrpId) {
+						console.info(pd_FrpId);
+						this.pd_FrpId = pd_FrpId;
+					},
 					confirm: function() {
 						var _this = this;
-						// 获取地址，如没有地址则跳到添加地址页面
+						//						 获取地址，如没有地址则跳到添加地址页面
 						axios.get('/address').then(function(res) {
 							console.info(res);
 							_this.address = res.data.data.rows;
@@ -288,6 +296,10 @@
 					buy: function() {
 						var _this = this;
 						if(_this.addrId == "" || _this.addrId == null) {
+							alert("请选择地址");
+							return;
+						}
+						if(_this.pd_FrpId == "" || _this.pd_FrpId == null) {
 							alert("请选择地址");
 							return;
 						}
@@ -332,6 +344,10 @@
 							area: ['800px', '450px'],
 							content: ['editAddress.html?addrid=' + addrid],
 						})
+					},
+					switch_chosekey: function(j) { ///选择银行
+						console.info(j);
+						this.chooseKey = j;
 					},
 				},
 				created: function() {

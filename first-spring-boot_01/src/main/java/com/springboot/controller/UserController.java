@@ -73,6 +73,7 @@ public class UserController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("loginname", user.getLoginname());
 		List<User> list = userService.findList(map);
+		// 如果存在并且已经激活
 		if (list.size() != 0) {
 			if (list.get(0).getState().equals("0")) {
 				throw new ServiceException("邮箱已被注册");
@@ -103,7 +104,6 @@ public class UserController {
 						+ "?id=" + user.getId() + "&activeCode=" + activeCode + "</a>该链接48小时内有效",
 				user.getLoginname(), "激活邮箱", javaMailSender, form);
 		return ResultGenerator.genSuccessResult(userService.add(user));
-
 	}
 
 	/**
@@ -125,6 +125,7 @@ public class UserController {
 		if (!activeCode.equals(user.getActivecode())) {
 			throw new ServiceException("激活码错误");
 		}
+		// 链接过期则删除用户信息
 		if (new Date().getTime() >= user.getActivedate().getTime()) {
 			userService.delete(id);
 			throw new ServiceException("该链接已经过期,请重新注册");
@@ -132,6 +133,7 @@ public class UserController {
 		// 激活成功时清空这两个字段,防止重复激活
 		user.setActivecode(null);
 		user.setActivedate(null);
+		
 		user.setState("0"); // 设置为正常可用状态
 		userService.updateByUser(user);
 		return ResultGenerator.genSuccessResult("success");

@@ -322,6 +322,9 @@
 					this.getCategory();
 					this.$nextTick(function() {
 						swiper = new Swiper('.swiper-container', {
+							autoplay: {
+								delay: 2000,//2秒切换一次
+							},
 							navigation: {
 								nextEl: '.swiper-button-next',
 								prevEl: '.swiper-button-prev',
@@ -332,7 +335,6 @@
 								slidesPerView: 4,
 								watchSlidesVisibility: true,
 							},
-							autoplay: true,
 						});
 
 					})
