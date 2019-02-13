@@ -17,11 +17,12 @@ public class SendEmailUtil {
 	private String domain;
 
 	/**
-	 * 发送邮件
-	 * 
-	 * @param content
-	 * @param sendTo
-	 * @param subJect
+	 * 发送邮箱
+	 * @param content 内容
+	 * @param sendTo 接收者
+	 * @param subJect 主题
+	 * @param javaMailSender
+	 * @param form 发送者
 	 * @return
 	 * @throws MessagingException
 	 */

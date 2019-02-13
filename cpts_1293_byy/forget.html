@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>修改密码</title>
+		<link rel="stylesheet" href="resource/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resource/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resource/css/style.css" />
+		<script src="resource/js/jquery.min.js"></script>
+		<script src="resource/js/bootstrap.min.js"></script>
+		<style>
+			.lab-notes {
+				font-weight: 500;
+				font-style: oblique;
+				color: #999999;
+				display: none;
+			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+			.wui-date-picker .wui-date-picker_aside .time-select .time-icon {
+				width: 25px;
+			}
+			
+			.panystate {
+				padding-top: 5px;
+				float: left;
+			}
+			
+			.panycir {
+				margin-right: 5px;
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				border-radius: 4px;
+			}
+			
+			.panystate span {
+				display: inline-block;
+				margin-right: 5px;
+			}
+			
+			.panycir1 {
+				background-color: #00d00b;
+			}
+			
+			.panycir2 {
+				background-color: #ff0000;
+			}
+			/* 添加合同步骤 */
+			
+			.ord_step {
+				padding-bottom: 125px;
+				overflow: hidden;
+			}
+			
+			.ord_step1 {}
+			
+			.ord_step1 li {
+				margin: 0 20px 20px 0;
+				float: left;
+				text-align: center;
+				width: 198px;
+				border: 1px solid #e1e1e1;
+				cursor: pointer;
+			}
+			
+			.contract_ico {
+				margin: 18px auto;
+				display: block;
+				width: 41px;
+				height: 56px;
+			}
+			
+			.contract_name {
+				font-size: 16px;
+				line-height: 2.2;
+				font-weight: normal;
+				background-color: #f3f3f3;
+			}
+			
+			.ord_step1 li.curr {
+				border-color: #007ab6;
+				background: url(../images/checked_ico.png) no-repeat 96% 5%;
+			}
+			
+			.ord_step .item {
+				text-align: center;
+			}
+			
+			.steps {
+				padding-left: 100px;
+				height: 90px;
+			}
+			
+			.step {
+				width: 32%;
+				margin-left: -4px;
+				position: relative;
+				vertical-align: top;
+				display: inline-block;
+			}
+			
+			.step-head {
+				height: 40px;
+			}
+			
+			.step-main {
+				position: absolute;
+				width: 100px;
+				top: 46px;
+				right: -30px;
+				text-align: center;
+				font-size: 16px;
+				color: #909090;
+			}
+			
+			.step-line {
+				/* position: absolute; */
+				margin-top: 19px;
+				height: 3px;
+				line-height: 3px;
+				display: block;
+				background-color: #e1e1e1;
+				z-index: 10000;
+			}
+			
+			.step-icon {
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				line-height: 40px;
+				text-align: center;
+				vertical-align: top;
+				color: #fff;
+				font-size: 20px;
+				font-family: arial;
+				z-index: 10000;
+				background-color: #c1c1c1;
+			}
+			
+			.is-sucess>.step-head>.step-line {
+				background-color: #007ab6;
+			}
+			
+			.is-sucess>.step-head .step-icon {
+				background-color: #007ab6;
+			}
+			
+			.is-sucess .step-main {
+				color: #323232;
+			}
+			
+			.mt-15 .label.label-default,
+			.mb-15 .label.label-default {
+				font-size: 14px;
+			}
+			
+			.btn-sm {
+				border: none;
+				background-color: #007AB6;
+				color: white;
+			}
+		</style>
+
+	</head>
+
+	<body class="bg">
+		<div class="infor" id="main">
+
+			<div class="stepbar">
+
+				<div class="steps">
+					<div class="step is-sucess stepfirst">
+						<div class="step-head">
+
+							<div class="step-icon">
+								1
+							</div>
+						</div>
+						<div class="step-main">
+							填写邮箱
+						</div>
+					</div>
+					<div class="step">
+						<div class="step-head">
+							<div class="step-line"></div>
+							<div class="step-icon">
+								2
+							</div>
+						</div>
+						<div class="step-main">
+							重置密码
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="ord_step" v-show="status==1">
+				<div class="item">
+					<span>邮箱</span>
+					<input class="form-control" v-model="inputtext.loginname" />
+				</div>
+				<div class="item">
+					<span></span>
+					<button type="button" class="btn btn-primary" v-on:click='subLoginName();'>下一步</button>
+				</div>
+			</div>
+			<div class="ord_step" v-show="status==2" v-cloak>
+				<div class="item">
+					<span>验证码</span>
+					<input class="form-control" v-model="inputtext.activeCode" />
+					<button v-on:click='getCode()' class="btn-sm" id="activeCode">{{content}}</button>
+				</div>
+				<div class="item">
+					<span>新密码</span>
+					<input class="form-control" v-model="inputtext.password" />
+				</div>
+				<div class="item">
+					<span>确认密码</span>
+					<input class="form-control" v-model="inputtext.confirmPassword" />
+				</div>
+				<div class="item">
+					<span></span>
+					<button class="btn btn-save btn-primary" @click="forestatus">上一步</button>
+					<button type="button" class="btn btn-primary" v-on:click='subActiveCode();'>完成</button>
+				</div>
+
+			</div>
+		</div>
+
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script>
+			var vue = new Vue({
+				el: '#main',
+				data: {
+					chosekey: -1,
+					status: 1,
+					inputtext: {},
+					count: 60,
+					timer: null,
+					content: "发送验证码",
+					code: ""
+				},
+				methods: {
+					updatestatus: function(status) { //下一步
+						this.status++;
+						var statusm = this.status;
+						for(var count = 0; count < statusm; count++) {
+							$(".steps .step").eq(count).addClass("is-sucess");
+						}
+					},
+					forestatus: function(status) { //上一步
+						this.status--;
+						var statusm = this.status;
+						$(".steps .step").eq(statusm).removeClass("is-sucess");
+					},
+					subLoginName: function() {
+						var _this = this;
+						if(_this.inputtext.loginname == "" || _this.inputtext.loginname == null || _this.inputtext.loginname == undefined) {
+							alert("请输入邮箱");
+							_this.status--;
+							return;
+						}
+						axios.post('/user/send_email/' + this.inputtext.loginname)
+							.then(function(response) {
+								console.info(response);
+								_this.code = response.data.code;
+								if(response.data.code == 200) {
+									alert(response.data.data);
+									_this.updatestatus();
+								} else {
+									alert(response.data.message);
+									this.status--;
+									return;
+								}
+							});
+					},
+					subActiveCode: function() {
+						if(_this.inputtext.activeCode == "" || _this.inputtext.activeCode == null || _this.inputtext.activeCode == undefined) {
+							alert("请输入验证码");
+							_this.status--;
+							return;
+						}
+						if(this.inputtext.password == "" || this.inputtext.password == null || this.inputtext.password == undefined) {
+							alert("请输入新密码");
+							this.status--;
+							return;
+						}
+						if(this.inputtext.confirmPassword == "" || this.inputtext.confirmPassword == null || this.inputtext.confirmPassword == undefined) {
+							alert("请输入确认密码");
+							this.status--;
+							return;
+						}
+						if(this.inputtext.confirmPassword != this.inputtext.password) {
+							alert("请输入确认密码");
+							this.status--;
+							return;
+						}
+						axios.put('/user/forgot_password', this.inputtext)
+							.then(function(response) {
+								this.code = response.data.code;
+								console.info(response);
+								if(response.data.code != 200) {
+									alert(response.data.message);
+								} else {
+									alert(response.data.data);
+									location.href = "login.html";
+								}
+
+							});
+					},
+					getCode: function() {
+						axios.post('/user/send_email/' + this.inputtext.loginname)
+							.then(function(response) {
+								console.info(response);
+							});
+						const TIME_COUNT = 60;
+						if(!this.timer) {
+							this.count = TIME_COUNT;
+							this.timer = setInterval(() => {
+								if(this.count > 0 && this.count <= TIME_COUNT) {
+									this.count--;
+									this.content = this.count + "s后重新获取";
+									$("#activeCode").attr("disabled", "disabled");
+								} else {
+									clearInterval(this.timer);
+									this.timer = null;
+									$("#activeCode").attr("disabled", false);
+									this.content = "发送验证码";
+								}
+							}, 1000);
+						}
+
+					},
+				},
+				created: function() {
+
+				},
+				mounted: function() {
+
+				},
+				filters: {}
+			});
+		</script>
+
+	</body>
+
+</html>

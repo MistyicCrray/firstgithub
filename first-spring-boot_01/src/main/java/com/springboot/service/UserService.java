@@ -107,4 +107,11 @@ public class UserService {
 	public int updateByUser(User user) {
 		return userMapper.updateByPrimaryKey(user);
 	}
+
+	/**
+	 * 通过账号查询
+	 */
+	public User findByLoginName(String loginname) {
+		return userMapper.selectByLoginName(loginname);
+	}
 }

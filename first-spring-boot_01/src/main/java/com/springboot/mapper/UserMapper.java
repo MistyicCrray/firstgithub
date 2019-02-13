@@ -164,4 +164,30 @@ public interface UserMapper {
     
     @SelectProvider(type = com.springboot.entity.dyna.UserDynaProvider.class, method = "updateProvider")
     Integer update(Map<String, Object> map);
+    
+    @Select({
+        "select",
+        "id, username, password, gender, img, create_time, state, loginName, activeCode, ",
+        "activeDate, adreess, tel, lastLoginTime, email, usertype",
+        "from user",
+        "where loginname = #{loginname,jdbcType=VARCHAR}"
+    })
+    @Results({
+        @Result(column="id", property="id", jdbcType=JdbcType.VARCHAR, id=true),
+        @Result(column="username", property="username", jdbcType=JdbcType.VARCHAR),
+        @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
+        @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
+        @Result(column="img", property="img", jdbcType=JdbcType.VARCHAR),
+        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="state", property="state", jdbcType=JdbcType.VARCHAR),
+        @Result(column="loginName", property="loginname", jdbcType=JdbcType.VARCHAR),
+        @Result(column="activeCode", property="activecode", jdbcType=JdbcType.VARCHAR),
+        @Result(column="activeDate", property="activedate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="adreess", property="adreess", jdbcType=JdbcType.VARCHAR),
+        @Result(column="tel", property="tel", jdbcType=JdbcType.VARCHAR),
+        @Result(column="lastLoginTime", property="lastlogintime", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="email", property="email", jdbcType=JdbcType.VARCHAR),
+        @Result(column="usertype", property="usertype", jdbcType=JdbcType.VARCHAR)
+    })
+    User selectByLoginName(String loginname);
 }
