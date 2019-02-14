@@ -164,8 +164,8 @@
 							您尚未发布商品
 							<a href="javascript:void(0)" style="color: #0000FF;" v-on:click="addProduct()">立即发布</a>
 						</div>
-						<div class="grzlbt ml40">
-							<a href="javascript:void(0)" style="color: #0000FF; text-align: right;" v-on:click="addProduct()">发布新的商品</a>
+						<div class="grzlbt ml40" v-if="product.length!=0">
+							<a href="javascript:void(0)" style="color: #0000FF; text-align: right;" v-on:click="addProduct()">发布二手</a>
 						</div>
 						<div style="margin-top: 50px;" v-if="product.length!=0">
 							<table>
@@ -357,7 +357,7 @@
 					addProduct: function(proid) {
 						layer.open({
 							type: 2,
-							title: '修改商品信息',
+							title: '发布二手',
 							shadeClose: true,
 							scrollbar: true,
 							closeBtn: 1,

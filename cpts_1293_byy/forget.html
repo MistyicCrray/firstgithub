@@ -167,6 +167,9 @@
 				background-color: #007AB6;
 				color: white;
 			}
+			.item span{
+				text-align: left;
+			}
 		</style>
 
 	</head>
@@ -210,7 +213,7 @@
 				</div>
 				<div class="item">
 					<span></span>
-					<button type="button" class="btn btn-primary" v-on:click='subLoginName();'>下一步</button>
+					<button type="button" class="btn btn-primary" v-on:click='subLoginName()'>下一步</button>
 				</div>
 			</div>
 			<div class="ord_step" v-show="status==2" v-cloak>
@@ -286,7 +289,7 @@
 							});
 					},
 					subActiveCode: function() {
-						if(_this.inputtext.activeCode == "" || _this.inputtext.activeCode == null || _this.inputtext.activeCode == undefined) {
+						if(this.inputtext.activeCode == "" || this.inputtext.activeCode == null || this.inputtext.activeCode == undefined) {
 							alert("请输入验证码");
 							_this.status--;
 							return;

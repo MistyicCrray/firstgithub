@@ -122,16 +122,12 @@
 					</ul>
 				</div>
 			</div>
-			<!-- end banner_x -->
 			<!-- self_info -->
 			<div class="grzxbj">
 				<div class="selfinfo center">
 					<div class="rtcont fr">
 
 						<div class="ddzxbt">确认收货地址</div>
-						<!--<select class="form-control" id="address" v-model="addrId" v-if="address!=null">
-							<option v-for="item in address" v-bind:value="item.addrid">{{item.province}}{{item.city}}{{item.region}}{{item.address}}</option>
-						</select>-->
 						<div style="margin-top: 50px;">
 							<table v-if="address!=''">
 								<tr>
@@ -145,7 +141,7 @@
 									<td v-if="address!=null"></td>
 								</tr>
 								<tr v-for="item in address">
-									<td><input type="radio" name="address" v-bind:value="item.addrid" v-model="addrId" /></td>
+									<td><input type="radio" v-bind:id="item.addrid" name="address" v-bind:value="item.addrid" v-model="addrId" /></td>
 									<td>{{item.consignee}}</td>
 									<td>{{item.province}}{{item.city}}{{item.region}}</td>
 									<td>{{item.address}}</td>
@@ -318,6 +314,13 @@
 						axios.get('/address').then(function(res) {
 							console.info(res);
 							_this.address = res.data.data.rows;
+							_this.address.forEach(function(i) {
+								console.info(i.status);
+								if(i.status == '0') {
+									$("#" + i.addrid).attr("checked", "checked");
+								}
+							})
+
 						})
 					},
 					logout: function() {

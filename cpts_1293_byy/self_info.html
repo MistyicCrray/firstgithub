@@ -55,7 +55,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{userInfo}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -177,7 +177,7 @@
 								<div class="form-group">
 									<label for="username" class="col-sm-2 control-label">昵称</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="username" name="username" placeholder="昵称" v-model="userInfo">
+										<input type="text" class="form-control" id="username" name="username" placeholder="昵称" v-model="user.username">
 									</div>
 								</div>
 								<div class="form-group">
@@ -245,8 +245,8 @@
 						axios.put('/user/update/' + sessionStorage.getItem("userId"), $("#update").serialize())
 							.then(function() {
 								alert("修改成功");
-								_this.getUser();
 								sessionStorage.setItem("username", _this.user.username);
+								_this.userInfo = _this.user.username;
 							})
 					},
 					uploadImg: function() {

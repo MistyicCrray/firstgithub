@@ -3,7 +3,6 @@ package com.springboot.tools;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -13,8 +12,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  *
  */
 public class SendEmailUtil {
-	@Value("${local_url}")
-	private String domain;
 
 	/**
 	 * 发送邮箱

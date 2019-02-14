@@ -6,31 +6,20 @@
 		<title></title>
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/cssreset-min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/common.css">
 	</head>
 
 	<body>
 		<div id="main">
 			<form id="edit">
 				<div style="position: relative;" class="ml40 infor">
-					<div data-toggle="distpicker" class="form-inline mb20 ml160" id="target">
-						<div class="form-group">
-							<label class="sr-only" for="province"></label>
-							<select class="form-control" id="province" v-bind:value="inputtext.province" name="province">
-								<option>{{inputtext.province}}</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="sr-only" for="city"></label>
-							<select class="form-control" id="city" v-bind:value="inputtext.city" name="city">
-								<option>{{inputtext.city}}</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="sr-only" for="district"></label>
-							<select class="form-control" id="district" v-bind:value="inputtext.region" name="region">
-								<option>{{inputtext.region}}</option>
-							</select>
-						</div>
+					<div id="demo" class="form-inline mb20 ml160 mt20">
+						<p>
+							<select v-model="inputtext.province" name="province" class="form-control"></select>
+							<select v-model="inputtext.city" name="city" class="form-control"></select>
+							<select v-model="inputtext.region" name="area" class="form-control"></select>
+						</p>
 					</div>
 					<div class="form-horizontal">
 						<div class="form-group">
@@ -73,8 +62,7 @@
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
-		<script src="resource/js/distpicker.data.js"></script>
-		<script src="resource/js/distpicker.js"></script>
+		<script type="text/javascript" src="resource/js/jquery.citys.js"></script>
 		<script type="text/javascript">
 			var addrid = GetQueryString("addrid");
 			var vue = new Vue({
@@ -101,7 +89,15 @@
 					axios.get("/address/" + addrid)
 						.then(function(res) {
 							_this.inputtext = res.data.data;
-						})
+							_this.$nextTick(function() {
+								$('#demo').citys({
+									valueType: 'name',
+									province: _this.inputtext.province,
+									city: _this.inputtext.city,
+									area: _this.inputtext.region
+								});
+							})
+						});
 				}
 			})
 		</script>
