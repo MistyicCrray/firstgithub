@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>欢迎页面-X-admin2.0</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="./css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="./js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-body" id="main">
+			<div class="layui-form">
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+                  账号
+              </label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="user.loginname" disabled="" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+                  邮箱
+              </label>
+					<div class="layui-input-inline">
+						<input type="text" id="L_email" name="email" required="" v-model="user.email" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+                  昵称
+              </label>
+					<div class="layui-input-inline">
+						<input type="text" id="L_username" name="username" required="" v-model="user.username" lay-verify="nikename" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+                  手机号
+              </label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="user.tel" lay-verify="nikename" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+              </label>
+					<button class="layui-btn" v-on:click="edit">
+                  修改
+              </button>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="js/vue-main.js"></script>
+		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script>
+			var id = GetQueryString('id');
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					user: {}
+				},
+				methods: {
+					edit: function() {
+						var _this = this;
+						axios.put('/user/update/' + id, _this.user)
+							.then(function(res) {
+
+							})
+					}
+				},
+				created: function() {
+					var _this = this;
+					axios.get('/user/' + id)
+						.then(function(res) {
+							console.info(res);
+							_this.user = res.data.data;
+						})
+				}
+			})
+		</script>
+	</body>
+
+</html>

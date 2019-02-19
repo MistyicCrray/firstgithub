@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>后台登录-X-admin2.0</title>
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="./css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="./lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="./js/xadmin.js"></script>
+
+	</head>
+
+	<body class="login-bg">
+
+		<div class="login layui-anim layui-anim-up" id="app">
+			<div class="message">去哪儿买后台-管理登录</div>
+			<div id="darkbannerwrap"></div>
+
+			<form method="post" class="layui-form" @submit.prevent="submit">
+				<input name="username" placeholder="用户名" type="text" lay-verify="required" class="layui-input" v-model="inputtext.loginname">
+				<hr class="hr15">
+				<input name="password" lay-verify="required" placeholder="密码" type="password" class="layui-input" v-model="inputtext.password">
+				<hr class="hr15">
+				<input value="登录" lay-submit lay-filter="login" style="width:100%;" type="button" v-on:click="submit">
+				<hr class="hr20">
+			</form>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="js/vue-main.js"></script>
+		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: '#app',
+				data: {
+					user: {},
+					islogin: sessionStorage.length > 0,
+					inputtext: {
+						loginname: '',
+						password: ''
+					}
+				},
+				addCookie: function(username, password, value) {
+
+				},
+				// 在 `methods` 对象中定义方法
+				methods: { // 获取类别信息
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					getCookie: function() {
+						var _this = this;
+						var app = new Array();
+						var result = document.cookie.split(",");
+						for(var i = 0; i < result.length; i++) {
+							app[i] = result[i];
+						}
+						_this.inputtext.password = app[0];
+						_this.inputtext.loginname = app[1];
+						//  自动登录
+						/*_this.inputtext.autologin = app[3];
+						if(_this.inputtext.autologin) {
+							setTimeout(function() {
+								if(confirm("自动登录中请稍后...")) {
+									_this.submit();
+								}
+							}, 1);
+
+						}*/
+					},
+					submit: function() {
+						var _this = this;
+						console.info(_this.inputtext);
+						axios.post('/user/Login', _this.inputtext)
+							.then(function(response) {
+								var resultdata = response.data;
+								console.info(response);
+								sessionStorage.setItem("userId", resultdata.data.userInfo.id);
+								sessionStorage.setItem("username", resultdata.data.userInfo.username);
+								sessionStorage.setItem("accessToken", resultdata.data.accessToken);
+								if(_this.inputtext.remenber) {
+									document.cookie = _this.inputtext.password + "," + _this.inputtext.loginname + "," + true;
+								} else {
+									document.cookie = "";
+								}
+								if(_this.inputtext.autologin) {
+									document.cookie = _this.inputtext.password + "," + _this.inputtext.loginname + "," + true + "," + true;
+								}
+								alert("登录成功");
+								if(resultdata.data.userInfo.usertype == 0) {
+									window.location.href = '/cpts_1293_byy/index.html'; // 跳转	
+								} else if(resultdata.data.userInfo.usertype == 1) {
+									window.location.href = '/X-admin/index.html'; // 跳转	
+								}
+
+							})
+							.catch(function(err) {});
+					}
+				},
+				mounted: function() {
+					this.getCookie();
+				}
+			})
+		</script>
+	</body>
+
+</html>
