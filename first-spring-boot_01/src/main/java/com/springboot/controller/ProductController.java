@@ -168,4 +168,25 @@ public class ProductController {
 		}
 		return ResultGenerator.genSuccessResult(order);
 	}
+
+	/**
+	 * 竞拍
+	 * 
+	 * @param map
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value = "/auction/{productId}", method = RequestMethod.POST)
+	public Result auction(@RequestBody Map<String, Object> map, @CurrentUser User user,
+			@PathVariable String productId) {
+		Product product = productService.findById(productId);
+		if (product.getUserid().equals(user.getId())) {
+			return ResultGenerator.genFailResult("您不能竞拍自己的商品");
+		}
+		map.put("proid", productId);
+		map.put("bidderId", user.getId());
+		map.put("currentBidder", user.getUsername());
+		productService.update(map);
+		return ResultGenerator.genSuccessResult("竞拍成功");
+	}
 }

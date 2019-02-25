@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.service.StatisticsService;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
-
+/**
+ * 统计
+ * @author Administrator
+ *
+ */
 @RestController
 public class StatisticsController {
 

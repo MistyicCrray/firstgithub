@@ -43,6 +43,18 @@ public class ProductDynaProvider {
 				if (param.get("status") != null) {
 					SET("status=#{status}");
 				}
+				if (param.get("isNotAuction") != null) {
+					SET("isNotAuction=#{isNotAuction}");
+				}
+				if (param.get("increments") != null) {
+					SET("increments=#{increments}");
+				}
+				if (param.get("currentBidder") != null) {
+					SET("currentBidder=#{currentBidder}");
+				}
+				if (param.get("bidderId") != null) {
+					SET("bidderId=#{bidderId}");
+				}
 				WHERE("proid=#{proid}");
 			}
 		}.toString();
@@ -87,6 +99,18 @@ public class ProductDynaProvider {
 				}
 				if (param.get("quality") != null) {
 					WHERE("quality=#{quality}");
+				}
+				if (param.get("isNotAuction") != null) {
+					WHERE("isNotAuction=#{isNotAuction}");
+				}
+				if (param.get("increments") != null) {
+					WHERE("increments=#{increments}");
+				}
+				if (param.get("currentBidder") != null) {
+					WHERE("currentBidder=#{currentBidder}");
+				}
+				if (param.get("bidderId") != null) {
+					WHERE("bidderId=#{bidderId}");
 				}
 			}
 		}.toString();

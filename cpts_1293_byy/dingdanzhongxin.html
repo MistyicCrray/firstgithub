@@ -8,6 +8,7 @@
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 	</head>
 
 	<body>
@@ -105,7 +106,7 @@
 		</div>
 		<!-- end banner_x -->
 		<!-- self_info -->
-		<div class="grzxbj">
+		<div class="grzxbj" id="main">
 			<div class="selfinfo center">
 				<div class="lfnav fl">
 					<div class="ddzx">订单中心</div>
@@ -147,12 +148,43 @@
 					<div class="ddzxbt">交易订单</div>
 					<div class="ddxq">
 						<ul class="">
-							<li>订单号：01703210019672</li>
-							<li>铂弗伦斯堡汤锅DEP-179 少油烟 抗沾结 烹煮食物更安全</li>
-							<li>已付款</li>
-							<li>订单金额：39.00</li>
+							<li>订单号</li>
+							<li>商品名</li>
+							<li>数量</li>
+							<li>总价</li>
+							<li>状态</li>
+							<li>操作</li>
+						</ul>
+						<ul class="" v-for="item in orders">
+							<li>{{item.order_id}}</li>
+							<li style="font-size: 12px;">{{item.name}}</li>
+							<li>{{item.quantity}}</li>
+							<li>{{item.payment}}</li>
+							<li>{{item.status}}</li>
+							<li>
+								<a href="javascript:void(0)" class="" style="font-size: 13px;">查看详情</a>
+								<a href="javascript:void(0)" class="" style="font-size: 13px;">确认收货</a>
+								<a href="javascript:void(0)" class="fa fa-trash" title="删除订单"></a>
+							</li>
 						</ul>
 					</div>
+					<nav aria-label="Page navigation center">
+						<ul class="pagination">
+							<li>
+								<a href="javascript:void(0)" aria-label="Previous" v-on:click="prePage">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li v-for="page in pages" v-bind:class="{ 'active': pageNum == page}">
+								<a href="javascript:void(0)" v-on:click="pageClick(page)">{{page}}</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" aria-label="Next" v-on:click="nextPage">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -167,10 +199,52 @@
 			var vue = new Vue({
 				el: "#main",
 				data: {
-
+					orders: "",
+					user: sessionStorage,
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					inputPage: '',
+					pageNum: 1,
 				},
 				methods: {
-
+					getOrders: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get("/order", {
+							params: {
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							_this.orders = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						});
+					},
+					pageClick: function(page) {
+						this.getOrders(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if(this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getOrders(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if(this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getOrders(this.pageNum);
+					},
+				},
+				created: function() {
+					this.getOrders();
 				}
 			})
 		</script>

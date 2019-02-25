@@ -74,19 +74,19 @@ public class OrderDynaProvider {
 				LEFT_OUTER_JOIN("address a ON o.address_id=a.addrid");
 				if (map != null) {
 					if (map.get("id") != null) {
-						WHERE("id=#{id}");
+						WHERE("o.id=#{id}");
 					}
 					if (map.get("userid") != null) {
-						WHERE("userid=#{userid}");
+						WHERE("o.userid=#{userid}");
 					}
 					if (map.get("sellid") != null) {
-						WHERE("sellid=#{sellid}");
+						WHERE("o.sellid=#{sellid}");
 					}
 					if (map.get("status") != null) {
-						WHERE("status=#{status}");
+						WHERE("o.status=#{status}");
 					}
 					if (map.get("create_time") != null) {
-						WHERE("create_time=#{create_time}");
+						WHERE("o.create_time=#{create_time}");
 					}
 				}
 			}

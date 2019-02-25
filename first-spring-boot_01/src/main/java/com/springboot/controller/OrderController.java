@@ -112,11 +112,15 @@ public class OrderController {
 			@CurrentUser User user) {
 		if (user.getUsertype().equals("0")) {
 			map.put("userid", user.getId());
-		} else {
+			// 管理员
+		} else if (user.getUsertype().equals("1")) {
 			map.put("userid", null);
+		} else {
+			return ResultGenerator.genFailResult("您无权访问");
 		}
 		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<Map<String, Object>> list = orderService.findListBy(map);
+		
 		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
 	}
 
@@ -139,7 +143,6 @@ public class OrderController {
 		User sell = userService.findById(order.getSellid()); // 卖家
 		User buy = userService.findById(order.getUserid()); // 买家
 		Address address = addressService.findById(order.getAddressId());
-
 		Map<String, Object> orderMap = new HashMap<String, Object>();
 		orderMap.put("product", product);
 		orderMap.put("sell", sell);

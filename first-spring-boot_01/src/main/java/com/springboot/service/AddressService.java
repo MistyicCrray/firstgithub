@@ -64,6 +64,16 @@ public class AddressService {
 	}
 
 	/**
+	 * 修改地址
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public Integer update(Address address) {
+		return addressMapper.updateByPrimaryKey(address);
+	}
+
+	/**
 	 * 删除地址
 	 * 
 	 * @param id
@@ -84,7 +94,7 @@ public class AddressService {
 	}
 
 	/**
-	 * 查询地址                                       
+	 * 查询地址
 	 * 
 	 * @param map
 	 * @return

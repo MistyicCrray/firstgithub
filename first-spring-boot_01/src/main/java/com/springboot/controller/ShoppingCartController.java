@@ -33,7 +33,7 @@ public class ShoppingCartController {
 	private ProductService productService;
 
 	/**
-	 * 添加购物车以及购物车操作
+	 * 添加购物车
 	 * 
 	 * @Title: add
 	 * @Description: TODO
@@ -45,16 +45,18 @@ public class ShoppingCartController {
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result add(@RequestBody ShoppingCart shoppingCart, @CurrentUser User user) {
-		// 如果购物车存在已经添加过的商品，则两个相加
 		Map<String, Object> map = new HashMap<>();
 		map.put("productid", shoppingCart.getProductid());
 		List<Map<String, Object>> shoppingCarts = shoppingCartService.findList(map);
 		Map<String, Object> shopMap = new HashMap<>();
+		// 如果购物车存在已经添加过的商品，则两个相加
 		if (shoppingCarts.size() != 0) {
 			for (Map<String, Object> shoppingCart2 : shoppingCarts) {
 				if (shoppingCart.getProductid().equals(shoppingCart2.get("proid"))) {
+					// 总价相加
 					shopMap.put("total",
 							Float.parseFloat(shoppingCart2.get("total").toString()) + shoppingCart.getTotal());
+					// 数量相加
 					shopMap.put("quantity",
 							Integer.parseInt(shoppingCart2.get("quantity").toString()) + shoppingCart.getQuantity());
 					shopMap.put("cartid", shoppingCart2.get("cartid"));
@@ -104,7 +106,6 @@ public class ShoppingCartController {
 				}
 			}
 		}
-		System.out.println(map);
 		return ResultGenerator.genSuccessResult(shoppingCartService.update(map));
 	}
 
@@ -152,9 +153,9 @@ public class ShoppingCartController {
 	public Result comfirmOrder(@CurrentUser User user) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userid", user.getId());
+		// 已选中的商品进入订单
 		map.put("ischeck", "0");
 		List<Map<String, Object>> shopList = shoppingCartService.findList(map);
 		return ResultGenerator.genSuccessResult(shopList);
 	}
-
 }

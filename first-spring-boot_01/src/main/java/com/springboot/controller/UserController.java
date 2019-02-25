@@ -277,7 +277,7 @@ public class UserController {
 	}
 
 	/**
-	 * 
+	 * 用户修改密码
 	 * @param map
 	 * @return
 	 */
