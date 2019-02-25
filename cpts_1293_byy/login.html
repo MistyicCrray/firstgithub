@@ -11,6 +11,17 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/login.css">
 
 	</head>
+	<style type="text/css">
+		.remenber {
+			float: left;
+			margin-left: 50px;
+		}
+		
+		.autoLogin {
+			float: right;
+			margin-left: 80px;
+		}
+	</style>
 
 	<body>
 		<div id="app">
@@ -36,7 +47,13 @@
 							<div class="username">密&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;<input class="shurukuang" v-model="inputtext.password" type="password" name="password" placeholder="请输入你的密码" /></div>
 							<div class="username">
 								<div class="left fl">
-									<a href="forget.html">忘记密码？</a>
+									<label class="remenber"><input type="checkbox" v-model="remenber" />记住密码</label>
+									<label class="autoLogin"><input type="checkbox" v-model="autoLogin" />自动登录</label>
+								</div>
+							</div>
+							<div class="username">
+								<div class="left fl">
+									<a href="forget.html" style="color: white;">忘记密码？</a>
 								</div>
 							</div>
 						</div>
@@ -46,16 +63,13 @@
 					</div>
 				</div>
 			</form>
-			<!--<footer>
-				<div class="copyright">简体 | 繁体 | English | 常见问题</div>
-				<div class="copyright">小米公司版权所有-京ICP备10046444-<img src="resource/image/ghs.png" alt="">京公网安备11010802020134号-京ICP证110507号</div>
-			</footer>-->
 		</div>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script type="text/javascript" src="resource/js/base64.js"></script>
 		<script type="text/javascript">
 			var app = new Vue({
 				el: '#app',
@@ -65,40 +79,64 @@
 					inputtext: {
 						loginname: '',
 						password: ''
-					}
-				},
-				addCookie: function(username, password, value) {
-
+					},
+					autoLogin: "",
+					remenber: ""
 				},
 				// 在 `methods` 对象中定义方法
-				methods: { // 获取类别信息
+				methods: {
+					setCookie: function(cname, cvalue, exdays) {
+						var d = new Date();
+						var b = new Base64();
+						var str = b.encode(cvalue); // 加密
+						d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+						document.cookie = cname + "=" + str + "; ";
+					},
+					getCookie: function(cname) {
+						var name = cname + "=";
+						var ca = document.cookie.split(';');
+						var b = new Base64();
+						for(var i = 0; i < ca.length; i++) {
+							var c = ca[i];
+							while(c.charAt(0) == ' ') c = c.substring(1);
+							if(c.indexOf(name) != -1) {
+								var cnameValue = unescape(c.substring(name.length, c.length));
+								return b.decode(cnameValue); // 解密
+							}
+						}
+						return "";
+					},
 					logout: function() {
 						logout();
 						location.href = "login.html";
 					},
-					//					getCookie: function() {
-					//						var _this = this;
-					//						var app = new Array();
-					//						var result = document.cookie.split(",");
-					//						for(var i = 0; i < result.length; i++) {
-					//							app[i] = result[i];
-					//						}
-					//						_this.inputtext.password = app[0];
-					//						_this.inputtext.loginname = app[1];
-					//  自动登录
-					/*_this.inputtext.autologin = app[3];
-					if(_this.inputtext.autologin) {
-						setTimeout(function() {
-							if(confirm("自动登录中请稍后...")) {
-								_this.submit();
-							}
-						}, 1);
-
-					}*/
-					//					},
+					autoLogin: function() {
+						var _this = this;
+						_this.login.password = _this.getCookie("password");
+						_this.login.loginName = _this.getCookie("loginName");
+						_this.login.remenber = _this.getCookie("remenber");
+						_this.login.autoLogin = _this.getCookie("autoLogin");
+						if(_this.login.autoLogin) {
+							layer.msg('自动登陆中...', {
+								time: 2000, //2s后自动关闭
+								btn: ['取消'],
+								shade: 0.5,
+								yes: function(index) {
+									layer.close(index);
+									_this.login.autoLogin = false;
+								}
+							});
+						}
+						if(_this.login.autoLogin) {
+							setTimeout(function() {
+								if(_this.login.autoLogin) {
+									_this.submit();
+								}      
+							}, 2000)
+						}
+					},
 					submit: function() {
 						var _this = this;
-						console.info(_this.inputtext);
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
 								var resultdata = response.data;
@@ -106,22 +144,36 @@
 								sessionStorage.setItem("userId", resultdata.data.userInfo.id);
 								sessionStorage.setItem("username", resultdata.data.userInfo.username);
 								sessionStorage.setItem("accessToken", resultdata.data.accessToken);
-								//								if(_this.inputtext.remenber) {
-								//									document.cookie = _this.inputtext.password + "," + _this.inputtext.loginname + "," + true;
-								//								} else {
-								//									document.cookie = "";
-								//								}
-								//								if(_this.inputtext.autologin) {
-								//									document.cookie = _this.inputtext.password + "," + _this.inputtext.loginname + "," + true + "," + true;
-								//								}
-								alert("登录成功");
+								if(_this.inputtext.remenber) {
+									_this.setCookie("loginName", _this.inputtext.loginName, 7);
+									_this.setCookie("password", _this.inputtext.password, 7);
+									_this.setCookie("remenber", "true", 7);
+									_this.setCookie("autoLogin", "", 7);
+								} else {
+									document.cookie = "";
+								}
+								if(_this.inputtext.autologin) {
+									_this.setCookie("loginName", _this.inputtext.loginName, 7);
+									_this.setCookie("password", _this.inputtext.password, 7);
+									_this.setCookie("remenber", "true", 7);
+									_this.setCookie("autoLogin", "true", 7);
+								} else {
+									document.cookie = "";
+								}
+								if(resultdata.code == 200) {
+									alert("登录成功");
+								}
+								if(resultdata.code == 400) {
+									alert(resultdata.message);
+								}
+
 								window.location.href = '/cpts_1293_byy/index.html'; // 跳转
 							})
 							.catch(function(err) {});
 					}
 				},
-				mounted: function() {
-					//					this.getCookie();
+				created: function() {
+					this.autoLogin();
 				}
 			})
 		</script>

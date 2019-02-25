@@ -48,6 +48,7 @@ public class ProductDynaProvider {
 		}.toString();
 	}
 
+	// 类别查询
 	public String selectProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
@@ -60,6 +61,7 @@ public class ProductDynaProvider {
 					WHERE("name=#{name}");
 				}
 				if (param.get("cateid") != null) {
+					// 父类别和子类别同时查询
 					WHERE("category=ANY(SELECT ID FROM CATEGORY WHERE PARENTID=#{cateid}) OR category=#{cateid}");
 				}
 				if (param.get("price") != null) {

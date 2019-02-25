@@ -15,7 +15,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class TokenUtil {
-	private static final String SECRET = "com.infohold.hm";
+	private static final String SECRET = "admin";
 
 	private static Logger logger = LoggerFactory.getLogger(TokenUtil.class.getClass());
 
@@ -25,9 +25,9 @@ public class TokenUtil {
 	 *         编号 @param @return 参数 @return String 返回类型 @throws
 	 */
 	public static String createJwtToken(String id) {
-		String issuer = "hm.infohold.com";
+		String issuer = "www.gowhere.com";
 		String subject = "";
-		long ttlMillis = 3600000;
+		long ttlMillis = 3600000 * 8; // 八小时
 		return createJwtToken(id, issuer, subject, ttlMillis);
 	}
 

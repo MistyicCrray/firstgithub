@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.News;
+import com.springboot.entity.User;
 import com.springboot.service.NewsService;
+import com.springboot.tools.CurrentUser;
+import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.TableData;
@@ -53,8 +56,12 @@ public class NewsController {
 	 * @author hlx
 	 * @date 2018年11月19日下午5:20:11
 	 */
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@ModelAttribute News news) {
+	public Result add(@ModelAttribute News news, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(newsService.add(news));
 	}
 
@@ -68,8 +75,12 @@ public class NewsController {
 	 * @author hlx
 	 * @date 2018年11月19日下午5:20:45
 	 */
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	public Result delete(@PathVariable String id) {
+	public Result delete(@PathVariable String id, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(newsService.delete(id));
 	}
 
@@ -83,19 +94,24 @@ public class NewsController {
 	 * @author hlx
 	 * @date 2018年11月19日下午5:21:54
 	 */
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map) {
+	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(newsService.update(map));
 	}
 
 	/**
 	 * 详情
-	* @Title: findById 
-	* @Description: TODO 
-	* @param id
-	* @return Result
-	* @author hlx
-	* @date 2018年11月19日下午5:27:36
+	 * 
+	 * @Title: findById
+	 * @Description: TODO
+	 * @param id
+	 * @return Result
+	 * @author hlx
+	 * @date 2018年11月19日下午5:27:36
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {

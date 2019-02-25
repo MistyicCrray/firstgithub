@@ -73,6 +73,29 @@ function GetQueryString(key) {
 	return result ? decodeURIComponent(result[2]) : null;
 }
 
+function setCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	var b = new Base64();
+	var str = b.encode(cvalue); // 加密
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	document.cookie = cname + "=" + str + "; ";
+}
+
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	var b = new Base64();
+	for(var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while(c.charAt(0) == ' ') c = c.substring(1);
+		if(c.indexOf(name) != -1) {
+			var cnameValue = unescape(c.substring(name.length, c.length));
+			return b.decode(cnameValue); // 解密
+		}
+	}
+	return "";
+}
+
 /*点击小图弹出大图*/
 $(document).on('click', '.busin_img > a', function() {
 	console.log('点击小图显示大图')

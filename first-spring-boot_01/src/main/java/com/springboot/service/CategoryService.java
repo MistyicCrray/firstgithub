@@ -1,15 +1,16 @@
 package com.springboot.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.StringUtil;
 import com.springboot.entity.Category;
 import com.springboot.mapper.CategoryMapper;
 import com.springboot.tools.ServiceException;
-import com.springboot.tools.UUIDUtils;
 
 @Service
 public class CategoryService {
@@ -18,10 +19,31 @@ public class CategoryService {
 	private CategoryMapper categoryMapper;
 
 	public int add(Category category) {
-		category.setId(UUIDUtils.get16UUID());
+		int id = 1001;
 		List<Category> list = categoryMapper.selectAll();
+		// 当这个类型为父类型时
+		if (StringUtil.isEmpty(category.getParentid())) {
+			Map<String, Object> cateMap = new HashMap<>();
+			cateMap.put("parentid", null);
+			List<Category> sonList = categoryMapper.findList(cateMap);
+			if (list.size() == 0) {
+				category.setId("1001");
+			} else {
+				category.setId(id + sonList.size() + "");
+			}
+			// 当这个类型为子类型时
+		} else {
+			Map<String, Object> cateMap = new HashMap<>();
+			cateMap.put("parentid", category.getParentid());
+			List<Category> sonList = categoryMapper.findList(cateMap);
+			if (sonList.size() < 10) {
+				category.setId(id + "0" + sonList.size());
+			} else {
+				category.setId(id + sonList.size() + "");
+			}
+		}
 		for (Category cate : list) {
-			if(category.getName().equals(cate.getName())) {
+			if (category.getName().equals(cate.getName())) {
 				throw new ServiceException("该类型已存在");
 			}
 		}

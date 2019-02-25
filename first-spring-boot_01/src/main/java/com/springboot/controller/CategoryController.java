@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +15,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.Category;
 import com.springboot.entity.Product;
+import com.springboot.entity.User;
 import com.springboot.service.CategoryService;
+import com.springboot.tools.CurrentUser;
+import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.TableData;
@@ -53,8 +56,12 @@ public class CategoryController {
 	 * @param category
 	 * @return Result
 	 */
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result inset(@ModelAttribute Category category) {
+	public Result inset(@RequestBody Category category, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(categoryService.add(category));
 	}
 
@@ -66,8 +73,12 @@ public class CategoryController {
 	 * @param map
 	 * @return Result
 	 */
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map) {
+	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(categoryService.update(map));
 	}
 

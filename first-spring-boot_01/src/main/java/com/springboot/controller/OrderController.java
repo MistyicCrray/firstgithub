@@ -110,10 +110,14 @@ public class OrderController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result find(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,
 			@CurrentUser User user) {
-		map.put("userid", user.getId());
-		Page<Order> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
-		List<Order> list = orderService.findList(map);
-		return ResultGenerator.genSuccessResult(new TableData<Order>(page.getTotal(), list));
+		if (user.getUsertype().equals("0")) {
+			map.put("userid", user.getId());
+		} else {
+			map.put("userid", null);
+		}
+		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		List<Map<String, Object>> list = orderService.findListBy(map);
+		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
 	}
 
 	/**

@@ -89,7 +89,6 @@ public class UserController {
 						+ "&activeCode=" + activeCode + "'>" + domain + "/active.html?id=" + list.get(0).getId()
 						+ "&activeCode=" + activeCode + "</a>该链接48小时内有效", user.getLoginname(), "激活邮箱", javaMailSender,
 						form);
-
 				userService.update(userMap, null);
 				return ResultGenerator.genSuccessResult("success");
 			}
@@ -98,6 +97,7 @@ public class UserController {
 		user.setActivecode(activeCode);
 		user.setActivedate(now.getTime()); // 存入过期时间,两天后过期
 		user.setState("4"); // 未激活状态
+		user.setUsertype("0"); // 非管理员
 		// 发送邮件
 		SendEmailUtil.send(
 				"点击激活邮箱：<a href='" + domain + "/active.html?id=" + user.getId() + "&activeCode=" + activeCode + "'>"
@@ -203,15 +203,15 @@ public class UserController {
 			@RequestParam(required = false) MultipartFile file) {
 		map.put("password", MD5.md5((String) map.get("password")));
 		if (userService.login(map) == null) {
-			throw new ServiceException("用户名或密码错误");
+			return ResultGenerator.genFailResult("用户名或密码错误");
 		}
 		List<User> users = userService.findList(map);
 		if (users.size() != 0) {
 			if (users.get(0).getState().equals("2")) {
-				throw new ServiceException("用户未激活");
+				return ResultGenerator.genFailResult("用户未激活");
 			}
 			if (users.get(0).getState().equals("1")) {
-				throw new ServiceException("用户已被冻结");
+				return ResultGenerator.genFailResult("用户已被冻结");
 			}
 		}
 
@@ -231,10 +231,12 @@ public class UserController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map,
+	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map,
 			@RequestParam(required = false) MultipartFile img) {
 		map.put("id", id);
-		map.remove("password");
+		if (!map.get("password").equals("123456")) {
+			map.remove("password");
+		}
 		return ResultGenerator.genSuccessResult(userService.update(map, img));
 	}
 

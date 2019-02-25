@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.Banner;
+import com.springboot.entity.User;
 import com.springboot.service.BannerService;
+import com.springboot.tools.CurrentUser;
+import com.springboot.tools.LoginRequired;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.TableData;
@@ -33,18 +36,30 @@ public class BannerController {
 	@Autowired
 	private BannerService bannerService;
 
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@RequestBody Banner banner) {
+	public Result add(@RequestBody Banner banner, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(bannerService.add(banner));
 	}
 
+	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public Result delete(@PathVariable String id) {
+	public Result delete(@PathVariable String id, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(bannerService.delete(id));
 	}
 
+	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestBody Banner banner) {
+	public Result update(@RequestBody Banner banner, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		return ResultGenerator.genSuccessResult(bannerService.add(banner));
 	}
 

@@ -247,6 +247,10 @@
 							pd_FrpId: 'POST-NET-B2C',
 							text: "zgyz.png"
 						},
+						{
+							pd_FrpId: 'CEB-NET-B2C',
+							text: "guangda.jpg"
+						},
 					],
 					chooseKey: ""
 				},
@@ -296,7 +300,7 @@
 							return;
 						}
 						if(_this.pd_FrpId == "" || _this.pd_FrpId == null) {
-							alert("请选择地址");
+							alert("请选择支付银行");
 							return;
 						}
 						if(_this.products == "" || _this.products == null) {
@@ -305,7 +309,7 @@
 						}
 						axios.post('/product/buy/' + _this.addrId, _this.products)
 							.then(function(res) {
-								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01;
+								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.orderId;
 							})
 
 					},
@@ -315,10 +319,10 @@
 							console.info(res);
 							_this.address = res.data.data.rows;
 							_this.address.forEach(function(i) {
-								console.info(i.status);
 								if(i.status == '0') {
 									$("#" + i.addrid).attr("checked", "checked");
 								}
+								
 							})
 
 						})
@@ -355,6 +359,7 @@
 				},
 				created: function() {
 					this.getAddress();
+					this.getbank("ICBC-NET-B2C");
 					this.confirm();
 				}
 			})

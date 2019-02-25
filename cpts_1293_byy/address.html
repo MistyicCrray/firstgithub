@@ -284,6 +284,7 @@
 						axios.post('/address', _this.inputtext)
 							.then(function(res) {
 								alert("保存成功");
+								console.info(_this.inputtext);
 								_this.inputtext = "";
 								$("#address").val("");
 								_this.search();

@@ -129,6 +129,7 @@ public class ProductController {
 	@RequestMapping(value = "/buy/{addrid}", method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map,
 			@PathVariable(value = "addrid") String addrid) {
+		Order order = new Order();
 		for (Map<String, Object> productMap : map) {
 			Integer quantity = Integer.parseInt(productMap.get("quantity").toString());
 			Integer quality = Integer.parseInt(productMap.get("quality").toString());
@@ -154,7 +155,6 @@ public class ProductController {
 			}
 			Product product = productService.findById((String) productMap.get("proid"));
 			// 购买时生成订单
-			Order order = new Order();
 			order.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
 			order.setSellid(product.getUserid()); // 卖家Id
 			order.setUserid(user.getId()); // 买家Id
@@ -166,6 +166,6 @@ public class ProductController {
 			order.setAddressId(addrid);
 			orderService.add(order);
 		}
-		return ResultGenerator.genSuccessResult("success");
+		return ResultGenerator.genSuccessResult(order);
 	}
 }

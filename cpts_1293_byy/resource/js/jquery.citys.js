@@ -34,7 +34,7 @@
             getApi = getApi||function(){};
         }
         var defaults = {
-            dataUrl:'http://passer-by.com/data_location/list.json',     //数据库地址
+            dataUrl:'city.json',     //数据库地址
             dataType:'json',          //数据库类型:'json'或'jsonp'
             provinceField:'province', //省份字段名
             cityField:'city',         //城市字段名

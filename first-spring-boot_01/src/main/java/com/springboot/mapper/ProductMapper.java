@@ -145,7 +145,7 @@ public interface ProductMapper {
 
 	@UpdateProvider(type = com.springboot.entity.dyna.ProductDynaProvider.class, method = "updateProvider")
 	Integer update(Map<String, Object> map);
-
+	
 	@Results({ @Result(column = "proid", property = "proid", jdbcType = JdbcType.VARCHAR, id = true),
 			@Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "category", property = "category", jdbcType = JdbcType.VARCHAR),

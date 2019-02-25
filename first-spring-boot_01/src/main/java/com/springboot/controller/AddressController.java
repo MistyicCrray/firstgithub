@@ -1,5 +1,7 @@
 package com.springboot.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,16 @@ public class AddressController {
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id, @CurrentUser User user) {
-		return ResultGenerator.genSuccessResult(addressService.delete(id));
+		addressService.delete(id);
+		Map<String, Object> map = new HashMap<>();
+		map.put("userid", user.getId());
+		List<Address> addrList = addressService.findList(map);
+		if (addrList.size() == 1) {
+			Address address = addrList.get(0);
+			address.setStatus("0");
+			addressService.update(address);
+		}
+		return ResultGenerator.genSuccessResult();
 	}
 
 	@LoginRequired

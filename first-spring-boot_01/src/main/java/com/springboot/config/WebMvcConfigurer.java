@@ -64,9 +64,10 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
 
 	/**
 	 * 配置CurrentUser
-	* @Title: currentUserMethodArgumentResolver 
-	* @Description: TODO 
-	* @return CurrentUserMethodArgumentResolver
+	 * 
+	 * @Title: currentUserMethodArgumentResolver
+	 * @Description: TODO
+	 * @return CurrentUserMethodArgumentResolver
 	 */
 	@Bean
 	public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
