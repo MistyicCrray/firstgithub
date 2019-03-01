@@ -22,6 +22,7 @@ public class App {
 		factory.setMaxFileSize("20MB"); // KB,MB
 		/// 设置总上传数据总大小
 		factory.setMaxRequestSize("1000MB");
+		factory.setLocation("e:/data/upload/images");
 		return factory.createMultipartConfig();
 	}
 }

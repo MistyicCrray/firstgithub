@@ -79,13 +79,8 @@
 			border-right: 0;
 		}
 		
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-		}
-		
-		input[type="number"] {
-			-moz-appearance: textfield;
+		input {
+			min-width: 30px
 		}
 	</style>
 
@@ -188,7 +183,7 @@
 				<div class="left fl"><img v-bind:src="'/images/' + product.img" style="width: 562px;"></div>
 				<div class="right fr">
 					<div class="jiage ml20 mt10">{{product.name}}</div>
-					<div class="jiage ml20 mt10">{{product.price}}元</div>
+					<div class="jiage ml20 mt10">￥{{product.price}}元</div>
 					<div class="jiage ml20 mt10">总计：{{product.price * quantity | numFilter}}元</div>
 					<div class="xiadan ml20 mt20">
 						<ul class="btn-numbox">

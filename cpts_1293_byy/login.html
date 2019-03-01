@@ -110,26 +110,26 @@
 						logout();
 						location.href = "login.html";
 					},
-					autoLogin: function() {
+					autoLoginF: function() {
 						var _this = this;
-						_this.login.password = _this.getCookie("password");
-						_this.login.loginName = _this.getCookie("loginName");
-						_this.login.remenber = _this.getCookie("remenber");
-						_this.login.autoLogin = _this.getCookie("autoLogin");
-						if(_this.login.autoLogin) {
+						_this.inputtext.password = _this.getCookie("password");
+						_this.inputtext.loginName = _this.getCookie("loginName");
+						_this.inputtext.remenber = _this.getCookie("remenber");
+						_this.inputtext.autoLogin = _this.getCookie("autoLogin");
+						if(_this.inputtext.autoLogin) {
 							layer.msg('自动登陆中...', {
 								time: 2000, //2s后自动关闭
 								btn: ['取消'],
 								shade: 0.5,
 								yes: function(index) {
 									layer.close(index);
-									_this.login.autoLogin = false;
+									_this.inputtext.autoLogin = false;
 								}
 							});
 						}
-						if(_this.login.autoLogin) {
+						if(_this.inputtext.autoLogin) {
 							setTimeout(function() {
-								if(_this.login.autoLogin) {
+								if(_this.inputtext.autoLogin) {
 									_this.submit();
 								}      
 							}, 2000)
@@ -173,7 +173,7 @@
 					}
 				},
 				created: function() {
-					this.autoLogin();
+					this.autoLoginF();
 				}
 			})
 		</script>

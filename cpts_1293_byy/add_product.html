@@ -19,9 +19,9 @@
 								<div class="form-group">
 									<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 									<div class="col-sm-6">
-										<select v-model="product.isNotAuction" class="form-control" name="isNotAuction">
-											<option value="1">是</option>
-											<option value="0">否</option>
+										<select v-model="product.isNotAuction" v-on:change="isNotAuction" class="form-control" name="isNotAuction">
+											<option v-bind:value="1">是</option>
+											<option v-bind:value="0">否</option>
 										</select>
 									</div>
 								</div>
@@ -59,13 +59,13 @@
 										<input type="text" class="form-control" v-model="product.increments" name="increments">
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
+								<div class="form-group" v-if="product.isNotAuction==0">
 									<label for="consignee" class="col-sm-2 control-label">单价:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.price" name="price">
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
+								<div class="form-group">
 									<label for="consignee" class="col-sm-2 control-label">数量:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.quality" name="quality">
@@ -87,7 +87,7 @@
 								<div class="form-group center">
 									<label for="inputEmail3" class="col-sm-2 control-label"></label>
 									<div class="col-sm-5">
-										<input type="button" class="form-control btn-default" value="保存">
+										<input type="button" v-on:click="submit" class="form-control btn-default" value="保存">
 									</div>
 								</div>
 							</div>
@@ -119,6 +119,9 @@
 					categories: ""
 				},
 				methods: {
+					isNotAuction:function(){
+						console.info(this.product.isNotAuction);
+					},
 					getCategory: function() {
 						var _this = this;
 						axios.get('/category')
@@ -134,9 +137,10 @@
 						formData.append("category", _this.product.category);
 						if(_this.product.isNotAuction == 1) {
 							formData.append("quality", 1);
-							formData.append("price", _this.product.price); // 当前定价
-							formData.append("minPrice", _this.product.price); // 设定为最小定价
+							formData.append("price", _this.product.minPrice); // 当前定价
+							formData.append("minPrice", _this.product.minPrice); // 设定为最小定价
 							formData.append("increments", _this.product.increments); // 设定每次最小叫价
+							formData.append("isNotAuction", _this.product.isNotAuction); // 设定每次最小叫价
 						} else {
 							if(_this.product.quality == null || _this.product.quality == "") {
 								alert("请输入数量");

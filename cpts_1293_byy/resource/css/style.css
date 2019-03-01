@@ -165,10 +165,10 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .xiangqing .neirong nav li a{color: #333;font-size: 14px;}
 .xiangqing .neirong nav li a:hover{color:#007ab6;}
 /*jieshao*/
-.jieshao{height: 560px; }
-.jieshao .left{width:560px;height:560px;border:1px solid #ccc;}
-.jieshao .right{width:620px;background: rgb(248,248,248);height: 600px;}
-.jieshao .right .jianjie{font-size: 14px;color: rgb(176,176,176);line-height: 20px;}
+.jieshao{height: 400px; }
+.jieshao .left{width:400px;height:400px;border:1px solid #ccc; margin-left: 100px;}
+.jieshao .right{width:400px;background: rgb(248,248,248);height: 600px;margin-right: 120px;}
+.jieshao .right .jianjie{font-size: 14px;color: rgb(176,176,176);line-height: 20px;margin-top: -100px;}
 .jieshao .right .jiage{font-size: 18px;color:#007ab6;font-weight: bold;}
 .jieshao .right .xzbb{height: 58px;line-height:58px;}
 .jieshao .right .xzbb .banben{height: 58px;line-height: 58px;width: 278px;cursor:pointer;margin-right: 5px;border:1px solid #bbb;}
@@ -181,7 +181,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .xqxq{height: 80px;width: 555px;background: rgb(255,255,255);padding:20px;}
 /*是否下单*/
 .xiadan{height: 50px;line-height: 50px;}
-.xiadan .jrgwc{height: 50px;width: 200px;border:none;background:#007ab6;color:#fff;font-size: 18px;font-weight: bold;cursor:pointer;margin-right: 50px;}
+.xiadan .jrgwc{height: 50px;width: 200px;border:none;background:#007ab6;color:#fff;font-size: 18px;font-weight: bold;cursor:pointer;margin-top: 50px;}
 .xiadan .jrgwc:hover{border:1px solid #fff;}
 /*我的购物车*/
 .banner_x .wdgwc{height: 100px;line-height: 100px;font-weight:bold;font-size: 24px;}

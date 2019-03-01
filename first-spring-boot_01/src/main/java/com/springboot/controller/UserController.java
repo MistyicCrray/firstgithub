@@ -1,6 +1,5 @@
 package com.springboot.controller;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,48 +61,8 @@ public class UserController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Result insertUser(@RequestBody User user) throws MessagingException {
-		String activeCode = UUIDUtils.getActiveCode();
-		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DATE, 2); // 存入过期时间
-		if (!user.getLoginname().matches("^\\w+@(\\w+\\.)+\\w+$")) {
-			throw new ServiceException("邮箱不合法");
-		}
-		// 检测用户登录账号是否存在
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("loginname", user.getLoginname());
-		List<User> list = userService.findList(map);
-		if (list.size() != 0) {
-			// 如果存在并且已经激活
-			if (list.get(0).getState().equals("0")) {
-				throw new ServiceException("邮箱已被注册");
-			}
-			// 如账号存在并且没激活则重新发送邮件，并且更新该用户数据
-			if (list.get(0).getState().equals("4")) {
-				Map<String, Object> userMap = new HashMap<String, Object>();
-				userMap.put("activeCode", activeCode);
-				userMap.put("activeDate", now.getTime());
-				userMap.put("id", list.get(0).getId());
-				userMap.put("password", MD5.md5(user.getPassword()));
-				// 发送邮件
-				SendEmailUtil.send("点击激活邮箱：<a href='" + domain + "/active.html?id=" + list.get(0).getId()
-						+ "&activeCode=" + activeCode + "'>" + domain + "/active.html?id=" + list.get(0).getId()
-						+ "&activeCode=" + activeCode + "</a>该链接48小时内有效", user.getLoginname(), "激活邮箱", javaMailSender,
-						form);
-				userService.update(userMap, null);
-				return ResultGenerator.genSuccessResult("success");
-			}
-		}
-		user.setId(UUIDUtils.get16UUID());
-		user.setActivecode(activeCode);
-		user.setActivedate(now.getTime()); // 存入过期时间,两天后过期
-		user.setState("4"); // 未激活状态
-		user.setUsertype("0"); // 非管理员
-		// 发送邮件
-		SendEmailUtil.send(
-				"点击激活邮箱：<a href='" + domain + "/active.html?id=" + user.getId() + "&activeCode=" + activeCode + "'>"
-						+ domain + "/active.html?id=" + user.getId() + "&activeCode=" + activeCode + "</a>该链接48小时内有效",
-				user.getLoginname(), "激活邮箱", javaMailSender, form);
-		return ResultGenerator.genSuccessResult(userService.add(user));
+		User add = userService.add(user);
+		return ResultGenerator.genSuccessResult(add);
 	}
 
 	/**
@@ -256,9 +215,10 @@ public class UserController {
 	 * 
 	 * @param id
 	 * @return
+	 * @throws MessagingException 
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Result addAdmin(@RequestBody User user) {
+	public Result addAdmin(@RequestBody User user) throws MessagingException {
 		user.setUsertype("admin");
 		return ResultGenerator.genSuccessResult(userService.add(user));
 	}
@@ -289,6 +249,7 @@ public class UserController {
 		}
 		if (StringUtil.isNotEmpty(map.get("password").toString())) {
 			user.setPassword(MD5.md5(map.get("password").toString()));
+			// 修改成功时清空字段
 			user.setActivecode("");
 			userService.updateByUser(user);
 		}
@@ -317,7 +278,8 @@ public class UserController {
 			String activeCode = UUIDUtils.getActiveCode();
 			// 发送邮件
 			SendEmailUtil.send(activeCode, user.getLoginname(), "修改密码动态码", javaMailSender, form);
-			user.setActivecode(activeCode);// 添加动态码
+			// 添加动态码
+			user.setActivecode(activeCode);
 			userService.updateByUser(user);
 		}
 		return ResultGenerator.genSuccessResult("邮件发送成功");

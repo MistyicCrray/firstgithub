@@ -13,8 +13,16 @@
 	</head>
 
 	<style type="text/css">
-		.nav {
+		.banner_y .nav {
 			float: left;
+			width: 300px;
+			height: 460px;
+		}
+		
+		.banner_y .nav ul li {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
 		}
 		
 		.lunbo {
@@ -89,7 +97,7 @@
 							<a href="about.html">手机二手</a>
 						</li>
 						<li>
-							<a href="saleroom.html">拍卖场</a>
+							<a href="shop.html">拍卖场</a>
 						</li>
 						<li>
 							<a href="self_info.html">我的发布</a>
@@ -114,21 +122,21 @@
 			<!-- start banner_y -->
 			<div class="banner_y center">
 				<div class="nav">
-					<ul>
-						<li v-for="item1 in categories" v-if="item1.parentid==null">
-							<a :href="['liebiao.html?cateid=' + item1.id]">{{item1.name}}</a>
-							<div class="pop">
-								<div class="left fl">
-									<div>
-										<div class="xuangou_left fl" v-for="item2 in categories" v-if="item1.id==item2.parentid">
-											<a :href="['liebiao.html?cateid=' + item2.id]">
-												<span class="fl">{{item2.name}}</span>
-											</a>
-										</div>
-									</div>
-								</div>
-								<div class="clear"></div>
-							</div>
+					<ul class="myTit">
+						<li>
+							<a title="望创天价香港苏富比春季书画拍卖亮点几许" href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
+						</li>
+						<li>
+							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
+						</li>
+						<li>
+							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
+						</li>
+						<li>
+							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
+						</li>
+						<li>
+							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
 						</li>
 					</ul>
 				</div>
@@ -158,7 +166,7 @@
 			<!-- start danpin -->
 			<div class="danpin center">
 				<!--新品-->
-				<div class="biaoti center">最新上架二手</div>
+				<div class="biaoti center">正在热拍</div>
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
@@ -171,60 +179,6 @@
 						<div class="jiage">{{item.price}}元</div>
 					</div>
 					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="peijian w">
-				<div class="biaoti center">电脑配件专区</div>
-				<div class="main center">
-					<div class="content">
-						<div class="remen fl">
-							<a href=""><img width="234px" height="300px" src="resource/image/peijian1.jpg"></a>
-						</div>
-						<div class="remen fl">
-							<div class="xinpin"><span style="background:red">火爆</span></div>
-							<div class="tu">
-								<a href=""><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
-							</div>
-							<div class="miaoshu">
-								<a href="">小米6 硅胶保护套</a>
-							</div>
-							<div class="jiage">49元</div>
-							<div class="pingjia">372人评价</div>
-							<div class="piao">
-								<a href="">
-									<span>发货速度很快！很配小米6！</span>
-									<span>来至于mi狼牙的评价</span>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="peijian w">
-				<div class="biaoti center">家具家电</div>
-				<div class="main center">
-					<div class="content">
-						<div class="remen fl">
-							<a href=""><img width="234px" height="300px" src="resource/image/peijian1.jpg"></a>
-						</div>
-						<div class="remen fl">
-							<div class="xinpin"><span style="background:red">火爆</span></div>
-							<div class="tu">
-								<a href=""><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
-							</div>
-							<div class="miaoshu">
-								<a href="">小米6 硅胶保护套</a>
-							</div>
-							<div class="jiage">49元</div>
-							<div class="pingjia">372人评价</div>
-							<div class="piao">
-								<a href="">
-									<span>发货速度很快！很配小米6！</span>
-									<span>来至于mi狼牙的评价</span>
-								</a>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -272,14 +226,9 @@
 								watchSlidesVisibility: true,
 							},
 						});
-
-					})
+					});
 				},
 				methods: {
-					// 获取购物车信息
-					getCarts: function() {
-
-					},
 					getBanner: function() {
 						var _this = this;
 						axios.get('/banner', {
@@ -303,7 +252,6 @@
 							_this.categories = response.data.data.rows;
 						})
 					},
-					getlocal: function() {},
 					logout: function() {
 						logout();
 						location.href = "login.html";
@@ -315,7 +263,8 @@
 						axios.get('/product', {
 							params: {
 								pageNum: pageIndex,
-								size: _this.pageSize
+								size: _this.pageSize,
+								isNotAuction: 1
 							}
 						}).then(function(response) {
 							console.info(response);
@@ -350,9 +299,6 @@
 					searchForm: function() {
 						location.href = "liebiao.html?search=" + this.search;
 					}
-				},
-				mounted: function() {
-					this.getlocal();
 				}
 			});
 		</script>
