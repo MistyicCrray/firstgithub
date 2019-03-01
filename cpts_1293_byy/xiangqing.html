@@ -213,9 +213,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script type="text/javascript" src="resource/js/layer.js"></script>
-		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script>
 			var id = GetQueryString("id");
 			var vue = new Vue({
@@ -232,6 +229,7 @@
 					axios.get('/product/' + id).then(function(res) {
 						_this.product = res.data.data;
 						document.getElementById("detail").innerHTML = res.data.data.detail;
+
 					})
 				},
 				methods: {

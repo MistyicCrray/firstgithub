@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="./js/xadmin.js"></script>
 	</head>
-
 	<body>
 		<div id="main">
 
@@ -102,9 +101,23 @@
 				<div class="page">
 					<div>
 						<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
-						<i v-for="page in pages">
-							<a class="num" href="javascript:void(0)" v-bind:class="{ 'current': pageNum == page}" v-on:click="pageClick(page)">{{page}}</a>
-						</i>
+						<template v-for="(item,index) in pages">
+							<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
+								<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							</template>
+							<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
+								<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							</template>
+							<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
+								<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							</template>
+							<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
+								<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							</template>
+							<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
+								<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							</template>
+						</template>
 						<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
 					</div>
 				</div>

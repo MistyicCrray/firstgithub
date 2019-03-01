@@ -20,6 +20,12 @@
 		.lunbo {
 			display: flex;
 		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
 	</style>
 
 	<body>
@@ -165,7 +171,7 @@
 							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
-							<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
+							<a :href="['xiangqing.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
 						</div>
 						<div class="youhui">暂无优惠</div>
 						<div class="jiage">{{item.price}}元</div>
@@ -315,7 +321,8 @@
 						axios.get('/product', {
 							params: {
 								pageNum: pageIndex,
-								size: _this.pageSize
+								size: _this.pageSize,
+								isNotAuction: 0
 							}
 						}).then(function(response) {
 							console.info(response);

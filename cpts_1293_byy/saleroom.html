@@ -28,6 +28,12 @@
 		.lunbo {
 			display: flex;
 		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
 	</style>
 
 	<body>
@@ -123,8 +129,11 @@
 			<div class="banner_y center">
 				<div class="nav">
 					<ul class="myTit">
+						<li style="text-align: center;">
+							<a href="#">拍卖信息</a>
+						</li>
 						<li>
-							<a title="望创天价香港苏富比春季书画拍卖亮点几许" href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
+							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
 						</li>
 						<li>
 							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
@@ -173,7 +182,7 @@
 							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
-							<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
+							<a :href="['xiangqing.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
 						</div>
 						<div class="youhui">暂无优惠</div>
 						<div class="jiage">{{item.price}}元</div>
