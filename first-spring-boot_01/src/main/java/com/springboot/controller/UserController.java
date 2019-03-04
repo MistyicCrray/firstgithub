@@ -24,6 +24,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import com.springboot.entity.User;
 import com.springboot.service.UserService;
+import com.springboot.tools.CurrentUser;
 import com.springboot.tools.LoginRequired;
 import com.springboot.tools.MD5;
 import com.springboot.tools.Result;
@@ -189,13 +190,10 @@ public class UserController {
 	 * @return
 	 */
 	@LoginRequired
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map,
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	public Result update(@CurrentUser User user, @RequestParam(required = false) Map<String, Object> map,
 			@RequestParam(required = false) MultipartFile img) {
-		map.put("id", id);
-		if (!map.get("password").equals("123456")) {
-			map.remove("password");
-		}
+		map.put("id", user.getId());
 		return ResultGenerator.genSuccessResult(userService.update(map, img));
 	}
 
@@ -215,11 +213,11 @@ public class UserController {
 	 * 
 	 * @param id
 	 * @return
-	 * @throws MessagingException 
+	 * @throws MessagingException
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result addAdmin(@RequestBody User user) throws MessagingException {
-		user.setUsertype("admin");
+		user.setUsertype("1");
 		return ResultGenerator.genSuccessResult(userService.add(user));
 	}
 
@@ -229,7 +227,7 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/reset/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/reset/{id}", method = RequestMethod.PUT)
 	public Result resetPwd(@PathVariable String id) {
 		User user = userService.findById(id);
 		user.setPassword(MD5.md5("123456"));
@@ -238,6 +236,7 @@ public class UserController {
 
 	/**
 	 * 用户修改密码
+	 * 
 	 * @param map
 	 * @return
 	 */
@@ -283,6 +282,22 @@ public class UserController {
 			userService.updateByUser(user);
 		}
 		return ResultGenerator.genSuccessResult("邮件发送成功");
+	}
+
+	/**
+	 * 管理员修改用户信息
+	 * 
+	 * @param id
+	 * @param file
+	 * @return
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+	public Result adminUpdate(@CurrentUser User user, @PathVariable String id, @RequestBody Map<String, Object> map,
+			@RequestParam(required = false) MultipartFile img) {
+		map.remove("password");
+		map.put("id", id);
+		return ResultGenerator.genSuccessResult(userService.update(map, img));
 	}
 
 }

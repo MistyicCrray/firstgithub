@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="author" content="order by dede58.com" />
-		<title>收货地址</title>
+		<title>去哪儿买-收货地址</title>
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="resource/js/jquery.citys.js"></script>
 	</head>
 	<style type="text/css">
-		.jiesuandan {
+		.jiesuandan { 
 			width: 938px;
 		}
 	</style>
@@ -121,7 +121,7 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./dingdanzhongxin.html">我的订单</a>
+									<a href="dingdanzhongxin.html">我的订单</a>
 								</li>
 							</ul>
 						</div>
@@ -129,7 +129,7 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./self_info.html">我的个人中心</a>
+									<a href="self_info.html">我的个人中心</a>
 								</li>
 								<li>
 									<a href="">我卖出的</a>
@@ -138,10 +138,10 @@
 									<a href="">我买到的</a>
 								</li>
 								<li>
-									<a href="" style="color:#ff6700;font-weight:bold;">我发布的</a>
+									<a href="my_release_product.html">我发布的</a>
 								</li>
 								<li>
-									<a href="address.html">收货地址</a>
+									<a href="address.html" style="color:#ff6700;font-weight:bold;">收货地址</a>
 								</li>
 							</ul>
 						</div>
@@ -160,25 +160,25 @@
 								<div class="form-group">
 									<label for="address" class="col-sm-2 control-label">详细地址</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="address" placeholder="详细地址" v-model="inputtext.address">
+										<input type="text" class="form-control" autocomplete="off" id="address" placeholder="详细地址" v-model="inputtext.address">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="postal" class="col-sm-2 control-label">邮政编码</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="postal" placeholder="邮政编码" v-model="inputtext.postal">
+										<input type="text" class="form-control" autocomplete="off" id="postal" placeholder="邮政编码" v-model="inputtext.postal">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="consignee" class="col-sm-2 control-label">收货人姓名</label>
 									<div class="col-sm-6">
-										<input type="email" class="form-control" id="consignee" placeholder="收货人姓名" v-model="inputtext.consignee">
+										<input type="email" class="form-control" autocomplete="off" id="consignee" placeholder="收货人姓名" v-model="inputtext.consignee">
 									</div>
 								</div>
 								<div class="form-group mt20">
 									<label for="phone" class="col-sm-2 control-label">手机号码</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="phone" placeholder="手机号码" v-model="inputtext.phone">
+										<input type="text" class="form-control" autocomplete="off" id="phone" placeholder="手机号码" v-model="inputtext.phone">
 										</select>
 									</div>
 								</div>
@@ -278,7 +278,6 @@
 						axios.post('/address', _this.inputtext)
 							.then(function(res) {
 								alert("保存成功");
-								console.info(_this.inputtext);
 								_this.inputtext = "";
 								$("#address").val("");
 								_this.search();

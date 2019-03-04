@@ -41,7 +41,7 @@ public class PublicPayController {
 		response.setContentType("text/html;charset=utf-8");
 		String p0_Cmd = "Buy", p1_MerId = "10001126856", p2_Order = request.getParameter("p2_Order"),
 				p3_Amt = request.getParameter("p3_Amt"), p4_Cur = "CNY", p5_Pid = "", p6_Pcat = "", p7_Pdesc = "",
-				p8_Url = "http://localhost:8080/first-spring-boot_01/back?orderId=" + p2_Order, p9_SAF = "", pa_MP = "",
+				p8_Url = "http://localhost:8080/pay/back?orderId=" + p2_Order, p9_SAF = "", pa_MP = "",
 				pd_FrpId = request.getParameter("pd_FrpId"), pr_NeedResponse = "1";
 		String hmac = PaymentUtil.buildHmac(p0_Cmd, p1_MerId, p2_Order, p3_Amt, p4_Cur, p5_Pid, p6_Pcat, p7_Pdesc,
 				p8_Url, p9_SAF, pa_MP, pd_FrpId, pr_NeedResponse, keyValue);

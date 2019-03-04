@@ -202,4 +202,7 @@ public interface ProductMapper {
 	@SelectProvider(type = com.springboot.entity.dyna.ProductDynaProvider.class, method = "searchList")
 	List<Product> search(String key);
 
+	@Update({ "update product set img=''", "where proid = #{id,jdbcType=VARCHAR}" })
+	int deleImg(String id);
+
 }

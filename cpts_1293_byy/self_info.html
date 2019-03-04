@@ -55,7 +55,7 @@
 						<div class="fr">
 							<ul v-if="islogin">
 								<li>
-									<a href="self_info.html"><i class="fa fa-user"></i>{{userInfo}}</a>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{userInfo.username}}</a>
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
@@ -132,16 +132,7 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./dingdanzhongxin.html">我的订单</a>
-								</li>
-								<li>
-									<a href="">我卖出的</a>
-								</li>
-								<li>
-									<a href="">我买到的</a>
-								</li>
-								<li>
-									<a href="">我发布的</a>
+									<a href="dingdanzhongxin.html">我的订单</a>
 								</li>
 							</ul>
 						</div>
@@ -149,13 +140,13 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./self_info.html" style="color:#ff6700;font-weight:bold;">我的个人中心</a>
+									<a href="self_info.html" style="color:#ff6700;font-weight:bold;">我的个人中心</a>
 								</li>
 								<li>
-									<a href="">我卖出的</a>
+									<a href="my_sell_product.html">我卖出的</a>
 								</li>
 								<li>
-									<a href="">我买到的</a>
+									<a href="my_by_product.html">我买到的</a>
 								</li>
 								<li>
 									<a href="my_release_product.html">我发布的</a>
@@ -189,7 +180,8 @@
 								<div class="form-group">
 									<label for="email" class="col-sm-2 control-label">邮箱</label>
 									<div class="col-sm-6">
-										<input type="email" class="form-control" id="email" name="email" placeholder="邮箱" v-model="user.email">
+										<input type="email" class="form-control" id="email" name="email" v-on:input="checkEmail" placeholder="邮箱" v-model="user.email">
+										<p id="appand"></p>
 									</div>
 								</div>
 								<div class="form-group">
@@ -229,9 +221,21 @@
 					user: {},
 					islogin: sessionStorage.length > 0,
 					baseUrl: '/images/',
-					userInfo: sessionStorage.username
+					userInfo: sessionStorage
 				},
 				methods: {
+					checkEmail: function() {
+						var _this = this;
+						var myforms = document.forms;
+						var myReg = /^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
+						if(myReg.test(_this.user.email)) {
+							document.getElementById("appand").innerHTML = "";
+							return true;
+						} else {
+							document.getElementById("appand").innerHTML = "<i style='color: red;'>邮箱格式错误<i>";
+							return false;
+						}
+					},
 					getUser: function() {
 						var _this = this;
 						axios.get('/user/' + sessionStorage.getItem("userId"))
@@ -241,8 +245,20 @@
 							})
 					},
 					editUser: function() {
+						if(!this.isMobilePhone($("#tel").val())) {
+							alert("请输入正确的手机号码");
+							return false;
+						}
 						var _this = this;
-						axios.put('/user/update/' + sessionStorage.getItem("userId"), $("#update").serialize())
+						var myforms = document.forms;
+						var myReg = /^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
+						if(myReg.test(_this.user.email)) {
+							document.getElementById("appand").innerHTML = "";
+						} else {
+							document.getElementById("appand").innerHTML = "<i style='color: red;'>邮箱格式错误<i>";
+							return false;
+						}
+						axios.put('/user/update', $("#update").serialize())
 							.then(function() {
 								alert("修改成功");
 								sessionStorage.setItem("username", _this.user.username);
@@ -253,7 +269,7 @@
 						var _this = this;
 						var formData = new FormData();
 						formData.append("img", $("#image")[0].files[0]);
-						axios.put('/user/update/' + sessionStorage.getItem("userId"), formData)
+						axios.put('/user/update', formData)
 							.then(function() {
 								alert("修改成功");
 								_this.getUser();
@@ -263,6 +279,11 @@
 						logout();
 						location.href = "login.html";
 					},
+					/*验证是否为手机号码（移动手机）*/
+					isMobilePhone: function(source) {
+						var regex = /^((\(\d{3}\))|(\d{3}\-))?1\d{10}/;
+						return regex.test(source);
+					}
 				},
 				created: function() {
 					this.getUser();

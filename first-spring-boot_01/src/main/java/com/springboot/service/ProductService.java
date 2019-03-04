@@ -41,7 +41,10 @@ public class ProductService {
 		return productMapper.deleteByPrimaryKey(id);
 	}
 
-	public Integer update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map, MultipartFile file) {
+		if (file != null) {
+			map.put("img",(String) FileUtil.uploadImage(file).get("filePath"));
+		}
 		return productMapper.update(map);
 	}
 
@@ -75,6 +78,10 @@ public class ProductService {
 
 	public List<Product> searchList(String key) {
 		return productMapper.search(key);
+	}
+	
+	public int delImg(String id) {
+		return productMapper.deleImg(id);
 	}
 
 }

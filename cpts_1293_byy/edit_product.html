@@ -15,25 +15,80 @@
 				<div style="position: relative;" class="ml40 infor">
 					<div>
 						<form id="addProduct">
-							<div class="item"><span>商品名称:</span><input type="text" class="form-control" v-model="product.name" name="name"></div>
-							<div class="item"><span>选择种类</span>
-								<select v-model="product.category" class="form-control" name="category">
-									<optgroup v-for="item in categories" v-if="item.parentid==null" v-bind:label="item.name">
-										<option v-for="opt in categories" v-bind:value="opt.id" v-if="opt.parentid==item.id">{{opt.name}}</option>
-									</optgroup>
-								</select>
-							</div>
-							<div class="item"><span>单价:</span><input type="text" class="form-control" v-model="product.price" name="price"></div>
-							<div class="item"><span>数量:</span><input type="text" class="form-control" v-model="product.quality"></div>
-							<div class="item" v-if="product.img==null"><span>图片:</span>
-								<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
-							</div>
-							<div class="item" v-if="product.img!=null"><span>图片:</span>
-								<div class="busin_img">
-									<a><img v-bind:src="product.img"><em>点击查看大图</em></a><button class="btn btn-cancel" v-on:click="delImg(inputtext.frontIdcard)">删除</button>
+							<div style="position: relative;" class="ml40 infor">
+								<div class="form-horizontal">
+									<div class="form-group">
+										<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
+										<div class="col-sm-6">
+											<select v-model="product.isnotauction" class="form-control" name="isNotAuction">
+												<option value="'1'">是</option>
+												<option value="'0'">否</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="consignee" class="col-sm-2 control-label">商品名称:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.name" name="name">
+										</div>
+									</div>
+									<div class="form-group mt20">
+										<label for="phone" class="col-sm-2 control-label">选择种类:</label>
+										<div class="col-sm-6">
+											<select v-model="product.category" class="form-control" name="category">
+												<optgroup v-for="item in categories" v-if="item.parentid==null" v-bind:label="item.name">
+													<option v-for="opt in categories" v-bind:value="opt.id" v-if="opt.parentid==item.id">{{opt.name}}</option>
+												</optgroup>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" v-if="product.isNotAuction==1">
+										<label for="consignee" class="col-sm-2 control-label">最低价格:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.minPrice" name="minPrice">
+										</div>
+									</div>
+									<div class="form-group" v-if="product.isNotAuction==1">
+										<label for="consignee" class="col-sm-2 control-label">最高价格:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.maxPrice" name="maxPrice">
+										</div>
+									</div>
+									<div class="form-group" v-if="product.isNotAuction==1">
+										<label for="consignee" class="col-sm-2 control-label">每次叫价:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.increments" name="increments">
+										</div>
+									</div>
+									<div class="form-group" v-if="product.isNotAuction==0">
+										<label for="consignee" class="col-sm-2 control-label">单价:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.price" name="price">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="consignee" class="col-sm-2 control-label">数量:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" v-model="product.quality" name="quality">
+										</div>
+									</div>
+									<div class="form-group" v-if="product.img==''">
+										<label for="consignee" class="col-sm-2 control-label">图片:</label>
+										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
+									</div>
+									<div class="form-group" v-if="product.img!=''"><label for="consignee" class="col-sm-2 control-label">图片:</label>
+										<div class="busin_img">
+											<a><img v-bind:src="product.img"><em>点击查看大图</em></a><button class="btn btn-cancel" type="button" v-on:click="delImg()">删除</button>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="consignee" class="col-sm-2 control-label">详情:</label>
+										<div class="col-sm-6">
+											<textarea class="form-control" id="content" name="detail"></textarea>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div class="ml40 "><span>详情:</span><textarea class="form-control" id="content" name="detail"></textarea></div>
 							<div class="mt10 item"><button type="button" v-on:click="submit" class="btn">上架</button></div>
 						</form>
 					</div>
@@ -71,7 +126,8 @@
 							.then(function(res) {
 								console.info(res);
 								_this.product = res.data.data;
-								_this.detail = _this.product.detail
+								_this.detail = _this.product.detail;
+								console.info(_this.product.isnotauction);
 								editor.html(_this.detail);
 							})
 					},
@@ -84,18 +140,26 @@
 					},
 					submit: function() {
 						var _this = this;
-						var formData = new FormData();
-						formData.append("detail", editor.html());
-						formData.append("name", _this.product.name);
-						formData.append("category", _this.product.category);
-						formData.append("price", _this.product.price);
-						formData.append("quality", _this.product.quality);
-						formData.append("file", $("#file")[0].files[0]);
+						//						var formData = new FormData();
+						//						formData.append("detail", editor.html());
+						//						formData.append("name", _this.product.name);
+						//						formData.append("category", _this.product.category);
+						//						formData.append("price", _this.product.price);
+						//						formData.append("quality", _this.product.quality);
+						//						formData.append("file", $("#file")[0].files[0]);
+						var formData = new FormData($("#addProduct")[0]);
 						axios.put('/product/' + id, formData)
 							.then(function(res) {
 								alert("修改成功");
 								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
 								parent.layer.close(index); // 关闭layer
+							})
+					},
+					delImg: function() {
+						axios.put('/product/delImag/' + id)
+							.then(function(res) {
+								alert("删除成功");
+								this.getProduct();
 							})
 					},
 				},

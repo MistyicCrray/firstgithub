@@ -75,19 +75,19 @@
 					<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
 					<template v-for="(item,index) in pages">
 						<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
-							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
 						</template>
 						<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
-							<a v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
 						</template>
 						<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
-							<a v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
 						</template>
 						<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
-							<a v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
 						</template>
 						<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
-							<a v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
 						</template>
 					</template>
 					<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
@@ -183,12 +183,10 @@
 						})
 					},
 					resetPassword: function(id) {
-						var _this = this;
-						_this.inputtext.password = '123456';
 						layer.confirm("是否重置密码？(重置后密码为：123456)", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.put('/user/update/' + id, _this.inputtext)
+							axios.put('/user/reset/' + id)
 								.then(function(res) {
 									layer.msg('重置成功', {
 										icon: 1

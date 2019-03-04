@@ -92,10 +92,10 @@ public class ProductController {
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user,
-			@PathVariable String id) {
+			@PathVariable String id, @RequestParam(required = false) MultipartFile file) {
 		map.put("updateby", user.getId());
 		map.put("proid", id);
-		return ResultGenerator.genSuccessResult(productService.update(map));
+		return ResultGenerator.genSuccessResult(productService.update(map, file));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class ProductController {
 			}
 			map1.put("proid", productMap.get("proid"));
 			map1.put("quality", i);
-			productService.update(map1); // 修改库存量
+			productService.update(map1, null); // 修改库存量
 			Map<String, Object> shoppingMap = new HashMap<>();
 			shoppingMap.put("productid", productMap.get("productid"));
 			List<Map<String, Object>> list = shoppingCartService.findList(shoppingMap);
@@ -194,5 +194,17 @@ public class ProductController {
 		map.put("price", Float.parseFloat(map.get("minPrice").toString())); // 商品当前价格
 		productService.update(map);
 		return ResultGenerator.genSuccessResult("竞拍成功");
+	}
+
+	
+	/**
+	 * 删除图片信息
+	 * @param id
+	 * @return
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/delImag/{id}", method = RequestMethod.PUT)
+	public Result delImg(@PathVariable String id) {
+		return ResultGenerator.genSuccessResult(productService.delImg(id));
 	}
 }

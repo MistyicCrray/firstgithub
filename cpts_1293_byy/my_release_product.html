@@ -133,7 +133,7 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./dingdanzhongxin.html">我的订单</a>
+									<a href="dingdanzhongxin.html">我的订单</a>
 								</li>
 							</ul>
 						</div>
@@ -141,16 +141,16 @@
 						<div class="subddzx">
 							<ul>
 								<li>
-									<a href="./self_info.html">我的个人中心</a>
+									<a href="self_info.html">我的个人中心</a>
 								</li>
 								<li>
-									<a href="">我卖出的</a>
+									<a href="my_sell_product.html">我卖出的</a>
 								</li>
 								<li>
-									<a href="">我买到的</a>
+									<a href="my_by_product.html">我买到的</a>
 								</li>
 								<li>
-									<a href="" style="color:#ff6700;font-weight:bold;">我发布的</a>
+									<a href="my_release_product.html" style="color:#ff6700;font-weight:bold;">我发布的</a>
 								</li>
 								<li>
 									<a href="address.html">收货地址</a>
@@ -288,13 +288,13 @@
 							})
 							.then(function(res) {
 								_this.product = res.data.data.rows;
-								console.info(_this.product);
 								_this.pageNum = pageIndex;
 								_this.total = res.data.data.total;
 								_this.pages = Math.ceil(_this.total / _this.pageSize);
 							})
 					},
 					pageClick: function(page) {
+						this.pageNum = page;
 						this.getProducts(page);
 					},
 					prePage: function() {
