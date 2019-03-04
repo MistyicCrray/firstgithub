@@ -179,10 +179,10 @@
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
-							<a :href="['xiangqing.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
+							<a :href="['auction.html?id=' + item.proid]"><img :src="'/images/' + item.img" alt=""></a>
 						</div>
 						<div class="pinpai">
-							<a :href="['xiangqing.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
+							<a :href="['auction.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
 						</div>
 						<div class="youhui">暂无优惠</div>
 						<div class="jiage">{{item.price}}元</div>

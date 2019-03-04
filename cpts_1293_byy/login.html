@@ -140,7 +140,6 @@
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
 								var resultdata = response.data;
-								console.info(response);
 								sessionStorage.setItem("userId", resultdata.data.userInfo.id);
 								sessionStorage.setItem("username", resultdata.data.userInfo.username);
 								sessionStorage.setItem("accessToken", resultdata.data.accessToken);
@@ -169,7 +168,8 @@
 
 								window.location.href = '/cpts_1293_byy/index.html'; // 跳转
 							})
-							.catch(function(err) {});
+							.catch(function(err) {
+							});
 					}
 				},
 				created: function() {

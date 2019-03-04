@@ -184,21 +184,20 @@
 				<div class="main center">
 					<div class="content">
 						<div class="remen fl">
-							<a href=""><img width="234px" height="300px" src="resource/image/peijian1.jpg"></a>
+							<img width="234px" height="300px" src="resource/image/peijian1.jpg">
 						</div>
-						<div class="remen fl">
+						<div class="remen fl" v-for="item in computer">
 							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
-								<a href=""><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
+								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
 							</div>
 							<div class="miaoshu">
-								<a href="">小米6 硅胶保护套</a>
+								<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
 							</div>
-							<div class="jiage">49元</div>
-							<div class="pingjia">372人评价</div>
+							<div class="jiage">{{item.price}}元</div>
 							<div class="piao">
-								<a href="">
-									<span>发货速度很快！很配小米6！</span>
+								<a :href="['xiangqing.html?id=' + item.proid]">
+									<span class="pinpai">{{item.detail}}</span>
 									<span>来至于mi狼牙的评价</span>
 								</a>
 							</div>
@@ -211,21 +210,20 @@
 				<div class="main center">
 					<div class="content">
 						<div class="remen fl">
-							<a href=""><img width="234px" height="300px" src="resource/image/peijian1.jpg"></a>
+							<img width="234px" height="300px" src="resource/image/jiadian.jpg">
 						</div>
-						<div class="remen fl">
+						<div class="remen fl" v-for="item in furniture">
 							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
-								<a href=""><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
+								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
 							</div>
 							<div class="miaoshu">
-								<a href="">小米6 硅胶保护套</a>
+								<a :href="['xiangqing.html?id=' + item.proid]"></a>
 							</div>
-							<div class="jiage">49元</div>
-							<div class="pingjia">372人评价</div>
+							<div class="jiage">{{item.price}}元</div>
 							<div class="piao">
-								<a href="">
-									<span>发货速度很快！很配小米6！</span>
+								<a :href="['xiangqing.html?id=' + item.proid]">
+									<span>{{item.detail}}</span>
 									<span>来至于mi狼牙的评价</span>
 								</a>
 							</div>
@@ -257,11 +255,14 @@
 					categories: "",
 					carts: "",
 					search: '',
-					banner: []
+					banner: [],
+					computer: [],
+					furniture: [],
 				},
 				created: function() {
 					this.getProduct();
 					this.getCategory();
+					this.getComputer();
 					this.$nextTick(function() {
 						swiper = new Swiper('.swiper-container', {
 							autoplay: {
@@ -330,6 +331,34 @@
 							_this.pageNum = pageIndex;
 							_this.total = response.data.data.total;
 							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					getComputer: function() {
+						var _this = this;
+						axios.get('/product', {
+							params: {
+								pageNum: 1,
+								size: 4,
+								isNotAuction: 0,
+								cateid: 3
+							}
+						}).then(function(response) {
+							console.info(response);
+							_this.computer = response.data.data.rows;
+						})
+					},
+					getFurniture: function() {
+						var _this = this;
+						axios.get('/product', {
+							params: {
+								pageNum: 1,
+								size: 4,
+								isNotAuction: 0,
+								cateid: 4
+							}
+						}).then(function(response) {
+							console.info(response);
+							_this.furniture = response.data.data.rows;
 						})
 					},
 					edit: function(id) {
