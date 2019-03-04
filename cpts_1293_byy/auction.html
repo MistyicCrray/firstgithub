@@ -8,6 +8,7 @@
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/main.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 	</head>
@@ -183,24 +184,18 @@
 				<div class="left fl"><img v-bind:src="'/images/' + product.img" style="width: 562px;"></div>
 				<div class="right fr">
 					<div class="jiage ml20 mt10">{{product.name}}</div>
-					<div class="jiage ml20 mt10">￥{{product.price}}元</div>
-					<div class="jiage ml20 mt10">总计：{{product.price * quantity | numFilter}}元</div>
+					<div class="jiage ml20 mt10">当前价格￥{{currentPrice}}</div>
+					<div class="jiage ml20 mt10">当前加价不能低于￥{{product.increments}}</div>
+					<div class="jiage ml20 mt10">当前竞拍者----{{product.currentbidder}}</div>
 					<div class="xiadan ml20 mt20">
 						<ul class="btn-numbox">
-							<li><span class="jiage">数量</span></li>
-							<li class="ml20">
-								<ul class="count">
-									<li><span id="num-jian" class="num-jian" v-on:click="minus">-</span></li>
-									<li><input type="number" class="input-num" disabled="" id="input-num" value="0" v-on:input="quantityFilter" v-model="quantity" /></li>
-									<li><span id="num-jia" class="num-jia" v-on:click="add">+</span></li>
-								</ul>
-							</li>
+							<li><span class="jiage">数量{{product.quality}}</span></li>
 							<li><span class="kucun">（库存:{{product.quality}}）</span></li>
 						</ul>
 					</div>
 					<div class="xiadan ml20 mt20">
-						<input class="jrgwc" type="button" name="jrgwc" v-on:click="account" value="立即选购" />
-						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addCart" value="加入购物车" />
+						<div class="jiage">出价：<input class="form-control" name="jrgwc" v-model="price" v-on:input="setPrice" placeholder="请填写要出的价格" /></div>
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addPrice" value="加价" />
 					</div>
 				</div>
 				<div class="clear"></div>
@@ -222,62 +217,45 @@
 					cart: {},
 					islogin: sessionStorage.length > 0,
 					user: sessionStorage,
-					quantity: 0
+					price: 0,
+					currentPrice: 0
 				},
 				created: function() {
-					var _this = this;
-					axios.get('/product/' + id).then(function(res) {
-						_this.product = res.data.data;
-						document.getElementById("detail").innerHTML = res.data.data.detail;
-
-					})
+					this.getProduct();
 				},
 				methods: {
-					addCart: function() {
+					getProduct: function() {
 						var _this = this;
-						if(_this.quantity == 0) {
-							alert("请选择数量");
-							return;
-						}
-						_this.cart.productid = id;
-						_this.cart.quantity = _this.quantity;
-						_this.cart.total = _this.product.price * _this.cart.quantity;
-						axios.post('/shoppingCart', _this.cart).then(function(res) {
-							alert("添加成功");
+						axios.get('/product/' + id).then(function(res) {
+							console.info(res);
+							_this.product = res.data.data;
+							_this.currentPrice = res.data.data.price;
+							document.getElementById("detail").innerHTML = res.data.data.detail;
 						})
 					},
-					account: function() {
+					addPrice: function() {
 						var _this = this;
-						if(_this.quantity == 0) {
-							alert("请选择数量");
+						if(_this.price == 0) {
+							alert("请填写价格");
 							return;
 						}
-						location.href = "comfirm_order.html?proid=" + _this.product.proid + "&quantity=" + _this.quantity;
+						_this.product.price = _this.price;
+						axios.put('/product/auction/' + id, _this.product).then(function(res) {
+							if(res.data.code == 200) {
+								alert(res.data.data);
+								_this.getProduct();
+							} else {
+								alert(res.data.message);
+							}
+						})
 					},
 					logout: function() {
 						logout();
 						location.href = "login.html";
 					},
-					add: function() {
-						var _this = this;
-						_this.quantity++;
-						if(_this.quantity > _this.product.quality) {
-							_this.quantity = _this.product.quality
-						}
+					setPrice: function() {
+						this.price = this.price.replace(/[^0-9.]/g, '');
 					},
-					minus: function() {
-						var _this = this;
-						if(_this.quantity > 0) {
-							_this.quantity--;
-						}
-					},
-					quantityFilter: function() {
-						var _this = this;
-						if(_this.quantity < 0) {
-							_this.quantity = 0;
-						}
-					},
-					
 				},
 				filters: {
 					numFilter: function(value) { // 截取当前数据到小数点后两位

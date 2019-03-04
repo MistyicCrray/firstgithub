@@ -184,14 +184,20 @@ public class ProductController {
 		if (product.getUserid().equals(user.getId())) {
 			return ResultGenerator.genFailResult("您不能竞拍自己的商品");
 		}
-		if (product.getPrice() > Float.parseFloat(map.get("price").toString())) {
+		if (product.getPrice() >= Float.parseFloat(map.get("price").toString())) {
 			return ResultGenerator.genFailResult("出价不能低于当前价格");
+		}
+		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString())-Float.parseFloat(map.get("increments").toString()))) {
+			return ResultGenerator.genFailResult("加价不能低于" + product.getIncrements());
+		}
+		if (product.getBidderid().equals(user.getId())) {
+			return ResultGenerator.genFailResult("您已经竞拍过，请勿重复竞拍");
 		}
 		map.put("proid", productId);
 		map.put("bidderId", user.getId()); // 竞拍者id
 		map.put("currentBidder", user.getUsername()); // 竞拍者姓名
 		map.put("auctionStatus", "1"); // 竞拍状态
-		map.put("price", Float.parseFloat(map.get("minPrice").toString())); // 商品当前价格
+		map.put("price", Float.parseFloat(map.get("price").toString())); // 商品当前价格
 		productService.update(map);
 		return ResultGenerator.genSuccessResult("竞拍成功");
 	}
