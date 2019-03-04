@@ -37,7 +37,8 @@ public class SearchController {
 		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		if (map.get("keyword") != null) {
 			String key = map.get("keyword").toString();
-			List<Product> produts = productService.searchList(key);
+			String keyword = key.replaceAll("\'", "");
+			List<Product> produts = productService.searchList(keyword);
 			return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), produts));
 		} else {
 			List<Product> produts = productService.findList(map);

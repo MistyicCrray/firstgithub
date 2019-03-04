@@ -187,7 +187,8 @@ public class ProductController {
 		if (product.getPrice() >= Float.parseFloat(map.get("price").toString())) {
 			return ResultGenerator.genFailResult("出价不能低于当前价格");
 		}
-		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString())-Float.parseFloat(map.get("increments").toString()))) {
+		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString())
+				- Float.parseFloat(map.get("increments").toString()))) {
 			return ResultGenerator.genFailResult("加价不能低于" + product.getIncrements());
 		}
 		if (product.getBidderid().equals(user.getId())) {
@@ -198,13 +199,13 @@ public class ProductController {
 		map.put("currentBidder", user.getUsername()); // 竞拍者姓名
 		map.put("auctionStatus", "1"); // 竞拍状态
 		map.put("price", Float.parseFloat(map.get("price").toString())); // 商品当前价格
-		productService.update(map);
+		productService.update(map, null);
 		return ResultGenerator.genSuccessResult("竞拍成功");
 	}
 
-	
 	/**
 	 * 删除图片信息
+	 * 
 	 * @param id
 	 * @return
 	 */

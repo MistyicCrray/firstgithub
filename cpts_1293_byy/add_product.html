@@ -20,8 +20,8 @@
 									<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 									<div class="col-sm-6">
 										<select v-model="product.isNotAuction" v-on:change="isNotAuction" class="form-control" name="isNotAuction">
-											<option v-bind:value="1">是</option>
-											<option v-bind:value="0">否</option>
+											<option value="1">是</option>
+											<option value="0">否</option>
 										</select>
 									</div>
 								</div>
@@ -136,8 +136,7 @@
 					},
 					submit: function() {
 						var _this = this;
-						if("")
-							var formData = new FormData();
+						var formData = new FormData();
 						formData.append("detail", editor.html());
 						formData.append("name", _this.product.name);
 						formData.append("category", _this.product.category);
@@ -146,7 +145,7 @@
 							formData.append("price", _this.product.minPrice); // 当前定价
 							formData.append("minPrice", _this.product.minPrice); // 设定为最小定价
 							formData.append("increments", _this.product.increments); // 设定每次最小叫价
-							formData.append("isNotAuction", _this.product.isNotAuction); // 设定每次最小叫价
+							formData.append("isNotAuction", _this.product.isNotAuction); // 设定是否时拍卖
 						} else {
 							if(_this.product.quality == null || _this.product.quality == "") {
 								alert("请输入数量");
