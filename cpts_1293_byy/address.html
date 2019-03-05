@@ -245,6 +245,7 @@
 					},
 					addAddress: function() {
 						var _this = this;
+						console.info(_this.inputtext);
 						if(_this.inputtext.province == "" || _this.inputtext.province == null) {
 							alert("请选择省");
 							return;
@@ -271,9 +272,7 @@
 						axios.post('/address', _this.inputtext)
 							.then(function(res) {
 								alert("保存成功");
-								_this.inputtext = "";
-								$("#address").val("");
-								_this.search();
+								window.location.reload();
 							})
 					},
 					// 删除
