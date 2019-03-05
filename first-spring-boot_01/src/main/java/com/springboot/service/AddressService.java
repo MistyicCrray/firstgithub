@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboot.entity.Address;
+import com.springboot.entity.User;
 import com.springboot.mapper.AddressMapper;
 import com.springboot.tools.ServiceException;
 import com.springboot.tools.UUIDUtils;
@@ -79,7 +80,18 @@ public class AddressService {
 	 * @param id
 	 * @return
 	 */
-	public int delete(String id) {
+	public int delete(String id, User user) {
+		Address address = addressMapper.selectByPrimaryKey(id);
+		Map<String, Object> map = new HashMap<>();
+		map.put("userid", user.getId());
+		List<Address> addrList = addressMapper.findList(map);
+		if (address.getStatus().equals("0")) {
+			if (addrList.size() != 0) {
+				address = addrList.get(0);
+				address.setStatus("0");
+				addressMapper.updateByPrimaryKey(address);
+			}
+		}
 		return addressMapper.deleteByPrimaryKey(id);
 	}
 

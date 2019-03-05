@@ -93,6 +93,16 @@ public interface BannerMapper {
 	int updateByPrimaryKey(Banner record);
 
 	@SelectProvider(type = com.springboot.entity.dyna.BannerDynaProvider.class, method = "selectProvider")
+	@Results({ @Result(column = "id", property = "id", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "image", property = "image", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "is_show", property = "isShow", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "is_top", property = "isTop", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "link_url", property = "linkUrl", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "create_date", property = "createDate", jdbcType = JdbcType.TIMESTAMP),
+			@Result(column = "update_date", property = "updateDate", jdbcType = JdbcType.TIMESTAMP),
+			@Result(column = "create_by", property = "createBy", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "update_by", property = "updateBy", jdbcType = JdbcType.VARCHAR) })
 	List<Banner> findList(Map<String, Object> map);
 
 	@UpdateProvider(type = com.springboot.entity.dyna.BannerDynaProvider.class, method = "updateProvider")

@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.entity.Banner;
 import com.springboot.mapper.BannerMapper;
+import com.springboot.tools.FileUtil;
 import com.springboot.tools.ServiceException;
 import com.springboot.tools.UUIDUtils;
 
@@ -18,9 +20,12 @@ public class BannerService {
 	@Autowired
 	private BannerMapper bannerMapper;
 
-	public String add(Banner banner) {
+	public String add(Banner banner, MultipartFile image) {
 		banner.setId(UUIDUtils.get16UUID());
 		banner.setCreateDate(new Date());
+		if (image != null) {
+			banner.setImage((String) FileUtil.uploadImage(image).get("filePath"));
+		}
 		int i = bannerMapper.insert(banner);
 		if (i > 0) {
 			return "添加成功";
@@ -38,7 +43,10 @@ public class BannerService {
 		}
 	}
 
-	public String update(Banner banner) {
+	public String update(Banner banner, MultipartFile image) {
+		if (image != null) {
+			banner.setImage((String) FileUtil.uploadImage(image).get("filePath"));
+		}
 		int i = bannerMapper.updateByPrimaryKey(banner);
 		if (i > 0) {
 			return "修改成功";

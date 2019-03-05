@@ -6,6 +6,7 @@
 		<title>欢迎页面-X-admin2.0</title>
 		<meta name="renderer" content="webkit">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" href="./css/font.css">
 		<link rel="stylesheet" href="./css/xadmin.css">
@@ -14,65 +15,44 @@
 		<script type="text/javascript" src="./js/xadmin.js"></script>
 	</head>
 
-	<body class="layui-anim layui-anim-up">
+	<body>
 		<div id="main">
+
 			<div class="x-nav">
 				<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
 					<i class="layui-icon" style="line-height:30px">ဂ</i></a>
 			</div>
+			<xblock>
+				<button class="layui-btn" onclick="x_admin_show('添加用户','./banner-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+				<span class="x-right" style="line-height:40px">共有数据：{{total}}条，共：{{pages}}页</span>
+			</xblock>
 			<div class="x-body">
-				<div class="layui-row">
-					<div class="layui-form layui-col-md12 x-so">
-						<input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input" v-model="inputtext.username">
-						<button class="layui-btn" v-on:click="getUsers"><i class="layui-icon">&#xe615;</i></button>
-					</div>
-				</div>
-				<xblock>
-					<button class="layui-btn" onclick="x_admin_show('添加用户','./member-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-					<span class="x-right" style="line-height:40px">共有数据：{{total}}条</span>
-				</xblock>
 				<table class="layui-table">
 					<thead>
 						<tr>
-							<th>用户名</th>
-							<th>登录账号</th>
-							<th>性别</th>
-							<th>手机</th>
-							<th>邮箱</th>
-							<th>地址</th>
-							<th>加入时间</th>
-							<th>状态</th>
+							<th>序号</th>
+							<th>轮播图</th>
+							<th>是否显示</th>
+							<th>排序</th>
 							<th>操作</th>
-						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="item in users">
-							<td>{{item.username}}</td>
-							<td>{{item.loginname}}</td>
-							<td v-if="item.gender==0">男</td>
-							<td v-if="item.gender==1">女</td>
-							<td v-if="item.gender==null"></td>
-							<td v-if="item.gender==''"></td>
-							<td>{{item.tel}}</td>
-							<td>{{item.email}}</td>
-							<td>{{item.adreess}}</td>
-							<td>{{item.createTime | date_format}}</td>
-							<td>{{item.state | statusFilt}}</td>
+						<tr v-for="item,index in banners">
+							<td>{{index+1}}</td>
+							<td><img :src="'/images/'+item.imgUrl"></td>
+							<td>{{item.isShow}}</td>
+							<td>{{item.isTop}}</td>
 							<td class="td-manage">
 								<a title="编辑" v-on:click="edit(item.id)" href="javascript:;">
 									<i class="layui-icon">&#xe642;</i>
 								</a>
-								<a title="重置密码" href="javascript:;" v-on:click="resetPassword(item.id)">
-									<i class="layui-icon">&#xe631;</i>
-								</a>
-								<a title="删除" v-on:click="deleteu(item.id)" href="javascript:;">
+								<a title="删除" v-on:click="deleteBanner(item.id)" href="javascript:;">
 									<i class="layui-icon">&#xe640;</i>
 								</a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-
 				<div class="page">
 					<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
 					<template v-for="(item,index) in pages">
@@ -102,23 +82,10 @@
 		<script type="text/javascript" src="js/vue-main.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
-			var optionsUserType = [{
-					text: '正常',
-					value: '0'
-				},
-				{
-					text: '冻结',
-					value: '1'
-				},
-				{
-					text: '未激活',
-					value: '2'
-				},
-			];
 			var vue = new Vue({
 				el: "#main",
 				data: {
-					users: "",
+					banners: "",
 					pageSize: 5,
 					total: 0,
 					pages: 0,
@@ -126,26 +93,27 @@
 					inputtext: {},
 				},
 				methods: {
-					getUsers: function(pageIndex) {
+					getBanners: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
-						axios.get('/user', {
+						axios.get('/banner', {
 							params: {
 								username: _this.inputtext.username == "" ? null : _this.inputtext.username,
 								pageNum: pageIndex,
-								size: _this.pageSize,
-								usertype: 0
+								size: _this.pageSize
 							}
 						}).then(function(res) {
 							console.info(res)
-							_this.users = res.data.data.rows;
+							_this.banners = res.data.data.rows;
 							_this.pageNum = pageIndex;
 							_this.total = res.data.data.total;
 							_this.pages = Math.ceil(_this.total / _this.pageSize);
 						})
 					},
 					pageClick: function(page) {
-						this.getUsers(page);
+						var _this = this;
+						_this.pageNum = page;
+						_this.getBanners(page);
 					},
 					prePage: function() {
 						this.pageNum--;
@@ -153,7 +121,7 @@
 							this.pageNum = 1;
 							return;
 						}
-						this.getUsers(this.pageNum);
+						this.getBanners(this.pageNum);
 					},
 					nextPage: function() {
 						this.pageNum++;
@@ -161,52 +129,40 @@
 							this.pageNum = this.pages;
 							return;
 						}
-						this.getUsers(this.pageNum);
+						this.getBanners(this.pageNum);
 					},
 					edit: function(id) {
 						var _this = this;
 						layer.open({
 							type: 2,
-							title: '修改个人信息',
+							title: '修改轮播图信息',
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
 							area: ['600px', '400px'],
-							content: ['member-edit.html?id=' + id],
+							content: ['banner-edit.html?id=' + id],
 							end: function() {
-								_this.getUsers();
+								_this.getBanners();
 							}
 						})
 					},
-					resetPassword: function(id) {
-						layer.confirm("是否重置密码？(重置后密码为：123456)", {
-							btn: ['确认', '取消'] //按钮
-						}, function() {
-							axios.put('/user/reset/' + id)
-								.then(function(res) {
-									layer.msg('重置成功', {
-										icon: 1
-									});
-								})
-						})
-					},
-					deleteu: function(id) {
+					deleteBanner: function(id) {
 						var _this = this;
-						layer.confirm("是否删除该用户？", {
+						layer.confirm("是否删除轮播图？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.delete('/user/delete/' + id)
+							axios.delete('/banner/' + id)
 								.then(function(res) {
 									layer.msg('删除成功', {
 										icon: 1
 									});
-									_this.getUsers();
-								})
+									_this.getBanners();
+								});
 						})
 					}
 				},
 				created: function() {
-					this.getUsers();
+					this.getBanners();
 				},
 				filters: {
 					date_format: function(value) {

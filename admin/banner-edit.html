@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>欢迎页面-X-admin2.0</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="./css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="./js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-body layui-anim layui-anim-up" id="main">
+			<form id="editBanner">
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>是否显示
+              </label>
+					<div class="layui-input-inline">
+						<select v-model="inputtext.isShow" name="isShow" class="layui-select">
+							<option value="0">是</option>
+							<option value="1">否</option>
+						</select>
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<span class="x-red">*</span>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>是否置顶
+              </label>
+					<div class="layui-input-inline">
+						<select v-model="inputtext.isTop" name="isTop" class="layui-input">
+							<option value="0">是</option>
+							<option value="1">否</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>链接
+              </label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="inputtext.linkUrl" name="linkUrl" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-upload">
+					<input type="file" id="upload" name="image" />
+					<div class="layui-upload-list">
+						<img class="layui-upload-img" id="img">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+              </label>
+					<button class="layui-btn" type="button" v-on:click="editBanner">修改</button>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="js/vue-main.js"></script>
+		<script>
+			var id = GetQueryString("id");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					inputtext: {}
+				},
+				methods: {
+					editBanner: function() {
+						var _this = this;
+						if(_this.inputtext.isShow == "" || _this.inputtext.isShow == null) {
+							layer.alert("请选择是否显示");
+							return;
+						}
+						if(_this.inputtext.isTop == "" || _this.inputtext.isTop == null) {
+							layer.alert("请选择是否置顶");
+							return;
+						}
+						if(_this.inputtext.linkUrl == "" || _this.inputtext.linkUrl == null) {
+							layer.alert("请输入链接");
+							return;
+						}
+						var params = new FormData();
+						params.append("isShow", _this.inputtext.isShow);
+						params.append("isTop", _this.inputtext.isTop);
+						params.append("linkUrl", _this.inputtext.linkUrl);
+						params.append("image", $("#upload")[0].files[0]);
+						axios.put("/banner/" + id, params)
+							.then(function(res) {
+								layer.alert("修改成功");
+							})
+					},
+					getBanner: function() {
+						var _this = this;
+						axios.get("/banner/" + id)
+							.then(function(res) {
+								console.info(res);
+								_this.inputtext = res.data.data;
+							})
+					}
+				},
+				created: function() {
+					this.getBanner();
+				},
+
+			})
+		</script>
+		<script type="text/javascript">
+			var upload_li = $('.upload_li');
+			var zf_submit = $('.zf_submit');
+			upload_li.on('click', function() {
+				zf_submit.addClass('bc_red');
+			})
+
+			$("#upload").change(function() {
+				var objUrl = getObjectURL(this.files[0]); //获取文件信息  
+				if(objUrl) {
+					$("#img").attr("src", objUrl);
+				}
+			});
+
+			function getObjectURL(file) {
+				var url = null;
+				if(window.createObjectURL != undefined) {
+					url = window.createObjectURL(file);
+				} else if(window.URL != undefined) { // mozilla(firefox)  
+					url = window.URL.createObjectURL(file);
+				} else if(window.webkitURL != undefined) { // webkit or chrome  
+					url = window.webkitURL.createObjectURL(file);
+				}
+				return url;
+			}
+		</script>
+	</body>
+
+</html>

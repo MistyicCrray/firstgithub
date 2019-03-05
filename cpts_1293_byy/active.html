@@ -26,9 +26,14 @@
 					active: function() {
 						axios.get('/user/active/' + userId + '/' + activeCode)
 							.then(function(res) {
-								alert("邮箱激活成功");
 								console.info(res);
-								location.href="login.html";
+								if(res.data.code == 200) {
+									alert("邮箱激活成功");
+									location.href = "login.html";
+								} else {
+									alert(res.data.message);
+								}
+
 							})
 					}
 				},

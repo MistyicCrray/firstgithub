@@ -55,6 +55,12 @@ public class ProductDynaProvider {
 				if (param.get("bidderId") != null) {
 					SET("bidderId=#{bidderId}");
 				}
+				if (param.get("auctionStatus") != null) {
+					SET("auctionStatus=#{auctionStatus}");
+				}
+				if (param.get("outTime") != null) {
+					SET("outTime=#{outTime}");
+				}
 				WHERE("proid=#{proid}");
 			}
 		}.toString();
@@ -112,6 +118,12 @@ public class ProductDynaProvider {
 				if (param.get("bidderId") != null) {
 					WHERE("bidderId=#{bidderId}");
 				}
+				if (param.get("auctionStatus") != null) {
+					WHERE("auctionStatus=#{auctionStatus}");
+				}
+				if (param.get("outTime") != null) {
+					WHERE("outTime=#{outTime}");
+				}
 			}
 		}.toString();
 	}
@@ -127,5 +139,5 @@ public class ProductDynaProvider {
 			}
 		}.toString();
 	}
-	 
+
 }

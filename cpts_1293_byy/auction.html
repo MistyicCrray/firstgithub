@@ -147,32 +147,17 @@
 				</a>
 				<div class="nav fl">
 					<ul>
-						<li>
-							<a href="">小米手机</a>
+						<li class="active">
+							<a href="index.html">主页</a>
 						</li>
 						<li>
-							<a href="">红米</a>
+							<a href="liebiao.html?search=手机">手机二手</a>
 						</li>
 						<li>
-							<a href="">平板·笔记本</a>
+							<a href="saleroom.html">拍卖场</a>
 						</li>
 						<li>
-							<a href="">电视</a>
-						</li>
-						<li>
-							<a href="">盒子·影音</a>
-						</li>
-						<li>
-							<a href="">路由器</a>
-						</li>
-						<li>
-							<a href="">智能硬件</a>
-						</li>
-						<li>
-							<a href="">服务</a>
-						</li>
-						<li>
-							<a href="">社区</a>
+							<a href="my_release_product.html">我的发布</a>
 						</li>
 					</ul>
 				</div>
@@ -185,7 +170,7 @@
 				<div class="right fr">
 					<div class="jiage ml20 mt10">{{product.name}}</div>
 					<div class="jiage ml20 mt10">当前价格￥{{currentPrice}}</div>
-					<div class="jiage ml20 mt10">当前加价不能低于￥{{product.increments}}</div>
+					<div class="jiage ml20 mt10">每次加价不能低于￥{{product.increments}}</div>
 					<div class="jiage ml20 mt10">当前竞拍者----{{product.currentbidder}}</div>
 					<div class="xiadan ml20 mt20">
 						<ul class="btn-numbox">
@@ -195,7 +180,7 @@
 					</div>
 					<div class="xiadan ml20 mt20">
 						<div class="jiage">出价：<input class="form-control" name="jrgwc" v-model="price" v-on:input="setPrice" placeholder="请填写要出的价格" /></div>
-						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addPrice" value="加价" />
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addPrice" value="出价" />
 					</div>
 				</div>
 				<div class="clear"></div>

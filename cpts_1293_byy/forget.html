@@ -271,7 +271,6 @@
 						var _this = this;
 						if(_this.inputtext.loginname == "" || _this.inputtext.loginname == null || _this.inputtext.loginname == undefined) {
 							alert("请输入邮箱");
-							_this.status--;
 							return;
 						}
 						axios.post('/user/send_email/' + this.inputtext.loginname)

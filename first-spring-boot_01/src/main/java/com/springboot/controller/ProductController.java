@@ -188,7 +188,7 @@ public class ProductController {
 			return ResultGenerator.genFailResult("出价不能低于当前价格");
 		}
 		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString())
-				- Float.parseFloat(map.get("increments").toString()))) {
+				- product.getPrice())) {
 			return ResultGenerator.genFailResult("加价不能低于" + product.getIncrements());
 		}
 		if (product.getBidderid().equals(user.getId())) {

@@ -80,7 +80,7 @@
 								<div class="form-group" v-if="product.isNotAuction==1">
 									<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control layui-input" id="outTime" v-model="product.outTime" name="outTime">
+										<input type="text" class="form-control" id="outTime" v-model="product.outTime" name="outTime">
 									</div>
 								</div>
 								<div class="form-group">
@@ -136,16 +136,32 @@
 					},
 					submit: function() {
 						var _this = this;
+						if(_this.product.isNotAuction == "" || _this.product.isNotAuction == "") {
+							alert("请选择是否拍卖");
+							return;
+						}
+						if(_this.product.name == "" || _this.product.name == "") {
+							alert("请输入商品名称");
+							return;
+						}
+						if(_this.product.category == "" || _this.product.category == "") {
+							alert("请选择商品种类");
+							return;
+						}
 						var formData = new FormData();
 						formData.append("detail", editor.html());
 						formData.append("name", _this.product.name);
 						formData.append("category", _this.product.category);
 						if(_this.product.isNotAuction == 1) {
 							formData.append("quality", 1);
-							formData.append("price", _this.product.minPrice); // 当前定价
-							formData.append("minPrice", _this.product.minPrice); // 设定为最小定价
-							formData.append("increments", _this.product.increments); // 设定每次最小叫价
-							formData.append("isNotAuction", _this.product.isNotAuction); // 设定是否时拍卖
+							// 当前定价
+							formData.append("price", _this.product.minPrice);
+							// 设定为最小定价
+							formData.append("minPrice", _this.product.minPrice);
+							// 设定每次最小叫价
+							formData.append("increments", _this.product.increments);
+							// 设定是否时拍卖
+							formData.append("isNotAuction", _this.product.isNotAuction);
 						} else {
 							if(_this.product.quality == null || _this.product.quality == "") {
 								alert("请输入数量");

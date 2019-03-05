@@ -75,6 +75,33 @@
 				methods: {
 					update: function() {
 						var _this = this;
+						if(_this.inputtext.province == "" || _this.inputtext.province == null) {
+							alert("请选择省");
+							return;
+						}
+						if(_this.inputtext.city == "" || _this.inputtext.city == null) {
+							alert("请选择市");
+							return;
+						}
+						if(_this.inputtext.region == "" || _this.inputtext.region == null) {
+							alert("请选择区");
+							return;
+						}
+						if($("#address").val() == "" || $("#address").val() == null) {
+							alert("请填写详细地址");
+							return;
+						}
+						if($("#consignee").val() == "" || $("#consignee").val() == null) {
+							alert("请填写收货人姓名");
+							return;
+						}
+						if($("#phone").val() == "" || $("#phone").val() == null) {
+							alert("请填写手机号码");
+							return;
+						}
+						if($("#postal").val() == "" || $("#postal").val() == null) {
+							_this.inputtext.postal = '000000';
+						}
 						axios.put("/address/" + addrid, _this.inputtext)
 							.then(function(res) {
 								console.info(_this.inputtext);

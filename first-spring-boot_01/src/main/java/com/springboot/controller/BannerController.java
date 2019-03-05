@@ -1,15 +1,17 @@
 package com.springboot.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -38,11 +40,17 @@ public class BannerController {
 
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@RequestBody Banner banner, @CurrentUser User currentUser) {
+	public Result add(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser,
+			@RequestParam(required = false) MultipartFile image)
+			throws IllegalAccessException, InvocationTargetException {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
-		return ResultGenerator.genSuccessResult(bannerService.add(banner));
+		Banner banner = new Banner();
+		banner.setCreateBy(currentUser.getId());
+		banner.setUpdateBy(currentUser.getId());
+		BeanUtils.populate(banner, map);
+		return ResultGenerator.genSuccessResult(bannerService.add(banner, image));
 	}
 
 	@LoginRequired
@@ -55,12 +63,17 @@ public class BannerController {
 	}
 
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestBody Banner banner, @CurrentUser User currentUser) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@PathVariable String id, @RequestParam(required = false) MultipartFile image, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User currentUser)
+			throws IllegalAccessException, InvocationTargetException {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
-		return ResultGenerator.genSuccessResult(bannerService.add(banner));
+		Banner banner = new Banner();
+		BeanUtils.populate(banner, map);
+		banner.setId(id);
+		return ResultGenerator.genSuccessResult(bannerService.update(banner, image));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

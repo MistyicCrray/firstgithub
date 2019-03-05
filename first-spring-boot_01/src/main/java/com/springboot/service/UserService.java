@@ -47,7 +47,7 @@ public class UserService {
 	 * @param user
 	 * @param file
 	 * @return String
-	 * @throws MessagingException 
+	 * @throws MessagingException
 	 */
 	public User add(User user) throws MessagingException {
 		String password = user.getPassword();
@@ -96,7 +96,25 @@ public class UserService {
 				"点击激活邮箱：<a href='" + domain + "/active.html?id=" + user.getId() + "&activeCode=" + activeCode + "'>"
 						+ domain + "/active.html?id=" + user.getId() + "&activeCode=" + activeCode + "</a>该链接48小时内有效",
 				user.getLoginname(), "激活邮箱", javaMailSender, form);
+		userMapper.insert(user);
 		return user;
+	}
+
+	/**
+	 * 管理员添加用户
+	 */
+	public int addAdmin(User user) {
+		user.setId(UUIDUtils.get16UUID());
+		String password = user.getPassword();
+		user.setPassword(MD5.md5(password)); // md5加密
+		user.setCreateTime(new Date());
+		user.setEmail(user.getLoginname());
+		if (!user.getUsertype().equals("1")) {
+			if (!user.getLoginname().matches("^\\w+@(\\w+\\.)+\\w+$")) {
+				throw new ServiceException("邮箱不合法");
+			}
+		}
+		return userMapper.insert(user);
 	}
 
 	/**
@@ -108,15 +126,11 @@ public class UserService {
 	 * @return Map<String,Object>
 	 */
 	public Map<String, Object> login(Map<String, Object> map) {
-		if (userMapper.findList(map).size() == 0 || userMapper.findList(map) == null) {
-			throw new ServiceException("用户名或密码错误");
-		} else {
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			User user = userMapper.findList(map).get(0);
-			resultMap.put("userInfo", user); // 存入user信息
-			resultMap.put("accessToken", TokenUtil.createJwtToken(user.getId())); // 存入token
-			return resultMap;
-		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		User user = userMapper.findList(map).get(0);
+		resultMap.put("userInfo", user); // 存入user信息
+		resultMap.put("accessToken", TokenUtil.createJwtToken(user.getId())); // 存入token
+		return resultMap;
 	}
 
 	/**

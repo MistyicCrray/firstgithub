@@ -30,7 +30,6 @@ import com.springboot.tools.MD5;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.SendEmailUtil;
-import com.springboot.tools.ServiceException;
 import com.springboot.tools.TableData;
 import com.springboot.tools.UUIDUtils;
 
@@ -77,18 +76,18 @@ public class UserController {
 	public Result activeEmail(@PathVariable String id, @PathVariable String activeCode) {
 		User user = userService.findById(id);
 		if (user == null) {
-			throw new ServiceException("用户还未注册，请前往注册页面");
+			return ResultGenerator.genFailResult("用户还未注册，请前往注册页面");
 		}
 		if (user.getState().equals("0") && StringUtil.isEmpty(user.getActivecode())) {
-			throw new ServiceException("该邮箱已激活");
+			return ResultGenerator.genFailResult("该邮箱已激活");
 		}
 		if (!activeCode.equals(user.getActivecode())) {
-			throw new ServiceException("激活码错误");
+			return ResultGenerator.genFailResult("激活码错误");
 		}
 		// 链接过期则删除用户信息
 		if (new Date().getTime() >= user.getActivedate().getTime()) {
 			userService.delete(id);
-			throw new ServiceException("该链接已经过期,请重新注册");
+			return ResultGenerator.genFailResult("该链接已经过期,请重新注册");
 		}
 		// 激活成功时清空这两个字段,防止重复激活
 		user.setActivecode(null);
@@ -162,10 +161,10 @@ public class UserController {
 	public Result Login(@RequestBody(required = false) Map<String, Object> map,
 			@RequestParam(required = false) MultipartFile file) {
 		map.put("password", MD5.md5((String) map.get("password")));
-		if (userService.login(map) == null) {
+		List<User> users = userService.findList(map);
+		if (users.size() == 0) {
 			return ResultGenerator.genFailResult("用户名或密码错误");
 		}
-		List<User> users = userService.findList(map);
 		if (users.size() != 0) {
 			if (users.get(0).getState().equals("2")) {
 				return ResultGenerator.genFailResult("用户未激活");
@@ -209,26 +208,17 @@ public class UserController {
 	}
 
 	/**
-	 * 添加管理用户
-	 * 
-	 * @param id
-	 * @return
-	 * @throws MessagingException
-	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Result addAdmin(@RequestBody User user) throws MessagingException {
-		user.setUsertype("1");
-		return ResultGenerator.genSuccessResult(userService.add(user));
-	}
-
-	/**
 	 * 重置密码
 	 * 
 	 * @param id
 	 * @return
 	 */
+	@LoginRequired
 	@RequestMapping(value = "/reset/{id}", method = RequestMethod.PUT)
-	public Result resetPwd(@PathVariable String id) {
+	public Result resetPwd(@PathVariable String id, @CurrentUser User currentUser) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您无权访问");
+		}
 		User user = userService.findById(id);
 		user.setPassword(MD5.md5("123456"));
 		return ResultGenerator.genSuccessResult(userService.updateByUser(user));
@@ -298,6 +288,22 @@ public class UserController {
 		map.remove("password");
 		map.put("id", id);
 		return ResultGenerator.genSuccessResult(userService.update(map, img));
+	}
+
+	/**
+	 * 管理员添加用户信息
+	 * 
+	 * @param id
+	 * @param file
+	 * @return
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
+	public Result adminAdd(@CurrentUser User currentUser, @RequestBody User user) {
+		if (!currentUser.getUsertype().equals("1")) {
+			return ResultGenerator.genFailResult("您没有权限访问");
+		}
+		return ResultGenerator.genSuccessResult(userService.addAdmin(user));
 	}
 
 }

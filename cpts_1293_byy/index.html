@@ -197,7 +197,7 @@
 							<div class="jiage">{{item.price}}元</div>
 							<div class="piao">
 								<a :href="['xiangqing.html?id=' + item.proid]">
-									<span class="pinpai">{{item.detail}}</span>
+									<span class="pinpai" id="pdtail">{{item.detail}}</span>
 									<span>来至于mi狼牙的评价</span>
 								</a>
 							</div>
@@ -283,10 +283,6 @@
 					})
 				},
 				methods: {
-					// 获取购物车信息
-					getCarts: function() {
-
-					},
 					getBanner: function() {
 						var _this = this;
 						axios.get('/banner', {
