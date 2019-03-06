@@ -28,7 +28,7 @@
 			</div>
 			<div class="x-body">
 				<div class="layui-row">
-					<button class="layui-btn" onclick="x_admin_show('添加分类','./cate-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+					<button class="layui-btn"><i class="layui-icon"></i>添加</button>
 				</div>
 				<xblock>
 					<span class="x-right" style="line-height:40px">共有数据：88 条</span>
@@ -39,8 +39,6 @@
 							<th width="70">ID</th>
 							<th width="70">栏目名</th>
 							<th width="50">父级编号</th>
-							<!--<th width="50">排序</th>-->
-							<!--<th width="50">状态</th>-->
 							<th width="200">操作</th>
 					</thead>
 					<tbody class="x-cate">
@@ -52,14 +50,10 @@
 							<td>
 								{{cate.parentid}}
 							</td>
-							<!--<td><input type="text" class="layui-input x-sort" name="order" value="1"></td>-->
-							<!--<td>
-								<input type="checkbox" name="switch" lay-text="开启|停用" checked="" lay-skin="switch">
-							</td>-->
 							<td class="td-manage">
-								<button class="layui-btn layui-btn layui-btn-xs" onclick="x_admin_show('编辑','admin-edit.html')"><i class="layui-icon">&#xe642;</i>编辑</button>
-								<button class="layui-btn layui-btn-warm layui-btn-xs" onclick="x_admin_show('编辑','admin-edit.html')"><i class="layui-icon">&#xe642;</i>添加子栏目</button>
-								<button class="layui-btn-danger layui-btn layui-btn-xs" onclick="member_del(this,'要删除的id')" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>
+								<button class="layui-btn layui-btn layui-btn-xs"><i class="layui-icon">&#xe642;</i>编辑</button>
+								<button class="layui-btn layui-btn-warm layui-btn-xs"><i class="layui-icon">&#xe642;</i>添加子栏目</button>
+								<button class="layui-btn-danger layui-btn layui-btn-xs" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>
 							</td>
 						</tr>
 						</tr>

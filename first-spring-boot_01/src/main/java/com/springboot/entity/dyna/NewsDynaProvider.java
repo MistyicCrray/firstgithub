@@ -24,6 +24,12 @@ public class NewsDynaProvider {
 					if (map.get("sub") != null) {
 						WHERE("sub=#{sub}");
 					}
+					if (map.get("istop") != null) {
+						WHERE("istop=#{istop}");
+					}
+					if (map.get("createdate") != null) {
+						WHERE("createdate=#{createdate}");
+					}
 				}
 			}
 		}.toString();
@@ -41,6 +47,12 @@ public class NewsDynaProvider {
 				}
 				if (map.get("sub") != null) {
 					SET("sub=#{sub}");
+				}
+				if (map.get("istop") != null) {
+					SET("istop=#{istop}");
+				}
+				if (map.get("createdate") != null) {
+					SET("createdate=#{createdate}");
 				}
 				WHERE("id=#{id}");
 			}

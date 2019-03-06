@@ -25,7 +25,7 @@ public class NewsService {
 		return newsMapper.deleteByPrimaryKey(id);
 	}
 
-	public int update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map) {
 		return newsMapper.update(map);
 	}
 

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,7 +58,7 @@ public class NewsController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@ModelAttribute News news, @CurrentUser User currentUser) {
+	public Result add(@RequestBody News news, @CurrentUser User currentUser) {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
@@ -67,16 +67,12 @@ public class NewsController {
 
 	/**
 	 * 删除
-	 * 
-	 * @Title: add
-	 * @Description: TODO
-	 * @param news
-	 * @return Result
-	 * @author hlx
-	 * @date 2018年11月19日下午5:20:45
+	 * @param id
+	 * @param currentUser
+	 * @return
 	 */
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id, @CurrentUser User currentUser) {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
@@ -95,11 +91,13 @@ public class NewsController {
 	 * @date 2018年11月19日下午5:21:54
 	 */
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@RequestParam(required = false) Map<String, Object> map, @PathVariable String id,
+			@CurrentUser User currentUser) {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
+		map.put("id", id);
 		return ResultGenerator.genSuccessResult(newsService.update(map));
 	}
 

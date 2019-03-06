@@ -13,86 +13,87 @@
 		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="./js/xadmin.js"></script>
-		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-		<!--[if lt IE 9]>
-      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 	</head>
 
 	<body>
-		<div class="x-body">
-			<div class="layui-form">
+		<form id="editForm">
+			<div class="x-body" id="main">
 				<div class="layui-form-item">
 					<label for="username" class="layui-form-label">
-                  <span class="x-red">*</span>登录名
+                  <span class="x-red">*</span>标题
               </label>
 					<div class="layui-input-inline">
-						<input type="text" id="username" name="username" required="" lay-verify="required" autocomplete="off" value="admin" class="layui-input">
-					</div>
-					<div class="layui-form-mid layui-word-aux">
-						<span class="x-red">*</span>
+						<input type="text" id="title" name="title" v-model="inputtext.title" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<label for="phone" class="layui-form-label">
-                  <span class="x-red">*</span>手机
+					<label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>是否置顶
               </label>
 					<div class="layui-input-inline">
-						<input type="text" value="18925139194" id="phone" name="phone" required="" lay-verify="phone" autocomplete="off" class="layui-input">
+						<select class="layui-select" name="istop" v-model="inputtext.istop">
+							<option value="0">置顶</option>
+							<option value="1">非置顶</option>
+						</select>
 					</div>
 					<div class="layui-form-mid layui-word-aux">
-						<span class="x-red">*</span>
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>邮箱
+					<label for="L_repass" class="layui-form-label">
+                  <span class="x-red">*</span>内容
               </label>
 					<div class="layui-input-inline">
-						<input type="text" value="113664000@qq.com" id="L_email" name="email" required="" lay-verify="email" autocomplete="off" class="layui-input">
-					</div>
-					<div class="layui-form-mid layui-word-aux">
-						<span class="x-red">*</span>
+						<textarea id="content" v-model="inputtext.content" name="contenttop" class="layui-input"></textarea>
 					</div>
 				</div>
 				<div class="layui-form-item">
 					<label for="L_repass" class="layui-form-label">
               </label>
-					<button class="layui-btn" lay-filter="add" lay-submit="">
-                  增加
-              </button>
+					<button class="layui-btn" type="button" id="btn" v-on:click="edit">修改</button>
 				</div>
 			</div>
-		</div>
+		</form>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
-		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
-			var id = GetQueryString('id');
+			var id = GetQueryString("id");
 			var vue = new Vue({
 				el: "#main",
 				data: {
-					user: {}
+					inputtext: {}
 				},
 				methods: {
 					edit: function() {
 						var _this = this;
-						axios.put('/user/update/' + id, _this.user)
+						if(_this.inputtext.title == "" || _this.inputtext.title == null) {
+							layer.alert("请输入标题");
+							return;
+						}
+						if(_this.inputtext.istop == "" || _this.inputtext.istop == null) {
+							layer.alert("请选择是否置顶");
+							return;
+						}
+						if(_this.inputtext.content == "" || _this.inputtext.content == null) {
+							layer.alert("请选择是否置顶");
+							return;
+						}
+						axios.put("/news/" + id, $("#editForm").serialize())
 							.then(function(res) {
 								layer.alert("修改成功");
-							})
-					}
+							});
+					},
+					getNews: function() {
+						var _this = this;
+						axios.get('/news/' + id).then(function(res) {
+							_this.inputtext = res.data.data;
+						})
+					},
 				},
 				created: function() {
-					var _this = this;
-					axios.get('/user/' + id)
-						.then(function(res) {
-							console.info(res);
-							_this.user = res.data.data;
-						})
+					this.getNews();
 				}
 			})
 		</script>

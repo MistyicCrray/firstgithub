@@ -64,8 +64,8 @@ public class BannerController {
 
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public Result update(@PathVariable String id, @RequestParam(required = false) MultipartFile image, @RequestParam(required = false) Map<String, Object> map,
-			@CurrentUser User currentUser)
+	public Result update(@PathVariable String id, @RequestParam(required = false) MultipartFile image,
+			@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser)
 			throws IllegalAccessException, InvocationTargetException {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
@@ -83,7 +83,7 @@ public class BannerController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result findList(@RequestParam(required = false) Map<String, Object> map, Integer size, Integer pageNum) {
-		Page<Banner> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		Page<Banner> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size, "IS_TOP DESC");
 		List<Banner> list = bannerService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Banner>(page.getTotal(), list));
 	}

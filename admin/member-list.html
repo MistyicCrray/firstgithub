@@ -29,7 +29,7 @@
 				</div>
 				<xblock>
 					<button class="layui-btn" onclick="x_admin_show('添加用户','./member-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-					<span class="x-right" style="line-height:40px">共有数据：{{total}}条</span>
+					<span class="x-right" style="line-height:40px">共有数据：{{total}} 条,共有：{{pages}}页,当前第{{pageNum}}页</span>
 				</xblock>
 				<table class="layui-table">
 					<thead>
@@ -39,8 +39,8 @@
 							<th>性别</th>
 							<th>手机</th>
 							<th>邮箱</th>
-							<th>地址</th>
 							<th>加入时间</th>
+							<th>最后登录日期</th>
 							<th>状态</th>
 							<th>操作</th>
 						</tr>
@@ -55,8 +55,8 @@
 							<td v-if="item.gender==''"></td>
 							<td>{{item.tel}}</td>
 							<td>{{item.email}}</td>
-							<td>{{item.adreess}}</td>
 							<td>{{item.createTime | date_format}}</td>
+							<td>{{item.lastlogintime | date_format}}</td>
 							<td>{{item.state | statusFilt}}</td>
 							<td class="td-manage">
 								<a title="编辑" v-on:click="edit(item.id)" href="javascript:;">
@@ -211,7 +211,7 @@
 				filters: {
 					date_format: function(value) {
 						if(!value) return '';
-						return moment(value).format('YYYY-MM-DD');
+						return moment(value).format('YYYY-MM-DD hh:mm:ss');
 					},
 					statusFilt: function(value) {
 						if(!value) return '';

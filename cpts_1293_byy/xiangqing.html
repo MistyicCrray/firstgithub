@@ -165,7 +165,7 @@
 
 			<!-- xiangqing -->
 			<div class="jieshao mt20 w">
-				<div class="left fl"><img v-bind:src="'/images/' + product.img" style="width: 562px;"></div>
+				<div class="left fl"><img v-bind:src="'/images/' + product.img" width='562px' height='600px'></div>
 				<div class="right fr">
 					<div class="jiage ml20 mt10">{{product.name}}</div>
 					<div class="jiage ml20 mt10">￥{{product.price}}元</div>
@@ -262,7 +262,7 @@
 							_this.quantity = 0;
 						}
 					},
-					
+
 				},
 				filters: {
 					numFilter: function(value) { // 截取当前数据到小数点后两位

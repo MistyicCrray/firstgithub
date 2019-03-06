@@ -17,43 +17,43 @@
 
 	<body>
 		<div id="main">
+
 			<div class="x-nav">
 				<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
 					<i class="layui-icon" style="line-height:30px">ဂ</i></a>
 			</div>
+			<xblock>
+				<button class="layui-btn" onclick="x_admin_show('添加公告','./news-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条,共有：{{pages}}页,当前第{{pageNum}}页</span>
+			</xblock>
 			<div class="x-body">
-				<div class="layui-row">
-					<div class="layui-form layui-col-md12 x-so">
-						<input type="text" name="username" v-model="inputtext.loginname" placeholder="请输入账号名" autocomplete="off" class="layui-input">
-						<button class="layui-btn" v-on:click="getUsers()"><i class="layui-icon">&#xe615;</i></button>
-					</div>
-				</div>
-				<xblock>
-					<button class="layui-btn" onclick="x_admin_show('添加用户','./admin-add.html')"><i class="layui-icon"></i>添加</button>
-					<span class="x-right" style="line-height:40px">共有数据：{{total}} 条,共有：{{pages}}页,当前第{{pageNum}}页 </span>
-				</xblock>
 				<table class="layui-table">
 					<thead>
 						<tr>
-							<th>ID</th>
-							<th>登录名</th>
-							<th>手机</th>
-							<th>邮箱</th>
-							<th>加入时间</th>
+							<th>序号</th>
+							<th>标题</th>
+							<th>创建时间</th>
+							<th>是否置顶</th>
 							<th>操作</th>
 					</thead>
 					<tbody>
-						<tr v-for="item,index in users">
+						<tr v-for="item,index in news">
 							<td>{{index+1}}</td>
-							<td>{{item.loginname}}</td>
-							<td>{{item.tel}}</td>
-							<td>{{item.email}}</td>
-							<td>{{item.createTime | date_format}}</td>
-							<td>
+							<td>{{item.title}}</td>
+							<td>{{item.createdate | date_format}}</td>
+							<td v-if="item.istop==0">置顶</td>
+							<td v-if="item.istop==1">非置顶</td>
+							<td class="td-manage">
+								<a title="置顶" v-on:click="setup(item.id)" href="javascript:;" v-if="item.istop==1">
+									<i class="layui-icon">↑</i>
+								</a>
+								<a title="取消置顶" v-on:click="cancel(item.id)" href="javascript:;" v-if="item.istop==0">
+									<i class="layui-icon">↓</i>
+								</a>
 								<a title="编辑" v-on:click="edit(item.id)" href="javascript:;">
 									<i class="layui-icon">&#xe642;</i>
 								</a>
-								<a title="删除" href="javascript:;">
+								<a title="删除" v-on:click="deleteNews(item.id)" href="javascript:;">
 									<i class="layui-icon">&#xe640;</i>
 								</a>
 							</td>
@@ -89,23 +89,10 @@
 		<script type="text/javascript" src="js/vue-main.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
-			var optionsUserType = [{
-					text: '正常',
-					value: '0'
-				},
-				{
-					text: '冻结',
-					value: '1'
-				},
-				{
-					text: '未激活',
-					value: '2'
-				},
-			];
 			var vue = new Vue({
 				el: "#main",
 				data: {
-					users: "",
+					news: "",
 					pageSize: 5,
 					total: 0,
 					pages: 0,
@@ -113,26 +100,48 @@
 					inputtext: {},
 				},
 				methods: {
-					getUsers: function(pageIndex) {
+					setup: function(id) {
+						layer.confirm("是否置顶该公告?", {
+							btn: ['确定', '取消']
+						}, function(index) {
+							axios.put("/news/" + id + '?istop=0')
+								.then(function(res) {
+									layer.close(index);
+									layer.alert("置顶成功");
+									this.getNews();
+								});
+						});
+
+					},
+					cancel: function(id) {
+						if(layer.confirm("是否取消置顶该公告?")) {
+							axios.put("/news/" + id + '?istop=1')
+								.then(function(res) {
+									layer.alert("取消置顶成功");
+									this.getNews();
+								});
+						}
+					},
+					getNews: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
-						axios.get('/user', {
+						axios.get('/news', {
 							params: {
-								loginname: _this.inputtext.loginname == "" ? null : _this.inputtext.loginname,
 								pageNum: pageIndex,
-								size: _this.pageSize,
-								usertype: 1
+								size: _this.pageSize
 							}
 						}).then(function(res) {
-							console.info(res)
-							_this.users = res.data.data.rows;
+							console.info(res);
+							_this.news = res.data.data.rows;
 							_this.pageNum = pageIndex;
 							_this.total = res.data.data.total;
 							_this.pages = Math.ceil(_this.total / _this.pageSize);
 						})
 					},
 					pageClick: function(page) {
-						this.getUsers(page);
+						var _this = this;
+						_this.pageNum = page;
+						_this.getNews(page);
 					},
 					prePage: function() {
 						this.pageNum--;
@@ -140,7 +149,7 @@
 							this.pageNum = 1;
 							return;
 						}
-						this.getUsers(this.pageNum);
+						this.getNews(this.pageNum);
 					},
 					nextPage: function() {
 						this.pageNum++;
@@ -148,57 +157,45 @@
 							this.pageNum = this.pages;
 							return;
 						}
-						this.getUsers(this.pageNum);
+						this.getNews(this.pageNum);
 					},
 					edit: function(id) {
 						var _this = this;
 						layer.open({
 							type: 2,
-							title: '修改个人信息',
+							title: '修改公告信息',
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
-							area: ['600px', '400px'],
-							content: ['admin-edit.html?id=' + id],
+							area: ['600px', '600px'],
+							content: ['news-edit.html?id=' + id],
 							end: function() {
-								_this.getUsers();
+								_this.getNews();
 							}
 						})
 					},
-					resetPassword: function(id) {
-						layer.confirm("是否重置密码？(重置后密码为：123456)", {
-							btn: ['确认', '取消'] //按钮
-						}, function() {
-							axios.put('/user/reset/' + id)
-								.then(function(res) {
-									layer.msg('重置成功', {
-										icon: 1
-									});
-								})
-						})
-					},
-					deleteu: function(id) {
+					deleteNews: function(id) {
 						var _this = this;
-						layer.confirm("是否删除该用户？", {
+						layer.confirm("是否删除公告？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.delete('/user/delete/' + id)
+							axios.delete('/news/' + id)
 								.then(function(res) {
 									layer.msg('删除成功', {
 										icon: 1
 									});
-									_this.getUsers();
-								})
+									_this.getNews();
+								});
 						})
-					}
+					},
 				},
 				created: function() {
-					this.getUsers();
+					this.getNews();
 				},
 				filters: {
 					date_format: function(value) {
 						if(!value) return '';
-						return moment(value).format('YYYY-MM-DD');
+						return moment(value).format('YYYY-MM-DD hh:mm:ss');
 					},
 					statusFilt: function(value) {
 						if(!value) return '';

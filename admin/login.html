@@ -103,33 +103,40 @@
 					},
 					submit: function() {
 						var _this = this;
+						console.info("222");
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
-								var resultdata = response.data;
-								sessionStorage.setItem("userId", resultdata.data.userInfo.id);
-								sessionStorage.setItem("username", resultdata.data.userInfo.username);
-								sessionStorage.setItem("accessToken", resultdata.data.accessToken);
-								if(document.getElementById("remenber").checked) {
-									_this.setCookie("loginname", _this.inputtext.loginname, 7);
-									_this.setCookie("password", _this.inputtext.password, 7);
-									_this.setCookie("remenber", "true", 7);
-									_this.setCookie("autoLogin", "", 7);
+								console.info(response.data.code);
+								if(response.data.code == 200) {
+									console.info(response);
+									sessionStorage.setItem("userId", response.data.data.userInfo.id);
+									sessionStorage.setItem("username", response.data.data.userInfo.username);
+									sessionStorage.setItem("accessToken", response.data.data.accessToken);
+									if(_this.inputtext.remenber) {
+										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+										_this.setCookie("password", _this.inputtext.password, 7);
+										_this.setCookie("remenber", "true", 7);
+										_this.setCookie("autoLogin", "", 7);
+									} else {
+										document.cookie = "";
+									}
+									if(_this.inputtext.autologin) {
+										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+										_this.setCookie("password", _this.inputtext.password, 7);
+										_this.setCookie("remenber", "true", 7);
+										_this.setCookie("autoLogin", "true", 7);
+									} else {
+										document.cookie = "";
+									}
+									alert("登录成功");
+									if(response.data.data.userInfo.usertype == 1) {
+										window.location.href = '/admin/index.html';
+									} else {
+										window.location.href = '/cpts_1293_byy/index.html';
+									}
 								} else {
-									document.cookie = "";
-								}
-								if(document.getElementById("autoLogin").checked) {
-									_this.setCookie("loginname", _this.inputtext.loginname, 7);
-									_this.setCookie("password", _this.inputtext.password, 7);
-									_this.setCookie("remenber", "true", 7);
-									_this.setCookie("autoLogin", "true", 7);
-								} else {
-									document.cookie = "";
-								}
-								alert("登录成功");
-								if(resultdata.data.userInfo.usertype == 0) {
-									window.location.href = '/cpts_1293_byy/index.html'; // 跳转	
-								} else if(resultdata.data.userInfo.usertype == 1) {
-									window.location.href = '/admin/index.html'; // 跳转	
+									console.info(response.data.code);
+									alert(response.data.message);
 								}
 
 							})

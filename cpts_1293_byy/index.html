@@ -141,10 +141,10 @@
 				<div class="lunbo swiper-container">
 					<div class="swiper-button-prev"></div>
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/1.jpg" /></a>
+						<div class="swiper-slide" v-for="item in banner">
+							<a v-bind:href="item.linkUrl"><img width="990px" height="460px" v-bind:src="'/images/'+ item.image" /></a>
 						</div>
-						<div class="swiper-slide">
+						<!--<div class="swiper-slide">
 							<a href="#"><img width="990px" height="460px" src="resource/image/2.jpg" /></a>
 						</div>
 						<div class="swiper-slide">
@@ -155,7 +155,7 @@
 						</div>
 						<div class="swiper-slide">
 							<a href="#"><img width="990px" height="460px" src="resource/image/5d.jpg" /></a>
-						</div>
+						</div>-->
 					</div>
 					<div class="swiper-button-next"></div>
 					<div class="swiper-pagination"></div>
@@ -260,6 +260,7 @@
 					furniture: [],
 				},
 				created: function() {
+					this.getBanner();
 					this.getProduct();
 					this.getCategory();
 					this.getComputer();
@@ -279,8 +280,7 @@
 								watchSlidesVisibility: true,
 							},
 						});
-
-					})
+					});
 				},
 				methods: {
 					getBanner: function() {
@@ -288,9 +288,11 @@
 						axios.get('/banner', {
 							params: {
 								size: 5,
-								pageNum: 1
+								pageNum: 1,
+								isShow: 0,
 							}
 						}).then(function(res) {
+							console.info(res);
 							_this.banner = res.data.data.rows;
 						})
 					},
@@ -319,7 +321,7 @@
 							params: {
 								pageNum: pageIndex,
 								size: _this.pageSize,
-								isNotAuction: 0
+								isNotAuction: 0  // 非拍卖品
 							}
 						}).then(function(response) {
 							console.info(response);
@@ -353,7 +355,6 @@
 								cateid: 4
 							}
 						}).then(function(response) {
-							console.info(response);
 							_this.furniture = response.data.data.rows;
 						})
 					},
