@@ -11,8 +11,8 @@ public class OrderDynaProvider {
 				SELECT("*");
 				FROM("t_order");
 				if (map != null) {
-					if (map.get("id") != null) {
-						WHERE("id=#{id}");
+					if (map.get("orderId") != null) {
+						WHERE("order_id=#{orderId}");
 					}
 					if (map.get("userid") != null) {
 						WHERE("userid=#{userid}");
@@ -73,8 +73,8 @@ public class OrderDynaProvider {
 				LEFT_OUTER_JOIN("product p ON p.proid=o.productid");
 				LEFT_OUTER_JOIN("address a ON o.address_id=a.addrid");
 				if (map != null) {
-					if (map.get("id") != null) {
-						WHERE("o.id=#{id}");
+					if (map.get("orderId") != null) {
+						WHERE("o.order_id=#{orderId}");
 					}
 					if (map.get("userid") != null) {
 						WHERE("o.userid=#{userid}");

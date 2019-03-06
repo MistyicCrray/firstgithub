@@ -114,7 +114,7 @@ public class OrderController {
 			map.put("userid", user.getId());
 			// 管理员
 		} else if (user.getUsertype().equals("1")) {
-			map.put("userid", null);
+			map.remove("userid");
 		} else {
 			return ResultGenerator.genFailResult("您无权访问");
 		}

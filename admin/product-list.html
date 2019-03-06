@@ -31,24 +31,32 @@
 					<thead>
 						<tr>
 							<th>序号</th>
-							<th>轮播图</th>
-							<th>是否显示</th>
-							<th>是否置顶</th>
+							<th>商品名</th>
+							<th>种类 </th>
+							<th>价格 </th>
+							<th>上架时间</th>
+							<th>图片</th>
+							<th>浏览量</th>
+							<th>剩余数量</th>
+							<th>是否拍卖品</th>
+							<th>状态</th>
 							<th>操作</th>
 					</thead>
 					<tbody>
-						<tr v-for="item,index in banners">
+						<tr v-for="item,index in product">
 							<td>{{index+1}}</td>
-							<td><img v-bind:src="'/images/'+item.image"></td>
-							<td v-if="item.isShow==1">不显示</td>
-							<td v-if="item.isShow==0">显示</td>
-							<td v-if="item.isTop==1">不是</td>
-							<td v-if="item.isTop==0">是</td>
+							<td>{{item.name}}</td>
+							<td v-for="opt in categories" v-if="item.category==opt.id">{{opt.name}}</td>
+							<td>￥{{item.price}}</td>
+							<td>{{item.createdate | dateFilter}}</td>
+							<td v-if="item.img!=null"><img v-bind:src="'/images/' + item.img" style="width: 20px; height: 20px;"></td>
+							<td v-if="item.img==null">暂无图片</td>
+							<td>{{item.hits}}</td>
+							<td>{{item.quality}}</td>
+							<td>{{item.isnotauction}}</td>
+							<td>{{item.status | optionStatusFilter}}</td>
 							<td class="td-manage">
-								<a title="编辑" v-on:click="edit(item.id)" href="javascript:;">
-									<i class="layui-icon">&#xe642;</i>
-								</a>
-								<a title="删除" v-on:click="deleteBanner(item.id)" href="javascript:;">
+								<a title="删除" v-on:click="deleteP(item.proid)" href="javascript:;">
 									<i class="layui-icon">&#xe640;</i>
 								</a>
 							</td>
@@ -84,38 +92,72 @@
 		<script type="text/javascript" src="js/vue-main.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
+			var optionStatus = [{
+				text: "正常",
+				value: "0"
+			}, {
+				text: "下架",
+				value: "1"
+			}, {
+				text: "售罄",
+				value: "2"
+			}]
 			var vue = new Vue({
 				el: "#main",
 				data: {
-					banners: "",
+					product: [],
+					islogin: sessionStorage.length > 0,
+					baseUrl: '/images/',
+					userInfo: sessionStorage.username,
+					user: {},
+					categories: "",
 					pageSize: 5,
 					total: 0,
 					pages: 0,
+					inputPage: '',
 					pageNum: 1,
-					inputtext: {},
 				},
 				methods: {
-					getBanners: function(pageIndex) {
-						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+					// 获取类别信息
+					getCategory: function() {
 						var _this = this;
-						axios.get('/banner', {
+						axios.get('/category', {
 							params: {
-								username: _this.inputtext.username == "" ? null : _this.inputtext.username,
-								pageNum: pageIndex,
-								size: _this.pageSize
+								size: 1000,
+								pageNum: 1
 							}
-						}).then(function(res) {
-							console.info(res)
-							_this.banners = res.data.data.rows;
-							_this.pageNum = pageIndex;
-							_this.total = res.data.data.total;
-							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						}).then(function(response) {
+							console.info(response);
+							_this.categories = response.data.data.rows;
 						})
 					},
-					pageClick: function(page) {
+					getUser: function() {
 						var _this = this;
-						_this.pageNum = page;
-						_this.getBanners(page);
+						axios.get('/user/' + sessionStorage.getItem("userId"))
+							.then(function(res) {
+								_this.user = res.data.data;
+							})
+					},
+					getProducts: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/product', {
+								params: {
+									pageNum: pageIndex,
+									size: _this.pageSize
+								}
+							})
+							.then(function(res) {
+								console.info(res);
+								_this.product = res.data.data.rows;
+								_this.pageNum = pageIndex;
+								_this.total = res.data.data.total;
+								_this.pages = Math.ceil(_this.total / _this.pageSize);
+							})
+					},
+					pageClick: function(page) {
+						this.pageNum = page;
+						this.getProducts(page);
 					},
 					prePage: function() {
 						this.pageNum--;
@@ -123,7 +165,7 @@
 							this.pageNum = 1;
 							return;
 						}
-						this.getBanners(this.pageNum);
+						this.getProducts(this.pageNum);
 					},
 					nextPage: function() {
 						this.pageNum++;
@@ -131,56 +173,42 @@
 							this.pageNum = this.pages;
 							return;
 						}
-						this.getBanners(this.pageNum);
+						this.getProducts(this.pageNum);
 					},
-					edit: function(id) {
+					deleteP: function(id) {
 						var _this = this;
-						layer.open({
-							type: 2,
-							title: '修改轮播图信息',
-							shadeClose: true,
-							closeBtn: 1,
-							scrollbar: true,
-							area: ['600px', '400px'],
-							content: ['banner-edit.html?id=' + id],
-							end: function() {
-								_this.getBanners();
-							}
-						})
-					},
-					deleteBanner: function(id) {
-						var _this = this;
-						layer.confirm("是否删除轮播图？", {
+						layer.confirm("是否删除该商品？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.delete('/banner/' + id)
+							axios.delete("/product/" + id)
 								.then(function(res) {
 									layer.msg('删除成功', {
 										icon: 1
 									});
-									_this.getBanners();
+									_this.getProducts();
 								});
 						})
-					}
+					},
 				},
 				created: function() {
-					this.getBanners();
+					this.getProducts();
+					this.getCategory();
 				},
 				filters: {
-					date_format: function(value) {
+					dateFilter: function(value) {
 						if(!value) return '';
 						return moment(value).format('YYYY-MM-DD');
 					},
-					statusFilt: function(value) {
+					optionStatusFilter: function(value) {
 						if(!value) return '';
-						for(var i = 0; i < optionsUserType.length; i++) {
-							var jn = optionsUserType[i];
-							if(jn.value == value) {
-								return jn.text;
-							}
+						if(value == '0') {
+							return "正常";
+						} else if(value == '1') {
+							return "下架";
+						} else if(value == '2') {
+							return "售罄";
 						}
-						return '';
-					}
+					},
 				}
 			})
 		</script>

@@ -19,57 +19,19 @@
 		<div class="x-body layui-anim layui-anim-up" id="main">
 			<div class="layui-form-item">
 				<label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>邮箱
+                  <span class="x-red">*</span>类别名称
               </label>
 				<div class="layui-input-inline">
-					<input type="text" id="L_email" name="email" v-model="inputtext.loginname" lay-verify="email" autocomplete="off" class="layui-input">
+					<input type="text" id="L_email" v-model="inputtext.name" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">
-					<span class="x-red">*</span>将会成为您唯一的登入名
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="L_username" class="layui-form-label">
-                  <span class="x-red">*</span>昵称
-              </label>
-				<div class="layui-input-inline">
-					<input type="text" id="L_username" name="username" v-model="inputtext.username" lay-verify="nikename" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label">
-                  <span class="x-red">*</span>密码
-              </label>
-				<div class="layui-input-inline">
-					<input type="password" id="L_pass" name="pass" v-model="inputtext.password" lay-verify="pass" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-form-mid layui-word-aux">
-					6到16个字符
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="L_repass" class="layui-form-label">
-                  <span class="x-red">*</span>确认密码
-              </label>
-				<div class="layui-input-inline">
-					<input type="password" id="L_repass" name="repass" v-model="inputtext.comfirmPwd" lay-verify="repass" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="L_repass" class="layui-form-label">
-                  <span class="x-red">*</span>性别
-              </label>
-				<div class="layui-input-inline">
-					<select class="layui-input" v-model="inputtext.sex">
-						<option value="0">男</option>
-						<option value="1">女</option>
-					</select>
+					<span class="x-red">*</span>
 				</div>
 			</div>
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label">
               </label>
-				<button class="layui-btn" type="button" v-on:click="addUser">增加 </button>
+				<button class="layui-btn" type="button" v-on:click="addCate">增加 </button>
 			</div>
 		</div>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
@@ -83,30 +45,14 @@
 					inputtext: {}
 				},
 				methods: {
-					addUser: function() {
+					addCate: function() {
 						var _this = this;
-						if(_this.inputtext.loginname == "" || _this.inputtext.loginname == null) {
-							layer.alert("请输入邮箱");
-							return;
-						}
-						if(_this.inputtext.username == "" || _this.inputtext.username == null) {
-							layer.alert("请输入用户名");
-							return;
-						}
-						if(_this.inputtext.password == "" || _this.inputtext.password == null) {
-							layer.alert("请输入密码");
-							return;
-						}
-						if(_this.inputtext.comfirmPwd == "" || _this.inputtext.comfirmPwd == null) {
-							layer.alert("请输入确认密码");
-							return;
-						}
-						if(_this.inputtext.comfirmPwd != _this.inputtext.password) {
-							layer.alert("密码和确认密码不一致");
+						if(_this.inputtext.name == "" || _this.inputtext.name == null) {
+							layer.alert("请输入类别名称");
 							return;
 						}
 						_this.inputtext.usertype = "0"; // 普通用户
-						axios.post("/user/addAdmin", _this.inputtext)
+						axios.post("/category", _this.inputtext)
 							.then(function(res) {
 								layer.alert("添加成功");
 							})

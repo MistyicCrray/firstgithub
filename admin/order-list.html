@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="./js/xadmin.js"></script>
 	</head>
+
 	<body>
 		<div id="main">
 
@@ -25,18 +26,17 @@
 				<div class="layui-row">
 					<div class="layui-form layui-col-md12 x-so">
 						<div class="layui-input-inline">
-							<select name="contrller">
+							<select v-model="inputtext.status" id="status">
 								<option value="">订单状态</option>
-								<option value="0">待确认</option>
-								<option value="1">已确认</option>
-								<option value="2">已收货</option>
-								<option value="3">已取消</option>
-								<option value="4">已完成</option>
-								<option value="5">已作废</option>
+								<option value="0">待付款</option>
+								<option value="1">未发货</option>
+								<option value="2">已发货</option>
+								<option value="3">未签收</option>
+								<option value="4">已签收</option>
 							</select>
 						</div>
-						<input type="text" name="username" placeholder="请输入订单号" autocomplete="off" class="layui-input">
-						<button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+						<input type="text" v-model="inputtext.orderId" placeholder="请输入订单号" autocomplete="off" class="layui-input">
+						<button class="layui-btn" v-on:click="getOrders()"><i class="layui-icon">&#xe615;</i></button>
 					</div>
 				</div>
 				<xblock>
@@ -74,8 +74,8 @@
 							<td>{{item.payment}}</td>
 							<td>{{item.price}}</td>
 							<td>{{item.quantity}}</td>
-							<td>{{item.status}}</td>
-							<td>{{item.create_time}}</td>
+							<td>{{item.status | statusFilter}}</td>
+							<td>{{item.create_time | date_format}}</td>
 							<td class="td-manage">
 								<a title="查看" onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
 									<i class="layui-icon">&#xe63c;</i>
@@ -119,19 +119,23 @@
 		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
 			var optionsOrderType = [{
-					text: '未发货',
+					text: '待付款',
 					value: '0'
 				},
 				{
-					text: '已发货',
+					text: '未发货',
 					value: '1'
 				},
 				{
-					text: '已签收',
+					text: '已发货',
 					value: '2'
 				},
 				{
 					text: '未签收',
+					value: '3'
+				},
+				{
+					text: '已签收',
 					value: '3'
 				},
 			];
@@ -144,6 +148,7 @@
 					total: 0,
 					pages: 0,
 					pageNum: 1,
+					inputtext: {}
 				},
 				methods: {
 					getOrders: function(pageIndex) {
@@ -152,7 +157,9 @@
 						axios.get("/order", {
 								params: {
 									pageNum: pageIndex,
-									size: _this.pageSize
+									size: _this.pageSize,
+									orderId: _this.inputtext.orderId == "" ? null : _this.inputtext.orderId,
+									status: $("#status").val() == "" ? null : $("#status").val()
 								}
 							})
 							.then(function(response) {
@@ -185,6 +192,19 @@
 				},
 				created: function() {
 					this.getOrders();
+				},
+				filters: {
+					date_format: function(value) {
+						if(!value) return '';
+						return moment(value).format('YYYY-MM-DD hh:mm:ss');
+					},
+					statusFilter: function(value) {
+						for(var i = 0; i < optionsOrderType.length; i++) {
+							if(value == optionsOrderType[i].value) {
+								return optionsOrderType[i].text;
+							}
+						}
+					}
 				}
 			})
 		</script>
