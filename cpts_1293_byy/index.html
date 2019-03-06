@@ -121,7 +121,7 @@
 			<div class="banner_y center">
 				<div class="nav">
 					<ul>
-						<li v-for="item1 in categories" v-if="item1.parentid==null">
+						<li v-for="item1 in categories" v-if="item1.parentid=='0'">
 							<a :href="['liebiao.html?cateid=' + item1.id]">{{item1.name}}</a>
 							<div class="pop">
 								<div class="left fl">
@@ -321,7 +321,7 @@
 							params: {
 								pageNum: pageIndex,
 								size: _this.pageSize,
-								isNotAuction: 0  // 非拍卖品
+								isNotAuction: 0 // 非拍卖品
 							}
 						}).then(function(response) {
 							console.info(response);

@@ -24,12 +24,14 @@ public class CategoryService {
 		// 当这个类型为父类型时
 		if (StringUtil.isEmpty(category.getParentid())) {
 			Map<String, Object> cateMap = new HashMap<>();
-			cateMap.put("parentid", null);
+			cateMap.put("parentid", "0");
 			List<Category> sonList = categoryMapper.findList(cateMap);
 			if (list.size() == 0) {
 				category.setId("1001");
+				category.setParentid("0");
 			} else {
 				category.setId(id + sonList.size() + "");
+				category.setParentid("0");
 			}
 			// 当这个类型为子类型时
 		} else {
