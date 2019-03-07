@@ -74,11 +74,17 @@ public class CategoryController {
 	 * @return Result
 	 */
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User currentUser) {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
+		List<Category> cates = categoryService.findList(map);
+		if (cates.size() != 0) {
+			return ResultGenerator.genFailResult("该类别名称已存在");
+		}
+		map.put("id", id);
 		return ResultGenerator.genSuccessResult(categoryService.update(map));
 	}
 
@@ -90,8 +96,21 @@ public class CategoryController {
 	 * @param id
 	 * @return Result
 	 */
-	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result selectById(@PathVariable(value = "id") String id) {
 		return ResultGenerator.genSuccessResult(categoryService.findById(id));
+	}
+	
+	/**
+	 * 根据id查询
+	 * 
+	 * @Title: selectById
+	 * @Description: TODO
+	 * @param id
+	 * @return Result
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public Result delete(@PathVariable(value = "id") String id) {
+		return ResultGenerator.genSuccessResult(categoryService.delete(id));
 	}
 }

@@ -46,14 +46,36 @@
 								{{cate.parentid}}
 							</td>
 							<td class="td-manage">
-								<button class="layui-btn layui-btn layui-btn-xs"><i class="layui-icon">&#xe642;</i>编辑</button>
-								<button class="layui-btn layui-btn-warm layui-btn-xs"><i class="layui-icon">&#xe642;</i>添加子栏目</button>
-								<button class="layui-btn-danger layui-btn layui-btn-xs" href="javascript:;"><i class="layui-icon">&#xe640;</i>删除</button>
+								<button class="layui-btn layui-btn layui-btn-xs" v-on:click="edit(cate.id)"><i class="layui-icon">&#xe642;</i>编辑</button>
+								<button class="layui-btn layui-btn-warm layui-btn-xs" v-on:click="addSon(cate.id)" v-if="cate.parentid==0"><i class="layui-icon">&#xe642;</i>添加子栏目</button>
+								<button class="layui-btn-danger layui-btn layui-btn-xs" href="javascript:;" v-on:click="deleteCate(cate.id)"><i class="layui-icon">&#xe640;</i>删除</button>
 							</td>
-						</tr>
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<div class="page">
+				<div class="layui-form">
+					<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
+					<template v-for="(item,index) in pages">
+						<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
+							<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+					</template>
+					<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
+				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
@@ -66,22 +88,92 @@
 				el: "#app",
 				data: {
 					categories: "",
+					pageSize: 10,
+					total: 0,
+					pages: 0,
+					pageNum: 1,
 				},
 				methods: {
-					getCategories: function() {
+					getCategories: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
 						axios.get('/category', {
 							params: {
-								size: 1000
+								pageNum: pageIndex,
+								size: _this.pageSize,
 							}
 						}).then(function(res) {
 							console.info(res);
 							_this.categories = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
 						})
 					},
-					addCate: function() {
-
-					}
+					edit: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改类别',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['cate-edit.html?id=' + id],
+							end: function() {
+								_this.getCategories();
+							}
+						})
+					},
+					addSon: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改类别',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['cate-add-son.html?id=' + id],
+							end: function() {
+								_this.getCategories();
+							}
+						})
+					},
+					deleteCate: function(id) {
+						var _this = this;
+						layer.confirm("是否删除该类别？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.delete('/category/' + id)
+								.then(function(res) {
+									layer.msg('删除成功', {
+										icon: 1
+									});
+									_this.getCategories();
+								});
+						})
+					},
+					pageClick: function(page) {
+						console.info(page)
+						this.getCategories(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if(this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getCategories(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if(this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getCategories(this.pageNum);
+					},
 				},
 				created: function() {
 					this.getCategories();

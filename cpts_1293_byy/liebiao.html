@@ -11,9 +11,15 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 	</head>
 	<style type="text/css">
-		.cate li{
+		.cate li {
 			float: left;
 			margin-left: 100px;
+		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
 		}
 	</style>
 
@@ -95,8 +101,8 @@
 						<div class="col-md-3" v-for="item in products">
 							<div class="thumbnail">
 								<a v-bind:href="'xiangqing.html?id='+item.proid"><img v-bind:src="'/images/' + item.img" alt=""></a>
-								<div class="caption">
-									<a class="h3" v-bind:href="'xiangqing.html?id='+item.proid">{{item.name}}</a>
+								<div class="caption pinpai">
+									<a class="h3" v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid">{{item.name}}</a>
 									<p class="h3">{{item.price}}元</p>
 								</div>
 							</div>

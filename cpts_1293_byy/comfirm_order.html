@@ -8,7 +8,6 @@
 		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 	</head>
 	<style type="text/css">
@@ -163,8 +162,8 @@
 							<div class="clear"></div>
 						</div>
 						<div class="ddxq" v-for="item in products">
-							<div class="ddspt fl"><img src="./image/gwc_xiaomi6.jpg" alt=""></div>
-							<div class="ddbh fl">{{item.name}}</div>
+							<div class="ddspt fl"><img :src="'/images/'+item.img" height="100px" alt=""></div>
+							<div class="ddbh fl" style="line-height: 100px;font-size: 16px;"><a :href="'xiangqing.html?id='+item.proid">{{item.name}}</a></div>
 							<div class="ztxx fr">
 								<ul>
 									<li>￥{{item.price}}</li>
@@ -193,8 +192,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
-		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript">
 			var proid = GetQueryString("proid");
 			var quantity = GetQueryString("quantity");

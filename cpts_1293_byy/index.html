@@ -141,21 +141,9 @@
 				<div class="lunbo swiper-container">
 					<div class="swiper-button-prev"></div>
 					<div class="swiper-wrapper">
-						<div class="swiper-slide" v-for="item in banner">
+						<div class="swiper-slide" v-for="item,index in banner">
 							<a v-bind:href="item.linkUrl"><img width="990px" height="460px" v-bind:src="'/images/'+ item.image" /></a>
 						</div>
-						<!--<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/2.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/3.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/4.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/5d.jpg" /></a>
-						</div>-->
 					</div>
 					<div class="swiper-button-next"></div>
 					<div class="swiper-pagination"></div>
@@ -189,7 +177,7 @@
 						<div class="remen fl" v-for="item in computer">
 							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
-								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
+								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
 							<div class="miaoshu">
 								<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
@@ -215,7 +203,7 @@
 						<div class="remen fl" v-for="item in furniture">
 							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
-								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" src="resource/image/peijian2.jpg"></a>
+								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
 							<div class="miaoshu">
 								<a :href="['xiangqing.html?id=' + item.proid]"></a>
@@ -279,6 +267,8 @@
 								slidesPerView: 4,
 								watchSlidesVisibility: true,
 							},
+							observer: true, //修改swiper自己或子元素时，自动初始化swiper
+							observeParents: true //修改swiper的父元素时，自动初始化swiper
 						});
 					});
 				},
@@ -338,7 +328,7 @@
 								pageNum: 1,
 								size: 4,
 								isNotAuction: 0,
-								cateid: 3
+								cateid: 1003
 							}
 						}).then(function(response) {
 							console.info(response);

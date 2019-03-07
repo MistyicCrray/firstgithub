@@ -83,7 +83,7 @@ public class BannerController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result findList(@RequestParam(required = false) Map<String, Object> map, Integer size, Integer pageNum) {
-		Page<Banner> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size, "IS_TOP DESC");
+		Page<Banner> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size, "IS_TOP");
 		List<Banner> list = bannerService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Banner>(page.getTotal(), list));
 	}
