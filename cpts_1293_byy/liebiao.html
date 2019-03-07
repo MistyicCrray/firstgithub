@@ -99,9 +99,9 @@
 					</div>
 					<div class="row">
 						<div class="col-md-3" v-for="item in products">
-							<div class="thumbnail">
-								<a v-bind:href="'xiangqing.html?id='+item.proid"><img v-bind:src="'/images/' + item.img" alt=""></a>
-								<div class="caption pinpai">
+							<div class="thumbnail" style="text-align: center;">
+								<a v-bind:href="'xiangqing.html?id='+item.proid"><img height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
+								<div class="caption pinpai" style="text-align: center;">
 									<a class="h3" v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid">{{item.name}}</a>
 									<p class="h3">{{item.price}}元</p>
 								</div>

@@ -101,26 +101,32 @@
 				},
 				methods: {
 					setup: function(id) {
-						layer.confirm("是否置顶该公告?", {
-							btn: ['确定', '取消']
-						}, function(index) {
-							axios.put("/news/" + id + '?istop=0')
+						var _this = this;
+						layer.confirm("是否删除公告？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.put('/news/' + id + '?istop=0')
 								.then(function(res) {
-									layer.close(index);
-									layer.alert("置顶成功");
-									this.getNews();
+									layer.msg('置顶成功', {
+										icon: 1
+									});
+									_this.getNews();
 								});
-						});
-
+						})
 					},
 					cancel: function(id) {
-						if(layer.confirm("是否取消置顶该公告?")) {
-							axios.put("/news/" + id + '?istop=1')
+						var _this = this;
+						layer.confirm("是否删除公告？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.put('/news/' + id + '?istop=1')
 								.then(function(res) {
-									layer.alert("取消置顶成功");
-									this.getNews();
+									layer.msg('置顶成功', {
+										icon: 1
+									});
+									_this.getNews();
 								});
-						}
+						})
 					},
 					getNews: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
