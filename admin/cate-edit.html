@@ -56,7 +56,11 @@
 						}
 						axios.put("/category/" + id, $("#edit").serialize())
 							.then(function(res) {
-								layer.alert("修改成功");
+								if(res.data.code == 200) {
+									layer.alert("修改成功");
+								} else {
+									alert(res.data.message);
+								}
 							})
 					},
 					getCate: function() {

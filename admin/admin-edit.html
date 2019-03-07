@@ -21,14 +21,25 @@
 	</head>
 
 	<body>
-		<div class="x-body">
+		<div class="x-body" id="main">
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<label for="username" class="layui-form-label">
                   <span class="x-red">*</span>登录名
               </label>
 					<div class="layui-input-inline">
-						<input type="text" id="username" name="username" required="" lay-verify="required" autocomplete="off" value="admin" class="layui-input">
+						<input type="text" id="loginname" name="loginname" v-model="user.loginname" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<span class="x-red">*</span>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="username" class="layui-form-label">
+                  		<span class="x-red">*</span>用户名
+              		</label>
+					<div class="layui-input-inline">
+						<input type="text" id="username" name="username" v-model="user.username" class="layui-input">
 					</div>
 					<div class="layui-form-mid layui-word-aux">
 						<span class="x-red">*</span>
@@ -39,7 +50,7 @@
                   <span class="x-red">*</span>手机
               </label>
 					<div class="layui-input-inline">
-						<input type="text" value="18925139194" id="phone" name="phone" required="" lay-verify="phone" autocomplete="off" class="layui-input">
+						<input type="text" id="phone" name="phone" v-model="user.phone" autocomplete="off" class="layui-input">
 					</div>
 					<div class="layui-form-mid layui-word-aux">
 						<span class="x-red">*</span>
@@ -50,7 +61,7 @@
                   <span class="x-red">*</span>邮箱
               </label>
 					<div class="layui-input-inline">
-						<input type="text" value="113664000@qq.com" id="L_email" name="email" required="" lay-verify="email" autocomplete="off" class="layui-input">
+						<input type="text" id="email" name="email" v-model="user.email" autocomplete="off" class="layui-input">
 					</div>
 					<div class="layui-form-mid layui-word-aux">
 						<span class="x-red">*</span>
@@ -59,8 +70,8 @@
 				<div class="layui-form-item">
 					<label for="L_repass" class="layui-form-label">
               </label>
-					<button class="layui-btn" lay-filter="add" lay-submit="">
-                  增加
+					<button class="layui-btn" v-on:click="edit">
+                  修改
               </button>
 				</div>
 			</div>

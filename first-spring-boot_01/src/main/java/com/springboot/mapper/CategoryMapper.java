@@ -107,5 +107,5 @@ public interface CategoryMapper {
     List<Category> findList(Map<String, Object> map);
     
     @SelectProvider(type = com.springboot.entity.dyna.CategoryDynaProvider.class, method = "updateProvider")
-    int update(Map<String, Object> map);
+    Integer update(Map<String, Object> map);
 }

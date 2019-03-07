@@ -39,9 +39,9 @@ public class CategoryService {
 			cateMap.put("parentid", category.getParentid());
 			List<Category> sonList = categoryMapper.findList(cateMap);
 			if (sonList.size() < 10) {
-				category.setId(id + "0" + sonList.size());
+				category.setId(category.getParentid() + "0" + sonList.size());
 			} else {
-				category.setId(id + sonList.size() + "");
+				category.setId(category.getParentid() + sonList.size() + "");
 			}
 		}
 		for (Category cate : list) {
@@ -56,7 +56,7 @@ public class CategoryService {
 		return categoryMapper.deleteByPrimaryKey(id);
 	}
 
-	public int update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map) {
 		return categoryMapper.update(map);
 	}
 

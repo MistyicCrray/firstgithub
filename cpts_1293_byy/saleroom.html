@@ -132,7 +132,10 @@
 						<li style="text-align: center;">
 							<a href="#">拍卖信息</a>
 						</li>
-						<li>
+						<li v-for="item in news">
+							<a href="#" v-bid:title="item.title">{{item.title}}</a>
+						</li>
+						<!--<li>
 							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
 						</li>
 						<li>
@@ -143,10 +146,7 @@
 						</li>
 						<li>
 							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>
-						<li>
-							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>
+						</li>-->
 					</ul>
 				</div>
 				<div class="lunbo swiper-container">
@@ -214,11 +214,13 @@
 					categories: "",
 					carts: "",
 					search: '',
-					banner: []
+					banner: [],
+					news: []
 				},
 				created: function() {
 					this.getProduct();
 					this.getCategory();
+					this.getNews();
 					this.$nextTick(function() {
 						swiper = new Swiper('.swiper-container', {
 							autoplay: {
@@ -307,7 +309,18 @@
 					},
 					searchForm: function() {
 						location.href = "liebiao.html?search=" + this.search;
-					}
+					},
+					getNews: function() {
+						var _this = this;
+						axios.get('/news', {
+							params: {
+								size: 10,
+							}
+						}).then(function(response) {
+							console.info(response);
+							_this.news = response.data.data.rows;
+						})
+					},
 				}
 			});
 		</script>

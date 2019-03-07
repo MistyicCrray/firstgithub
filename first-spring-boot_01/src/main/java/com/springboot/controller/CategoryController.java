@@ -81,7 +81,7 @@ public class CategoryController {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
 		List<Category> cates = categoryService.findList(map);
-		if (cates.size() != 0) {
+		if (cates.size() != 0 && !cates.get(0).getId().equals(id)) {
 			return ResultGenerator.genFailResult("该类别名称已存在");
 		}
 		map.put("id", id);
@@ -100,7 +100,7 @@ public class CategoryController {
 	public Result selectById(@PathVariable(value = "id") String id) {
 		return ResultGenerator.genSuccessResult(categoryService.findById(id));
 	}
-	
+
 	/**
 	 * 根据id查询
 	 * 

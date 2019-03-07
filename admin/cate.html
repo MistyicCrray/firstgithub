@@ -121,7 +121,7 @@
 							area: ['600px', '400px'],
 							content: ['cate-edit.html?id=' + id],
 							end: function() {
-								_this.getCategories();
+								_this.getCategories(_this.pageNum);
 							}
 						})
 					},
@@ -136,7 +136,7 @@
 							area: ['600px', '400px'],
 							content: ['cate-add-son.html?id=' + id],
 							end: function() {
-								_this.getCategories();
+								_this.getCategories(_this.pageNum);
 							}
 						})
 					},
@@ -150,7 +150,7 @@
 									layer.msg('删除成功', {
 										icon: 1
 									});
-									_this.getCategories();
+									_this.getCategories(_this.pageNum);
 								});
 						})
 					},

@@ -77,10 +77,10 @@
 							<td>{{item.status | statusFilter}}</td>
 							<td>{{item.create_time | date_format}}</td>
 							<td class="td-manage">
-								<a title="查看" onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
+								<!--<a title="查看" onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
 									<i class="layui-icon">&#xe63c;</i>
-								</a>
-								<a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
+								</a>-->
+								<a title="删除" v-on:click="del(item.order_id)" href="javascript:;">
 									<i class="layui-icon">&#xe640;</i>
 								</a>
 							</td>
@@ -189,6 +189,20 @@
 						}
 						this.getOrders(this.pageNum);
 					},
+					del: function(id) {
+						var _this = this;
+						layer.confirm("是否删除该订单？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.delete('/order/' + id)
+								.then(function(res) {
+									layer.msg('删除成功', {
+										icon: 1
+									});
+									_this.getOrders(_this.pageNum);
+								});
+						})
+					}
 				},
 				created: function() {
 					this.getOrders();

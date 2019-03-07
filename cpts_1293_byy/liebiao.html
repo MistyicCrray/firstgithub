@@ -87,8 +87,8 @@
 			</div>
 			<div class="banner_x center">
 				<ul class="cate">
-					<li>
-						<a href="javascript:void(0)">asdasd</a>
+					<li v-for="item in category">
+						<a href="javascript:void(0)" v-on:click="getProducts(1,item.id)">{{item.name}}</a>
 					</li>
 				</ul>
 			</div>
@@ -148,11 +148,15 @@
 					pageNum: 1,
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
+					category: []
 				},
 				methods: {
-					getProducts: function(pageIndex) {
+					getProducts: function(pageIndex, cateid) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
+						if(cateid != undefined) {
+							id = cateid;
+						}
 						if(id != null) {
 							axios.get('/product', {
 									params: {
@@ -168,7 +172,6 @@
 									_this.pages = Math.ceil(_this.total / _this.pageSize);
 								});
 						} else {
-							console.info(search)
 							axios.post('/search?keyword=' + search + "&pageNum=" + pageIndex + "&size=" + _this.pageSize)
 								.then(function(res) {
 									_this.products = res.data.data.rows;
@@ -178,6 +181,19 @@
 								})
 						}
 
+					},
+					getCategory: function() {
+						var _this = this;
+						axios.get('/category', {
+								params: {
+									parentid: id = "" ? null : id,
+									size: 1000
+								}
+							})
+							.then(function(res) {
+								console.info(res);
+								_this.category = res.data.data.rows;
+							})
 					},
 					pageClick: function(page) {
 						this.getProducts(page);
@@ -205,6 +221,7 @@
 				},
 				created: function() {
 					this.getProducts();
+					this.getCategory();
 				}
 			})
 		</script>

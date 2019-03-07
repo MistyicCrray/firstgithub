@@ -54,7 +54,14 @@
 						_this.inputtext.usertype = "0"; // 普通用户
 						axios.post("/category", _this.inputtext)
 							.then(function(res) {
-								layer.alert("添加成功");
+								console.info(res.data.message);
+								if(res.data.code == 200) {
+									layer.alert("添加成功");
+									var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+									parent.layer.close(index); // 关闭layer
+								} else {
+									alert(res.data.message);
+								}
 							})
 					}
 				},
