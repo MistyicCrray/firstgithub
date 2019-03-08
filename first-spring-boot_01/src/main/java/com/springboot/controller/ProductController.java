@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.StringUtil;
 import com.springboot.entity.Order;
 import com.springboot.entity.Product;
 import com.springboot.entity.User;
@@ -187,12 +188,13 @@ public class ProductController {
 		if (product.getPrice() >= Float.parseFloat(map.get("price").toString())) {
 			return ResultGenerator.genFailResult("出价不能低于当前价格");
 		}
-		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString())
-				- product.getPrice())) {
+		if (product.getIncrements() > (Float.parseFloat(map.get("price").toString()) - product.getPrice())) {
 			return ResultGenerator.genFailResult("加价不能低于" + product.getIncrements());
 		}
-		if (product.getBidderid().equals(user.getId())) {
-			return ResultGenerator.genFailResult("您已经竞拍过，请勿重复竞拍");
+		if (StringUtil.isNotEmpty(product.getBidderid())) {
+			if (product.getBidderid().equals(user.getId())) {
+				return ResultGenerator.genFailResult("您已经竞拍过，请勿重复竞拍");
+			}
 		}
 		map.put("proid", productId);
 		map.put("bidderId", user.getId()); // 竞拍者id

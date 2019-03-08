@@ -26,7 +26,7 @@ public class OrderService {
 	}
 
 	// 修改
-	public int update(Map<String, Object> map) {
+	public Integer update(Map<String, Object> map) {
 		return orderMapper.update(map);
 	}
 

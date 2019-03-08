@@ -58,7 +58,7 @@ public class OrderDynaProvider {
 						SET("address_id=#{addressId}");
 					}
 				}
-				WHERE("id=#{id}");
+				WHERE("order_id=#{orderId}");
 			}
 		}.toString();
 	}

@@ -46,7 +46,7 @@ public class UUIDUtils {
 	public static String getOrderIdByTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String newDate = sdf.format(new Date());
-		String result = "";
+		String result = "gotowhere_";
 		Random random = new Random();
 		for (int i = 0; i < 3; i++) {
 			result += random.nextInt(10);

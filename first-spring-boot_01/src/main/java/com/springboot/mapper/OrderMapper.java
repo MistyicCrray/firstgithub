@@ -112,7 +112,7 @@ public interface OrderMapper {
 	List<Order> findList(Map<String, Object> map);
 
 	@SelectProvider(type = com.springboot.entity.dyna.OrderDynaProvider.class, method = "updateProvider")
-	int update(Map<String, Object> map);
+	Integer update(Map<String, Object> map);
 
 	// 连表查询
 	@SelectProvider(type = com.springboot.entity.dyna.OrderDynaProvider.class, method = "selectBySql")

@@ -301,7 +301,7 @@
 						}
 						axios.post('/product/buy/' + _this.addrId, _this.products)
 							.then(function(res) {
-								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.orderId;
+								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.data.data.orderId;
 							})
 
 					},
