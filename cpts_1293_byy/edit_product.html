@@ -10,7 +10,7 @@
 
 	<body>
 		<div id="main">
-			<div class="rtcont fr">
+			<div class="rtcont">
 				<div class="ddzxbt">修改商品</div>
 				<div style="position: relative;" class="ml40 infor">
 					<div>
@@ -36,7 +36,7 @@
 										<label for="phone" class="col-sm-2 control-label">选择种类:</label>
 										<div class="col-sm-6">
 											<select v-model="product.category" class="form-control" name="category">
-												<optgroup v-for="item in categories" v-if="item.parentid==null" v-bind:label="item.name">
+												<optgroup v-for="item in categories" v-if="item.parentid=='0'" v-bind:label="item.name">
 													<option v-for="opt in categories" v-bind:value="opt.id" v-if="opt.parentid==item.id">{{opt.name}}</option>
 												</optgroup>
 											</select>
@@ -78,7 +78,7 @@
 									</div>
 									<div class="form-group" v-if="product.img!=''"><label for="consignee" class="col-sm-2 control-label">图片:</label>
 										<div class="busin_img">
-											<a><img v-bind:src="'/images/'+product.img"><em>点击查看大图</em></a><button class="btn btn-cancel" type="button" v-on:click="delImg()">删除</button>
+											<a><img v-bind:src="'/images/'+product.img"><em></em></a><button class="btn btn-cancel" type="button" v-on:click="delImg()">删除</button>
 										</div>
 									</div>
 									<div class="form-group">
@@ -140,13 +140,6 @@
 					},
 					submit: function() {
 						var _this = this;
-						//						var formData = new FormData();
-						//						formData.append("detail", editor.html());
-						//						formData.append("name", _this.product.name);
-						//						formData.append("category", _this.product.category);
-						//						formData.append("price", _this.product.price);
-						//						formData.append("quality", _this.product.quality);
-						//						formData.append("file", $("#file")[0].files[0]);
 						var formData = new FormData($("#addProduct")[0]);
 						axios.put('/product/' + id, formData)
 							.then(function(res) {

@@ -295,6 +295,7 @@
 								pageNum: 1
 							}
 						}).then(function(response) {
+							console.info(response);
 							_this.categories = response.data.data.rows;
 						})
 					},

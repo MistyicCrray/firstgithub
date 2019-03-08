@@ -13,6 +13,9 @@ public class ProductDynaProvider {
 				if (param.get("name") != null) {
 					SET("name=#{name}");
 				}
+				if (param.get("img") != null) {
+					SET("img=#{img}");
+				}
 				if (param.get("category") != null) {
 					SET("category=#{category}");
 				}

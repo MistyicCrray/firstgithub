@@ -10,9 +10,9 @@
 
 	<body>
 		<div id="main">
-			<div class="rtcont fr">
+			<div class="">
 				<div class="ddzxbt">上架商品</div>
-				<div style="position: relative;" class="ml40 infor">
+				<div class="infor">
 					<form id="edit">
 						<div style="position: relative;" class="ml40 infor">
 							<div class="form-horizontal">
@@ -35,7 +35,7 @@
 									<label for="phone" class="col-sm-2 control-label">选择种类:</label>
 									<div class="col-sm-6">
 										<select v-model="product.category" class="form-control" name="category">
-											<optgroup v-for="item in categories" v-if="item.parentid==null" v-bind:label="item.name">
+											<optgroup v-for="item in categories" v-if="item.parentid=='0'" v-bind:label="item.name">
 												<option v-for="opt in categories" v-bind:value="opt.id" v-if="opt.parentid==item.id">{{opt.name}}</option>
 											</optgroup>
 										</select>
@@ -109,6 +109,11 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
+		<script>
+			$(function() {
+				$("#outTime").bootstrapDatepickr();
+			})
+		</script>
 		<script>
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　

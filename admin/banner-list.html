@@ -34,16 +34,18 @@
 							<th>轮播图</th>
 							<th>是否显示</th>
 							<th>是否置顶</th>
+							<th>链接</th>
 							<th>操作</th>
 					</thead>
 					<tbody>
 						<tr v-for="item,index in banners">
 							<td>{{index+1}}</td>
-							<td><img v-bind:src="'/images/'+item.image"></td>
+							<td><img v-bind:src="'/images/'+item.image" width="150px" height="59px"></td>
 							<td v-if="item.isShow==1">不显示</td>
 							<td v-if="item.isShow==0">显示</td>
 							<td v-if="item.isTop==1">不是</td>
 							<td v-if="item.isTop==0">是</td>
+							<td>{{item.linkUrl}}</td>
 							<td class="td-manage">
 								<a title="编辑" v-on:click="edit(item.id)" href="javascript:;">
 									<i class="layui-icon">&#xe642;</i>
