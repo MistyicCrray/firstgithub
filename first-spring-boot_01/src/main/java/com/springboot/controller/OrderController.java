@@ -118,9 +118,10 @@ public class OrderController {
 		} else {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
-		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
+				"create_time DESC");
 		List<Map<String, Object>> list = orderService.findListBy(map);
-		
+
 		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
 	}
 
@@ -135,7 +136,6 @@ public class OrderController {
 	 * @author hlx
 	 * @date 2018年11月19日下午3:38:30
 	 */
-//	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {
 		Order order = orderService.findById(id);
@@ -145,30 +145,12 @@ public class OrderController {
 		Address address = addressService.findById(order.getAddressId());
 		Map<String, Object> orderMap = new HashMap<String, Object>();
 		orderMap.put("product", product);
-		orderMap.put("sell", sell);
-		orderMap.put("buy", buy);
+		orderMap.put("seller", sell);
+		orderMap.put("buyer", buy);
 		orderMap.put("address", address);
 		orderMap.put("order", order);
 
 		return ResultGenerator.genSuccessResult(orderMap);
-	}
-
-	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-	public Result findListBy(@PathVariable String id) {
-		Order order = orderService.findById(id);
-		Address address = addressService.findById(order.getAddressId()); // 地址信息
-		Product product = productService.findById(order.getProductid()); // 商品信息
-		User seller = userService.findById(order.getSellid()); // 卖家信息
-		User buyer = userService.findById(order.getUserid()); // 买家信息
-		buyer.setPassword("");
-		seller.setPassword("");
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("order", order);
-		resultMap.put("address", address);
-		resultMap.put("product", product);
-		resultMap.put("seller", seller);
-		resultMap.put("buyer", buyer);
-		return ResultGenerator.genSuccessResult(resultMap);
 	}
 
 }

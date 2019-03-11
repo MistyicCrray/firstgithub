@@ -126,29 +126,56 @@
 					</div>
 					<div class="rtcont fr">
 						<div class="ddzxbt">交易订单</div>
-						<div class="ddxq">
-							<ul class="">
-								<li>订单号</li>
-								<li>商品名</li>
-								<li>数量</li>
-								<li>总价</li>
-								<li>状态</li>
-								<li>操作</li>
-							</ul>
-							<ul class="" v-for="item in orders">
-								<li>{{item.order_id}}</li>
-								<li style="font-size: 12px;">{{item.name}}</li>
-								<li>{{item.quantity}}</li>
-								<li>{{item.payment}}</li>
-								<li>{{item.status}}</li>
-								<li>
+						<!--<ul class="">
+							<li>订单号</li>
+							<li>商品名</li>
+							<li>数量</li>
+							<li>总价</li>
+							<li>下单时间</li>
+							<li>状态</li>
+							<li>操作</li>
+						</ul>
+						<ul class="" v-for="item in orders">
+							<li>{{item.order_id}}</li>
+							<li style="font-size: 12px;">{{item.name}}</li>
+							<li>{{item.quantity}}</li>
+							<li>{{item.payment}}</li>
+							<li>{{item.create_time | dateFilter}}</li>
+							<li>{{item.status}}</li>
+							<li>
 									<a href="javascript:void(0)" class="" style="font-size: 13px;">查看详情</a>
 									<a href="javascript:void(0)" class="" style="font-size: 13px;">确认付款</a>
 									<a href="javascript:void(0)" class="" style="font-size: 13px;">确认收货</a>
 									<a href="javascript:void(0)" class="" style="font-size: 13px;" title="删除订单">删除订单</a>
 								</li>
-							</ul>
-						</div>
+						</ul>-->
+						<table>
+							<tr>
+								<td>图片</td>
+								<td>订单号</td>
+								<td>商品名</td>
+								<td>数量</td>
+								<td>总价</td>
+								<td>下单时间</td>
+								<td>状态</td>
+								<td>操作</td>
+							</tr>
+							<tr v-for="item in orders">
+								<td><img :src="'/images/'+item.img" height="50px"></td>
+								<td>{{item.order_id}}</td>
+								<td>{{item.name}}</td>
+								<td>{{item.quantity}}</td>
+								<td>{{item.payment}}</td>
+								<td>{{item.create_time | dateFilter}}</td>
+								<td>{{item.status | optStatusFilter}}</td>
+								<td>
+									<a href="javascript:void(0)" style="font-size: 13px;">查看详情</a>
+									<a href="javascript:void(0)" style="font-size: 13px;" v-if="item.status==0">确认付款</a>
+									<a href="javascript:void(0)" style="font-size: 13px;" v-if="item.status==2">确认收货</a>
+									<a href="javascript:void(0)" style="font-size: 13px;" title="删除订单">删除订单</a>
+								</td>
+							</tr>
+						</table>
 						<nav aria-label="Page navigation center">
 							<ul class="pagination">
 								<li>
@@ -178,6 +205,7 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript">
+			var optStatus = ['待付款', '未发货', '已发货', '未签收', '已签收'];
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -200,6 +228,7 @@
 								size: _this.pageSize
 							}
 						}).then(function(res) {
+							console.info(res);
 							_this.orders = res.data.data.rows;
 							_this.pageNum = pageIndex;
 							_this.total = res.data.data.total;
@@ -230,8 +259,16 @@
 					this.getOrders();
 				},
 				filters: {
-					statusOption: function() {
-
+					dateFilter: function(value) {
+						if(!value) return '';
+						return moment(value).format('YYYY-MM-DD hh:mm:ss');
+					},
+					optStatusFilter: function(value) {
+						for(var i = 0; i < optStatus.length; i++) {
+							if(value == i) {
+								return optStatus[i];
+							}
+						}
 					}
 				}
 			})

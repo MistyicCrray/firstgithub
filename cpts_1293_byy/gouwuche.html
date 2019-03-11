@@ -18,6 +18,12 @@
 			height: 120px;
 			width: 120px;
 		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
 	</style>
 
 	<body>
@@ -70,13 +76,13 @@
 						<div class="clear"></div>
 					</div>
 					<div class="content2 center" v-for="(item,index) in shoppingCarts">
-						<div class="sub_content fl ">
+						<div class="sub_content fl">
 							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" checked="checked" v-if="item.ischeck=='0'" />
 							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" v-if="item.ischeck=='1'" />
 						</div>
 						<div class="sub_content fl"><img id="productImg" v-bind:src="'/images/' + item.img"></div>
-						<div class="sub_content fl">
-							<a v-bind:href="'xiangqing.html?id=' + item.proid">{{item.name}}</a>
+						<div class="sub_content fl pinpai">
+							<a v-bind:href="'xiangqing.html?id=' + item.proid" v-bind:title="item.name">{{item.name}}</a>
 						</div>
 						<div class="sub_content fl ">{{item.price}}元</div>
 						<div class="sub_content fl">
@@ -133,6 +139,7 @@
 					cart: {},
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
+					products: []
 				},
 				created: function() {
 					this.search();

@@ -84,6 +84,7 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
 		converters.add(converter);
 	}
 
+	// 统一异常处理
 	@Override
 	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
 		exceptionResolvers.add(new HandlerExceptionResolver() {

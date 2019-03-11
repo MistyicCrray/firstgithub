@@ -103,7 +103,6 @@
 					},
 					submit: function() {
 						var _this = this;
-						console.info("222");
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
 								console.info(response.data.code);

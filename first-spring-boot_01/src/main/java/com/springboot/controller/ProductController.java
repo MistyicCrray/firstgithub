@@ -74,7 +74,7 @@ public class ProductController {
 	public Result get(Integer pageNum, Integer size, Product product,
 			@RequestParam(required = false) Map<String, Object> map) {
 		Page<Product> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
-				"createdate desc,hits desc");
+				"createdate desc");
 		List<Product> list = productService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
