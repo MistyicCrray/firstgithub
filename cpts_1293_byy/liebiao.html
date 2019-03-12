@@ -21,6 +21,23 @@
 			white-space: nowrap;
 			overflow: hidden;
 		}
+		
+		.item {
+			height: 400px;
+			width: 300px;
+			float: left;
+			margin-left: 60px;
+			border: #E6E6FA 1px solid;
+			margin-top: 50px;
+		}
+		
+		.item:hover {
+			border: #007ab6 1px solid;
+		}
+		
+		.minni {
+			padding: 10px;
+		}
 	</style>
 
 	<body>
@@ -98,12 +115,13 @@
 						<div class="col-md-1" v-for=""></div>
 					</div>
 					<div class="row">
-						<div class="col-md-3" v-for="item in products">
-							<div class="thumbnail" style="text-align: center;">
+						<div class="item" v-for="item in products">
+							<div class="minni">
 								<a v-bind:href="'xiangqing.html?id='+item.proid"><img height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
-								<div class="caption pinpai" style="text-align: center;">
-									<a class="h3" v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid">{{item.name}}</a>
-									<p class="h3">{{item.price}}元</p>
+								<div class="caption pinpai" style="font-size: 13px;">
+									<a v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid" style="text-align: left;text-align: center;">{{item.name}}</a>
+									<p v-for="opt in users" v-if="opt.id==item.userid"><i class="fa fa-user"></i>{{opt.username}}</p>
+									<p style="color: red;text-align: center;">{{item.price}}元</p>
 								</div>
 							</div>
 						</div>
@@ -148,9 +166,22 @@
 					pageNum: 1,
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
-					category: []
+					category: [],
+					users: []
 				},
 				methods: {
+					getUsers: function() {
+						var _this = this;
+						axios.get('/user', {
+								params: {
+									size: 1000
+								}
+							})
+							.then(function(res) {
+								console.info(res);
+								_this.users = res.data.data.rows;
+							})
+					},
 					getProducts: function(pageIndex, cateid) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
@@ -222,6 +253,7 @@
 				created: function() {
 					this.getProducts();
 					this.getCategory();
+					this.getUsers();
 				}
 			})
 		</script>

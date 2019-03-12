@@ -110,11 +110,6 @@
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script>
-			$(function() {
-				$("#outTime").bootstrapDatepickr();
-			})
-		</script>
-		<script>
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　
 				editor = K.create('textarea[name="detail"]', {
@@ -170,9 +165,11 @@
 						} else {
 							if(_this.product.quality == null || _this.product.quality == "") {
 								alert("请输入数量");
+								return;
 							}
 							formData.append("quality", _this.product.quality);
 							formData.append("price", _this.product.price);
+							formData.append("isnotauction", _this.product.isNotAuction);
 						}
 
 						formData.append("file", $("#file")[0].files[0]);

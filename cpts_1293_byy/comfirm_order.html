@@ -9,7 +9,6 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 	</head>
 	<style type="text/css">
 		.yhxz li {
@@ -120,40 +119,24 @@
 
 						<div class="ddzxbt">确认收货地址</div>
 						<div style="margin-top: 50px;">
-							<table v-if="address!=''">
-								<tr>
-									<td></td>
-									<td>收货人</td>
-									<td>所在地区 </td>
-									<td>详细地址 </td>
-									<td>邮编</td>
-									<td>电话/手机</td>
-									<td>操作</td>
-									<td v-if="address!=null"></td>
-								</tr>
-								<tr v-for="item in address">
-									<td><input type="radio" v-bind:id="item.addrid" name="address" v-bind:value="item.addrid" v-model="addrId" /></td>
-									<td>{{item.consignee}}</td>
-									<td>{{item.province}}{{item.city}}{{item.region}}</td>
-									<td>{{item.address}}</td>
-									<td>{{item.postal}}</td>
-									<td>{{item.phone}}</td>
-									<td>
-										<a href="javascript:void(0)" v-on:click="editAddress(item.addrid)">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="javascript:void(0)" v-on:click="del(item.addrid)">删除</a>
-									</td>
-								</tr>
-							</table>
+							<div style="margin-top: 50px;padding-bottom:200px;">
+								<ul class="yhxz">
+									<li style="width: 300px;" v-for="item,index in address" :class="{curr:addrKey==index}" v-on:click="switch_addrKey(index);chooseAddr(item.addrid)">
+										<p>{{item.province}}{{item.city}}{{item.region}}{{item.address}}</p>
+										<p>{{item.consignee}}</p>
+										<p>{{item.postal}}</p>
+										<p>{{item.phone}}</p>
+									</li>
+								</ul>
+							</div>
 						</div>
 						<div class="ddzxbt">选择支付银行</div>
 						<div style="margin-top: 50px;padding-bottom:200px;">
-
 							<ul class="yhxz">
 								<li v-for="item,index in bank" :class="{curr:chooseKey==index}" v-on:click="switch_chosekey(index);getbank(item.pd_FrpId)">
 									<img class="contract_ico" v-bind:src="'resource/yhimage/' + item.text" />
 								</li>
 							</ul>
-
 						</div>
 						<div class="ddzxbt">确认订单信息</div>
 						<div class="ddxq">
@@ -201,7 +184,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript">
 			var proid = GetQueryString("proid");
 			var quantity = GetQueryString("quantity");
@@ -244,11 +226,15 @@
 							text: "guangda.jpg"
 						},
 					],
-					chooseKey: ""
+					chooseKey: "",
+					addrKey: ""
 				},
 				methods: {
+					chooseAddr: function(id) {
+						var _this = this;
+						_this.addrId = id;
+					},
 					getbank: function(pd_FrpId) {
-						console.info(pd_FrpId);
 						this.pd_FrpId = pd_FrpId;
 					},
 					confirm: function() {
@@ -257,6 +243,12 @@
 						axios.get('/address').then(function(res) {
 							console.info(res);
 							_this.address = res.data.data.rows;
+							for(var i = 0; i < _this.address.length; i++) {
+								if(_this.address[i].status == '0') {
+									_this.addrId = _this.address[i].addrid;
+								}
+							}
+
 							if(_this.address.length == 0) {
 								if(confirm("您暂时没有添加地址，是否要添加地址？")) {
 									location.href = "address.html";
@@ -302,54 +294,20 @@
 						axios.post('/product/buy/' + _this.addrId, _this.products)
 							.then(function(res) {
 								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.data.data.orderId;
-							})
-
-					},
-					getAddress: function() {
-						var _this = this;
-						axios.get('/address').then(function(res) {
-							console.info(res);
-							_this.address = res.data.data.rows;
-							_this.address.forEach(function(i) {
-								if(i.status == '0') {
-									console.info(i);
-									$("#" + i.addrid).attr("checked", "checked");
-								}
 							});
-						});
 					},
 					logout: function() {
 						logout();
 						location.href = "login.html";
-					}, // 删除
-					del: function(eve) {
-						var _this = this;
-						if(confirm("是否删除改地址？")) {
-							axios.delete('/address/' + eve)
-								.then(function(res) {
-									alert("删除成功");
-									window.location.reload();
-								})
-						}
-					},
-					editAddress: function(addrid) {
-						layer.open({
-							type: 2,
-							title: '修改地址信息',
-							shadeClose: true,
-							scrollbar: true,
-							closeBtn: 1,
-							area: ['800px', '450px'],
-							content: ['editAddress.html?addrid=' + addrid],
-						})
 					},
 					switch_chosekey: function(j) { ///选择银行
-						console.info(j);
 						this.chooseKey = j;
 					},
+					switch_addrKey: function(i) { // 选择地址
+						this.addrKey = i;
+					}
 				},
 				created: function() {
-					this.getAddress();
 					this.getbank("ICBC-NET-B2C");
 					this.confirm();
 				}

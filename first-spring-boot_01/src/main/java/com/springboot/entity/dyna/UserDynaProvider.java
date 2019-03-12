@@ -95,6 +95,15 @@ public class UserDynaProvider {
 				if (map.get("lastLoginTime") != null) {
 					SET("lastLoginTime=#{lastLoginTime}");
 				}
+				if (map.get("province") != null) {
+					SET("province=#{province}");
+				}
+				if (map.get("city") != null) {
+					SET("city=#{city}");
+				}
+				if (map.get("area") != null) {
+					SET("area=#{area}");
+				}
 				WHERE("id=#{id}");
 			}
 		}.toString();
