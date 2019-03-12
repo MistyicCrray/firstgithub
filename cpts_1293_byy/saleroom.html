@@ -100,27 +100,15 @@
 							<a href="index.html">主页</a>
 						</li>
 						<li>
-							<a href="about.html">手机二手</a>
+							<a href="liebiao.html?search=手机">手机二手</a>
 						</li>
 						<li>
-							<a href="shop.html">拍卖场</a>
+							<a href="saleroom.html">拍卖场</a>
 						</li>
 						<li>
-							<a href="self_info.html">我的发布</a>
+							<a href="my_release_product.html">我的发布</a>
 						</li>
 					</ul>
-				</div>
-				<div class="search fr">
-					<form>
-						<div class="text fl">
-							<input type="text" class="shuru" placeholder="" v-model="search">
-						</div>
-						<div class="submit fl">
-							<input type="button" v-on:click="searchForm" class="sousuo" value="搜索" />
-						</div>
-						<div class="clear"></div>
-					</form>
-					<div class="clear"></div>
 				</div>
 			</div>
 			<!-- end banner_x -->
@@ -135,37 +123,13 @@
 						<li v-for="item in news" style="text-align: center;">
 							<a href="#" v-bid:title="item.title">{{item.title}}</a>
 						</li>
-						<!--<li>
-							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>
-						<li>
-							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>
-						<li>
-							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>
-						<li>
-							<a href="#">望创天价香港苏富比春季书画拍卖亮点几许</a>
-						</li>-->
 					</ul>
 				</div>
 				<div class="lunbo swiper-container">
 					<div class="swiper-button-prev"></div>
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/1.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/2.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/3.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/4.jpg" /></a>
-						</div>
-						<div class="swiper-slide">
-							<a href="#"><img width="990px" height="460px" src="resource/image/5d.jpg" /></a>
+						<div class="swiper-slide" v-for="item,index in banner">
+							<a v-bind:href="item.linkUrl"><img width="990px" height="460px" v-bind:src="'/images/'+ item.image" /></a>
 						</div>
 					</div>
 					<div class="swiper-button-next"></div>
@@ -218,6 +182,7 @@
 					news: []
 				},
 				created: function() {
+					this.getBanner();
 					this.getProduct();
 					this.getCategory();
 					this.getNews();
@@ -236,6 +201,8 @@
 								slidesPerView: 4,
 								watchSlidesVisibility: true,
 							},
+							observer: true, //修改swiper自己或子元素时，自动初始化swiper
+							observeParents: true //修改swiper的父元素时，自动初始化swiper
 						});
 					});
 				},
