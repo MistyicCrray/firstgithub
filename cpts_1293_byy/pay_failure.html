@@ -1,11 +1,102 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<meta name="author" content="order by dede58.com" />
+		<title>购买成功-去哪儿买二手商城</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<script src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
 	</head>
-	<body>
-		失败
+
+	<style type="text/css">
+		#productImg {
+			height: 120px;
+			width: 120px;
+		}
 		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+		
+		.zftitle {
+			text-align: center;
+			color: #007AB6;
+		}
+	</style>
+
+	<body>
+		<!-- start header -->
+		<!--end header -->
+		<div id="main">
+
+			<!-- start banner_x -->
+			<div class="banner_x center">
+				<a href="./index.html" target="_blank">
+					<div class="logo fl"></div>
+				</a>
+
+				<div class="wdgwc fl ml40">购买成功</div>
+				<div class="wxts fl ml20">温馨提示：您已购买成功可到订单中心查看订单</div>
+				<div class="dlzc fr">
+					<ul v-if="islogin">
+						<li>
+							<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
+						</li>
+						<li>|</li>
+						<li v-on:click="logout">
+							<a href="#">
+								</i>退出登录</a>
+						</li>
+					</ul>
+					<ul v-else>
+						<li>
+							<a href="login.html" target="_blank">登录</a>
+						</li>
+						<li>|</li>
+						<li>
+							<a href="register.html" target="_blank">注册</a>
+						</li>
+						<li>|</li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="xiantiao"></div>
+			<div>
+				<p class="h1 zftitle"><i class="fa fa-3x fa-check-square"></i><span class="ml40">支付成功！</span></p>
+				<p class="zftitle">共计支付金额{{monney}}</p>
+				<p class="zftitle">以下{{ordernum}}个订单已经支付成功，共计{{monney}}</p>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript">
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					monney: "",
+					ordernum: ""
+				},
+				methods: {
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+				}
+			})
+		</script>
 	</body>
+
 </html>

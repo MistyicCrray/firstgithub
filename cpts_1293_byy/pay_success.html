@@ -1,10 +1,225 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<meta name="author" content="order by dede58.com" />
+		<title>我的购物车-去哪儿买二手商城</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<script src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
 	</head>
+
+	<style type="text/css">
+		#productImg {
+			height: 120px;
+			width: 120px;
+		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+	</style>
+
 	<body>
-		成功
+		<!-- start header -->
+		<!--end header -->
+		<div id="main">
+
+			<!-- start banner_x -->
+			<div class="banner_x center">
+				<a href="./index.html" target="_blank">
+					<div class="logo fl"></div>
+				</a>
+
+				<div class="wdgwc fl ml40">我的购物车</div>
+				<div class="wxts fl ml20">温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</div>
+				<div class="dlzc fr">
+					<ul v-if="islogin">
+						<li>
+							<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
+						</li>
+						<li>|</li>
+						<li v-on:click="logout">
+							<a href="#">
+								</i>退出登录</a>
+						</li>
+					</ul>
+					<ul v-else>
+						<li>
+							<a href="login.html" target="_blank">登录</a>
+						</li>
+						<li>|</li>
+						<li>
+							<a href="register.html" target="_blank">注册</a>
+						</li>
+						<li>|</li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="xiantiao"></div>
+			<div class="gwcxqbj">
+				<div class="gwcxd center">
+					<div class="top2 center">
+						<div class="sub_top fl"></div>
+						<div class="sub_top fl">商品名称</div>
+						<div class="sub_top fl">单价</div>
+						<div class="sub_top fl">数量</div>
+						<div class="sub_top fl">小计</div>
+						<div class="sub_top fl">操作</div>
+						<div class="clear"></div>
+					</div>
+					<div class="content2 center" v-for="(item,index) in shoppingCarts">
+						<div class="sub_content fl">
+							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" checked="checked" v-if="item.ischeck=='0'" />
+							<input type="checkbox" v-on:click="choose(item.cartid)" value="quanxuan" class="quanxuan" v-if="item.ischeck=='1'" />
+						</div>
+						<div class="sub_content fl"><img id="productImg" v-bind:src="'/images/' + item.img"></div>
+						<div class="sub_content fl pinpai">
+							<a v-bind:href="'xiangqing.html?id=' + item.proid" v-bind:title="item.name">{{item.name}}</a>
+						</div>
+						<div class="sub_content fl ">{{item.price}}元</div>
+						<div class="sub_content fl">
+							<input class="shuliang" type="number" v-on:input="updateCart(item.proid,item.cartid,item.quantity,item.price)" v-model="item.quantity">
+						</div>
+						<div class="sub_content fl">{{item.total}}元</div>
+						<div class="sub_content fl">
+							<a href="javascript:void(0)" v-on:click="delCart(item.cartid)">×</a>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div v-if="shoppingCarts==''" class="content2 center">
+						<h2 class="center">您的购物车还没有商品哦<a href="liebiao.html?search=''">立即去购物吧！</a></h2>
+					</div>
+				</div>
+				<div class="jiesuandan mt20 center">
+					<div class="tishi fl ml20">
+						<ul>
+							<li>
+								<a href="./liebiao.html?search=">继续购物</a>
+							</li>
+							<li>|</li>
+							<li>共<span>{{productNum}}</span>件商品，已选择<span>{{ischeck}}</span>件</li>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<div class="jiesuan fr">
+						<div class="jiesuanjiage fl">合计（不含运费）：<span>{{total}}元</span></div>
+						<div class="jsanniu fr"><input class="btn" type="button" name="jiesuan" v-on:click="account" value="去结算" v-if="ischeck>0" /></div>
+						<div class="jsanniu fr"><input class="btn" disabled="disabled" type="button" name="jiesuan" value="去结算" v-if="ischeck<=0" /></div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script type="text/javascript" src="resource/js/slide.js"></script>
+		<script type="text/javascript">
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					shoppingCarts: "",
+					productNum: '',
+					total: 0.00,
+					ischeck: 0,
+					inputPage: '',
+					current: 0,
+					cart: {},
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					products: []
+				},
+				created: function() {
+					this.search();
+				},
+				methods: {
+					search: function() {
+						var _this = this;
+						axios.get('/shoppingCart').then(function(res) {
+							_this.shoppingCarts = res.data.data;
+							_this.productNum = res.data.data.length;
+							_this.total = 0;
+							_this.ischeck = 0;
+							for(var i = 0; i < res.data.data.length; i++) {
+								if(res.data.data[i].ischeck == '0') {
+									_this.ischeck++;
+									_this.total += res.data.data[i].total;
+								}
+							}
+						})
+					},
+					delCart: function(id) {
+						var _this = this;
+						if(confirm("是否移除购物车？")) {
+							axios.delete('/shoppingCart/' + id).then(function(res) {
+								alert("删除成功")
+								_this.search();
+							})
+						}
+					},
+					updateCart: function(proid, id, quantity, price) {
+						var _this = this;
+						if(quantity == "" || quantity == null || quantity == undefined) {
+							quantity = 1;
+							return;
+						}
+						if(quantity <= 0 || Number.isInteger(quantity) || quantity % 1 != 0) {
+							alert("请输入正确的商品数量！");
+							quantity = 1;
+							return;
+						}
+						var total = quantity * price;
+						var params = new URLSearchParams();
+						params.append("proid", proid);
+						params.append("cartid", id);
+						params.append("quantity", quantity);
+						params.append("total", total);
+						axios.put('/shoppingCart', params)
+							.then(function(res) {
+								_this.search();
+							})
+					},
+					choose: function(id) {
+						var _this = this;
+						axios.get('/shoppingCart/' + id)
+							.then(function(res) {
+								_this.cart = res.data.data;
+								console.info(_this.cart);
+								var params = new URLSearchParams();
+								if(_this.cart.ischeck == '1') {
+									params.append("ischeck", 0);
+								} else {
+									params.append("ischeck", 1);
+								}
+								params.append("cartid", id);
+								axios.put('/shoppingCart', params)
+									.then(function(res) {
+										_this.search();
+									})
+							});
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					account: function() {
+						location.href = "comfirm_order.html";
+					}
+				}
+			})
+		</script>
 	</body>
+
 </html>
