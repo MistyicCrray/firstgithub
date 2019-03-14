@@ -20,9 +20,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import com.springboot.entity.Order;
+import com.springboot.entity.OrderItem;
 import com.springboot.entity.Product;
 import com.springboot.entity.User;
-import com.springboot.service.OrderService;
+import com.springboot.service.OrderItemService;
 import com.springboot.service.ProductService;
 import com.springboot.service.ShoppingCartService;
 import com.springboot.tools.CurrentUser;
@@ -41,7 +42,7 @@ public class ProductController {
 	private ProductService productService;
 
 	@Autowired
-	private OrderService orderService;
+	private OrderItemService orderItemService;
 
 	@Autowired
 	private ShoppingCartService shoppingCartService;
@@ -130,7 +131,8 @@ public class ProductController {
 	@RequestMapping(value = "/buy/{addrid}", method = RequestMethod.POST)
 	public Result buyProduct(@CurrentUser User user, @RequestBody(required = false) List<Map<String, Object>> map,
 			@PathVariable(value = "addrid") String addrid) {
-		Order order = new Order();
+		OrderItem orderItem = new OrderItem();
+		Double total = new Double(0);
 		for (Map<String, Object> productMap : map) {
 			Integer quantity = Integer.parseInt(productMap.get("quantity").toString());
 			Integer quality = Integer.parseInt(productMap.get("quality").toString());
@@ -156,17 +158,23 @@ public class ProductController {
 			}
 			Product product = productService.findById((String) productMap.get("proid"));
 			// 购买时生成订单
-			order.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
-			order.setSellid(product.getUserid()); // 卖家Id
-			order.setUserid(user.getId()); // 买家Id
-			order.setCreateTime(new Date()); // 下单日期
-			order.setStatus("0"); // 未发货待付款状态
-			order.setQuantity(quantity); // 数量
-			order.setPayment(quantity * product.getPrice()); // 小计
-			order.setProductid(product.getProid());
-			order.setAddressId(addrid);
-			orderService.add(order);
+			orderItem.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
+			orderItem.setSellid(product.getUserid()); // 卖家Id
+			orderItem.setUserid(user.getId()); // 买家Id
+			orderItem.setCreateTime(new Date()); // 下单日期
+			orderItem.setStatus("0"); // 未发货待付款状态
+			orderItem.setQuantity(quantity); // 数量
+			orderItem.setPayment(quantity * product.getPrice()); // 小计
+			orderItem.setProductid(product.getProid());
+			orderItem.setAddressId(addrid);
+			orderItemService.add(orderItem);
+			total += orderItem.getPayment();
 		}
+		Order order = new Order();
+		order.setOrderId(UUIDUtils.get16UUID()); // 订单号
+		order.setAddrId(addrid);
+		order.setPayment(total);
+		order.setUserId(user.getId());
 		return ResultGenerator.genSuccessResult(order);
 	}
 

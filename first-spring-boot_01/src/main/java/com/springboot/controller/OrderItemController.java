@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.springboot.entity.Address;
-import com.springboot.entity.Order;
+import com.springboot.entity.OrderItem;
 import com.springboot.entity.Product;
 import com.springboot.entity.User;
 import com.springboot.service.AddressService;
-import com.springboot.service.OrderService;
+import com.springboot.service.OrderItemService;
 import com.springboot.service.ProductService;
 import com.springboot.service.UserService;
 import com.springboot.tools.CurrentUser;
@@ -31,10 +31,10 @@ import com.springboot.tools.TableData;
 
 @RestController
 @RequestMapping("/order")
-public class OrderController {
+public class OrderItemController {
 
 	@Autowired
-	private OrderService orderService;
+	private OrderItemService orderItemService;
 
 	@Autowired
 	private ProductService productService;
@@ -56,10 +56,10 @@ public class OrderController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result add(@ModelAttribute Order order, @CurrentUser User user) {
-		order.setUserid(user.getId());
-		order.setCreateTime(new Date());
-		return ResultGenerator.genSuccessResult(orderService.add(order));
+	public Result add(@ModelAttribute OrderItem orderItem, @CurrentUser User user) {
+		orderItem.setUserid(user.getId());
+		orderItem.setCreateTime(new Date());
+		return ResultGenerator.genSuccessResult(orderItemService.add(orderItem));
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class OrderController {
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable String id, @CurrentUser User user) {
-		return ResultGenerator.genSuccessResult(orderService.delete(id));
+		return ResultGenerator.genSuccessResult(orderItemService.delete(id));
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class OrderController {
 	@LoginRequired
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
-		return ResultGenerator.genSuccessResult(orderService.update(map));
+		return ResultGenerator.genSuccessResult(orderItemService.update(map));
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class OrderController {
 		}
 		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
 				"create_time DESC");
-		List<Map<String, Object>> list = orderService.findListBy(map);
+		List<Map<String, Object>> list = orderItemService.findListBy(map);
 
 		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
 	}
@@ -138,17 +138,17 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {
-		Order order = orderService.findById(id);
-		Product product = productService.findById(order.getProductid());
-		User sell = userService.findById(order.getSellid()); // 卖家
-		User buy = userService.findById(order.getUserid()); // 买家
-		Address address = addressService.findById(order.getAddressId());
+		OrderItem orderitem = orderItemService.findById(id);
+		Product product = productService.findById(orderitem.getProductid());
+		User sell = userService.findById(orderitem.getSellid()); // 卖家
+		User buy = userService.findById(orderitem.getUserid()); // 买家
+		Address address = addressService.findById(orderitem.getAddressId());
 		Map<String, Object> orderMap = new HashMap<String, Object>();
 		orderMap.put("product", product);
 		orderMap.put("seller", sell);
 		orderMap.put("buyer", buy);
 		orderMap.put("address", address);
-		orderMap.put("order", order);
+		orderMap.put("order", orderitem);
 
 		return ResultGenerator.genSuccessResult(orderMap);
 	}

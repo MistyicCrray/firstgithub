@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.service.OrderService;
+import com.springboot.service.OrderItemService;
 import com.springboot.tools.PaymentUtil;
 
 /**
@@ -38,7 +38,7 @@ public class PublicPayController {
 	String pay_failure;
 
 	@Autowired
-	private OrderService orderService;
+	private OrderItemService orderService;
 
 	// 会员名称: tiantest@126.com
 	//	交易密码: 123123
