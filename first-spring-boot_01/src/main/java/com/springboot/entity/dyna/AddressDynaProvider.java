@@ -10,7 +10,7 @@ public class AddressDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("address");
+				FROM("t_address");
 				if (param.get("userid") != null) {
 					WHERE("userid=#{userid}");
 				}
@@ -48,7 +48,7 @@ public class AddressDynaProvider {
 	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
-				UPDATE("address");
+				UPDATE("t_address");
 				if (param.get("province") != null) {
 					SET("province=#{province}");
 				}

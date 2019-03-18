@@ -31,7 +31,7 @@
 				<input name="password" type="checkbox" id="remenber" class="layui-input" v-model="inputtext.remenber">记住密码
 				<input name="password" type="checkbox" id="autoLogin" class="layui-input" v-model="inputtext.autoLogin">自动登录
 				<hr class="hr15">
-				<input value="登录" lay-submit lay-filter="login" style="width:100%;" type="button" v-on:click="submit">
+				<input value="登录" style="width:100%;" type="button" v-on:click="submit">
 				<hr class="hr20">
 			</form>
 		</div>
@@ -39,7 +39,6 @@
 		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
-		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script type="text/javascript" src="js/base64.js"></script>
 		<script type="text/javascript" src="js/layer.js"></script>
 		<script type="text/javascript">
@@ -89,7 +88,7 @@
 								shade: 0.5,
 								yes: function(index) {
 									layer.close(index);
-									_this.login.autoLogin = false;
+									_this.inputtext.autoLogin = false;
 								}
 							});
 						}
@@ -103,6 +102,14 @@
 					},
 					submit: function() {
 						var _this = this;
+						if(_this.inputtext.loginname == "" || _this.inputtext.loginname == null) {
+							alert("请输入账号");
+							return;
+						}
+						if(_this.inputtext.password == "" || _this.inputtext.password == null) {
+							alert("请输入密码");
+							return;
+						}
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
 								console.info(response.data.code);
@@ -112,7 +119,7 @@
 									sessionStorage.setItem("username", response.data.data.userInfo.username);
 									sessionStorage.setItem("accessToken", response.data.data.accessToken);
 									if(_this.inputtext.remenber) {
-										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+										_this.setCookie("loginName", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "", 7);
@@ -120,7 +127,7 @@
 										document.cookie = "";
 									}
 									if(_this.inputtext.autologin) {
-										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+										_this.setCookie("loginName", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "true", 7);

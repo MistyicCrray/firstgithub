@@ -218,6 +218,7 @@
 				created: function() {
 					var _this = this;
 					axios.get('/product/' + id).then(function(res) {
+						console.info(res);
 						_this.product = res.data.data;
 						document.getElementById("detail").innerHTML = res.data.data.detail;
 

@@ -10,7 +10,7 @@ public class BannerDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("banner");
+				FROM("t_banner");
 				if (param.get("id") != null) {
 					WHERE("id=#{id}");
 				}
@@ -36,7 +36,7 @@ public class BannerDynaProvider {
 	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
-				UPDATE("banner");
+				UPDATE("t_banner");
 				if (param.get("isShow") != null) {
 					SET("is_show=#{isShow}");
 				}

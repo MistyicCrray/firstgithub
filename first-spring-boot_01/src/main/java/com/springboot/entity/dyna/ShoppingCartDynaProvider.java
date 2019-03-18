@@ -9,7 +9,7 @@ public class ShoppingCartDynaProvider {
 	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
-				UPDATE("shoppingcart");
+				UPDATE("t_shoppingcart");
 				if (param.get("quantity") != null) {
 					SET("quantity=#{quantity}");
 				}
@@ -28,8 +28,8 @@ public class ShoppingCartDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("shoppingcart");
-				INNER_JOIN("product ON shoppingcart.productid=product.proid");
+				FROM("t_shoppingcart");
+				INNER_JOIN("t_product ON t_shoppingcart.productid=t_product.proid");
 				if (param.get("quantity") != null) {
 					WHERE("quantity=#{quantity}");
 				}
@@ -37,13 +37,13 @@ public class ShoppingCartDynaProvider {
 					WHERE("total=#{total}");
 				}
 				if (param.get("ischeck") != null) {
-					WHERE("shoppingcart.ischeck=#{ischeck}");
+					WHERE("t_shoppingcart.ischeck=#{ischeck}");
 				}
 				if (param.get("productid") != null) {
-					WHERE("shoppingcart.productid=#{productid}");
+					WHERE("t_shoppingcart.productid=#{productid}");
 				}
 				if (param.get("userid") != null) {
-					WHERE("shoppingcart.userid=#{userid}");
+					WHERE("t_shoppingcart.userid=#{userid}");
 				}
 			}
 		}.toString();
@@ -53,7 +53,7 @@ public class ShoppingCartDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("shoppingcart");
+				FROM("t_shoppingcart");
 				if (param.get("quantity") != null) {
 					WHERE("quantity=#{quantity}");
 				}
@@ -61,13 +61,13 @@ public class ShoppingCartDynaProvider {
 					WHERE("total=#{total}");
 				}
 				if (param.get("ischeck") != null) {
-					WHERE("shoppingcart.ischeck=#{ischeck}");
+					WHERE("t_shoppingcart.ischeck=#{ischeck}");
 				}
 				if (param.get("productid") != null) {
-					WHERE("shoppingcart.productid=#{productid}");
+					WHERE("t_shoppingcart.productid=#{productid}");
 				}
 				if (param.get("userid") != null) {
-					WHERE("shoppingcart.userid=#{userid}");
+					WHERE("t_shoppingcart.userid=#{userid}");
 				}
 			}
 		}.toString();

@@ -8,7 +8,7 @@ public class ProductDynaProvider {
 	public String updateProvider(Map<String, Object> param) {
 		return new SQL() {
 			{
-				UPDATE("product");
+				UPDATE("t_product");
 
 				if (param.get("name") != null) {
 					SET("name=#{name}");
@@ -74,7 +74,7 @@ public class ProductDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("product");
+				FROM("t_product");
 				if (param.get("proid") != null) {
 					WHERE("proid=#{proid}");
 				}
@@ -83,7 +83,7 @@ public class ProductDynaProvider {
 				}
 				if (param.get("cateid") != null) {
 					// 父类别和子类别同时查询
-					WHERE("category=ANY(SELECT ID FROM CATEGORY WHERE PARENTID=#{cateid}) OR category=#{cateid}");
+					WHERE("category=ANY(SELECT ID FROM T_CATEGORY WHERE PARENTID=#{cateid}) OR category=#{cateid}");
 				}
 				if (param.get("price") != null) {
 					WHERE("price=#{price}");
@@ -135,9 +135,9 @@ public class ProductDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("product");
+				FROM("t_product");
 				WHERE("proid LIKE '%" + key + "%' OR" + " name LIKE '%" + key
-						+ "%' OR category=(SELECT ID FROM CATEGORY WHERE name LIKE '%" + key + "%') OR detail LIKE '%"
+						+ "%' OR category=(SELECT ID FROM T_CATEGORY WHERE name LIKE '%" + key + "%') OR detail LIKE '%"
 						+ key + "%'");
 			}
 		}.toString();

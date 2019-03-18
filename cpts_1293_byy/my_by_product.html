@@ -154,30 +154,28 @@
 						</div>
 					</div>
 					<div class="rtcont fr">
-						<div style="margin-top: 50px;">
-							<div class="gwcxqbj">
-								<div class="gwcxd center">
-									<div class="top2 center">
-										<div class="sub_top fl">商品名称</div>
-										<div class="sub_top fl">单价</div>
-										<div class="sub_top fl">数量</div>
-										<div class="sub_top fl">总价</div>
-										<div class="sub_top fl">购买时间</div>
-										<div class="clear"></div>
+						<div class="gwcxqbj">
+							<div class="gwcxd center">
+								<div class="top2 center">
+									<div class="sub_top fl">商品名称</div>
+									<div class="sub_top fl">单价</div>
+									<div class="sub_top fl">数量</div>
+									<div class="sub_top fl">总价</div>
+									<div class="sub_top fl">购买时间</div>
+									<div class="clear"></div>
+								</div>
+								<div class="content2 center" v-for="item in products">
+									<div class="sub_content fl"><img id="productImg" class="img-thumbnail" v-bind:src="'/images/' + item.img"></div>
+									<div class="sub_content fl pinpai">
+										<a v-bind:title="item.name">{{item.name}}</a>
 									</div>
-									<div class="content2 center" v-for="item in products">
-										<div class="sub_content fl"><img id="productImg" class="img-thumbnail" v-bind:src="'/images/' + item.img"></div>
-										<div class="sub_content fl pinpai">
-											<a v-bind:title="item.name">{{item.name}}</a>
-										</div>
-										<div class="sub_content fl ">{{item.price}}元</div>
-										<div class="sub_content fl ">{{item.quantity}}</div>
-										<div class="sub_content fl">
-											{{item.payment}}
-										</div>
-										<div class="sub_content fl">{{item.create_time | date_format}}</div>
-										<div class="clear"></div>
+									<div class="sub_content fl ">{{item.price}}元</div>
+									<div class="sub_content fl ">{{item.quantity}}</div>
+									<div class="sub_content fl">
+										{{item.payment}}
 									</div>
+									<div class="sub_content fl">{{item.create_time | date_format}}</div>
+									<div class="clear"></div>
 								</div>
 							</div>
 						</div>

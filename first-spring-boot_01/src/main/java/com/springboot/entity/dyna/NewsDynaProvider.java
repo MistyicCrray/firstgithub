@@ -10,7 +10,7 @@ public class NewsDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("news");
+				FROM("t_news");
 				if (map != null) {
 					if (map.get("id") != null) {
 						WHERE("id=#{id}");
@@ -38,7 +38,7 @@ public class NewsDynaProvider {
 	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
-				UPDATE("news");
+				UPDATE("t_news");
 				if (map.get("title") != null) {
 					SET("title=#{title}");
 				}

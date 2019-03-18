@@ -9,7 +9,7 @@ public class UserDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("user");
+				FROM("t_user");
 				if (map != null) {
 					if (map.get("id") != null) {
 						WHERE("id=#{id}");
@@ -64,7 +64,7 @@ public class UserDynaProvider {
 	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
-				UPDATE("user");
+				UPDATE("t_user");
 				if (map.get("username") != null) {
 					SET("username=#{username}");
 				}

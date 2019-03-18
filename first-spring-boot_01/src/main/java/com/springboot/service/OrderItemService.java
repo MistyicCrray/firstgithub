@@ -29,6 +29,11 @@ public class OrderItemService {
 	public Integer update(Map<String, Object> map) {
 		return orderItemMapper.update(map);
 	}
+	
+	// 修改
+	public Integer update(OrderItem orderItem) {
+		return orderItemMapper.updateByPrimaryKey(orderItem);
+	}
 
 	// 查找
 	public List<OrderItem> findList(Map<String, Object> map) {

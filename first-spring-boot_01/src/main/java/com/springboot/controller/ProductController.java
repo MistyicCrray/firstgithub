@@ -24,6 +24,7 @@ import com.springboot.entity.OrderItem;
 import com.springboot.entity.Product;
 import com.springboot.entity.User;
 import com.springboot.service.OrderItemService;
+import com.springboot.service.OrderService;
 import com.springboot.service.ProductService;
 import com.springboot.service.ShoppingCartService;
 import com.springboot.tools.CurrentUser;
@@ -46,6 +47,9 @@ public class ProductController {
 
 	@Autowired
 	private ShoppingCartService shoppingCartService;
+
+	@Autowired
+	private OrderService orderService;
 
 	/**
 	 * 上架
@@ -133,6 +137,8 @@ public class ProductController {
 			@PathVariable(value = "addrid") String addrid) {
 		OrderItem orderItem = new OrderItem();
 		Double total = new Double(0);
+		Order order = new Order();
+		order.setOrderId("wg_" + UUIDUtils.getOrderIdByTime()); // 订单号
 		for (Map<String, Object> productMap : map) {
 			Integer quantity = Integer.parseInt(productMap.get("quantity").toString());
 			Integer quality = Integer.parseInt(productMap.get("quality").toString());
@@ -157,8 +163,9 @@ public class ProductController {
 				shoppingCartService.delete(id);
 			}
 			Product product = productService.findById((String) productMap.get("proid"));
-			// 购买时生成订单
-			orderItem.setOrderId(UUIDUtils.getOrderIdByTime()); // 订单号
+			// 购买时生成订单详情
+			orderItem.setOrderItemId(UUIDUtils.getOrderIdByTime()); // 订单详情号
+			orderItem.setOrderId(order.getOrderId()); // 对应订单号
 			orderItem.setSellid(product.getUserid()); // 卖家Id
 			orderItem.setUserid(user.getId()); // 买家Id
 			orderItem.setCreateTime(new Date()); // 下单日期
@@ -170,11 +177,12 @@ public class ProductController {
 			orderItemService.add(orderItem);
 			total += orderItem.getPayment();
 		}
-		Order order = new Order();
-		order.setOrderId(UUIDUtils.get16UUID()); // 订单号
+		// 添加至订单
 		order.setAddrId(addrid);
 		order.setPayment(total);
 		order.setUserId(user.getId());
+		order.setStatus("0");
+		orderService.add(order);
 		return ResultGenerator.genSuccessResult(order);
 	}
 

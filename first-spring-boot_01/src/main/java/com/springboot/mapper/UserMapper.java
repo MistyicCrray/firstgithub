@@ -179,7 +179,6 @@ public interface UserMapper {
         @Result(column="activeCode", property="activecode", jdbcType=JdbcType.VARCHAR),
         @Result(column="activeDate", property="activedate", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="adreess", property="adreess", jdbcType=JdbcType.VARCHAR),
-        @Result(column="tel", property="tel", jdbcType=JdbcType.VARCHAR),
         @Result(column="lastLoginTime", property="lastlogintime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="province", property="province", jdbcType=JdbcType.VARCHAR),
         @Result(column="city", property="city", jdbcType=JdbcType.VARCHAR),
@@ -193,7 +192,7 @@ public interface UserMapper {
     @Select({
         "select",
         "id, username, password, gender, img, create_time, state, loginName, activeCode, ",
-        "activeDate, adreess, tel, lastLoginTime, email, usertype",
+        "activeDate, adreess, lastLoginTime, email, usertype",
         "from user",
         "where loginname = #{loginname,jdbcType=VARCHAR}"
     })
@@ -214,7 +213,6 @@ public interface UserMapper {
         @Result(column="activeCode", property="activecode", jdbcType=JdbcType.VARCHAR),
         @Result(column="activeDate", property="activedate", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="adreess", property="adreess", jdbcType=JdbcType.VARCHAR),
-        @Result(column="tel", property="tel", jdbcType=JdbcType.VARCHAR),
         @Result(column="lastLoginTime", property="lastlogintime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="province", property="province", jdbcType=JdbcType.VARCHAR),
         @Result(column="city", property="city", jdbcType=JdbcType.VARCHAR),

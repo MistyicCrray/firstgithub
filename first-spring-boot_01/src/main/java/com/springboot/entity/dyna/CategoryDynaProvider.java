@@ -9,7 +9,7 @@ public class CategoryDynaProvider {
 		return new SQL() {
 			{
 				SELECT("*");
-				FROM("category");
+				FROM("t_category");
 				if (map != null) {
 					if (map.get("id") != null) {
 						WHERE("id=#{id}");
@@ -31,7 +31,7 @@ public class CategoryDynaProvider {
 	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
-				UPDATE("category");
+				UPDATE("t_category");
 				if (map.get("type") != null) {
 					SET("type=#{type}");
 				}
