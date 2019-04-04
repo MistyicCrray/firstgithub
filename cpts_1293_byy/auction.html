@@ -172,15 +172,16 @@
 					<div class="jiage ml20 mt10">当前价格￥{{currentPrice}}</div>
 					<div class="jiage ml20 mt10">每次加价不能低于￥{{product.increments}}</div>
 					<div class="jiage ml20 mt10">当前竞拍者----{{product.currentbidder}}</div>
+					<div class="jiage ml20 mt10">竞拍倒计时————<span id="outTime">{{product.outtime | dateFilter}}</span></div>
 					<div class="xiadan ml20 mt20">
 						<ul class="btn-numbox">
 							<li><span class="jiage">数量{{product.quality}}</span></li>
-							<li><span class="kucun">（库存:{{product.quality}}）</span></li>
 						</ul>
 					</div>
 					<div class="xiadan ml20 mt20">
 						<div class="jiage">出价：<input class="form-control" name="jrgwc" v-model="price" v-on:input="setPrice" placeholder="请填写要出的价格" /></div>
 						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addPrice" value="出价" />
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="buy" value="付款" v-if="product.bidderid==user.userId&&isnotstop" />
 					</div>
 				</div>
 				<div class="clear"></div>
@@ -193,6 +194,8 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script src="resource/js/moment.min.js"></script>
+		<script src="resource/js/countdown-clock.js"></script>
 		<script>
 			var id = GetQueryString("id");
 			var vue = new Vue({
@@ -203,10 +206,22 @@
 					islogin: sessionStorage.length > 0,
 					user: sessionStorage,
 					price: 0,
-					currentPrice: 0
+					currentPrice: 0,
+					isnotstop: false
 				},
 				created: function() {
-					this.getProduct();
+					var _this = this;
+					axios.get('/product/' + id).then(function(res) {
+						console.info(res);
+						_this.product = res.data.data;
+						_this.currentPrice = res.data.data.price;
+						document.getElementById("detail").innerHTML = res.data.data.detail;
+						_this.isnotstop = moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss');
+						console.info(_this.product.bidderid + "------" + _this.user.userId + "---" + _this.isnotstop);
+						if(moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss')) {
+							alert("竞拍已结束");
+						}
+					})
 				},
 				methods: {
 					getProduct: function() {
@@ -222,6 +237,10 @@
 						var _this = this;
 						if(_this.price == 0) {
 							alert("请填写价格");
+							return;
+						}
+						if(_this.isnotstop) {
+							alert("竞拍已结束");
 							return;
 						}
 						_this.product.price = _this.price;
@@ -241,12 +260,24 @@
 					setPrice: function() {
 						this.price = this.price.replace(/[^0-9.]/g, '');
 					},
+					buy: function() {
+						var _this = this;
+						location.href = "comfirm_order.html?proid=" + _this.product.proid + "&quantity=" + _this.product.quality;
+					}
 				},
 				filters: {
 					numFilter: function(value) { // 截取当前数据到小数点后两位
 						let realVal = Number(value).toFixed(2);   // num.toFixed(2)获取的是字符串
 						return Number(realVal);
-					}
+					},
+					dateFilter: function(value) {
+						var _this = this;
+						if(_this.isnotstop == false) {
+							Ticts.createTicts("outTime", value);
+						} else {
+							return "0天0小时0分钟0秒";
+						}
+					},
 				}
 			})
 		</script>

@@ -30,7 +30,7 @@ import com.springboot.tools.ResultGenerator;
 import com.springboot.tools.TableData;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orderItem")
 public class OrderItemController {
 
 	@Autowired
@@ -149,8 +149,20 @@ public class OrderItemController {
 		orderMap.put("buyer", buy);
 		orderMap.put("address", address);
 		orderMap.put("order", orderitem);
-
 		return ResultGenerator.genSuccessResult(orderMap);
+	}
+	
+	/**
+	 * 订单号查询订单详情列表
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/order/{id}", method = RequestMethod.GET)
+	public  Result findByOrderId(@PathVariable String id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderId", id);
+		List<Map<String, Object>> orderItems = orderItemService.findListBy(map);
+		return ResultGenerator.genSuccessResult(orderItems);
 	}
 
 }

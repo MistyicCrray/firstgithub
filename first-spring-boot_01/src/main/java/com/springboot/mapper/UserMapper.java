@@ -193,7 +193,7 @@ public interface UserMapper {
         "select",
         "id, username, password, gender, img, create_time, state, loginName, activeCode, ",
         "activeDate, adreess, lastLoginTime, email, usertype",
-        "from user",
+        "from t_user",
         "where loginname = #{loginname,jdbcType=VARCHAR}"
     })
     @Results({

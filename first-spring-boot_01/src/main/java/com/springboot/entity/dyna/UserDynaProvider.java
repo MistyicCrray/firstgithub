@@ -39,7 +39,7 @@ public class UserDynaProvider {
 						WHERE("createdate=#{createdate}");
 					}
 					if (map.get("loginname") != null) {
-						WHERE("loginName=#{loginname}");
+						WHERE("loginname=#{loginname}");
 					}
 					if (map.get("email") != null) {
 						WHERE("email=#{email}");
@@ -80,11 +80,11 @@ public class UserDynaProvider {
 				if (map.get("state") != null) {
 					SET("state=#{state}");
 				}
-				if (map.get("tel") != null) {
-					SET("tel=#{tel}");
+				if (map.get("phone") != null) {
+					SET("phone=#{phone}");
 				}
 				if (map.get("loginname") != null) {
-					SET("loginName=#{loginname}");
+					SET("loginname=#{loginname}");
 				}
 				if (map.get("email") != null) {
 					SET("email=#{email}");

@@ -10,6 +10,37 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 	</head>
+	<style type="text/css">
+		.dd {
+			border: 1px #007AFF solid;
+			height: 200px;
+		}
+		
+		.dd .ddid {
+			/*font-size: 18px;*/
+			padding-left: 5px;
+		}
+		
+		.ddname {
+			margin-left: 300px;
+		}
+		
+		.dd li img {
+			position: absolute;
+			height: 150px;
+			padding-top: 30px;
+			padding-left: 5px;
+			/*margin-left: 600px;*/
+		}
+		
+		.bott {
+			border: 1px #007AB6 solid;
+			background-color: #007AB6;
+			color: #fff;
+			padding: 3px;
+			margin: 10px 10px 10px 0px;
+		}
+	</style>
 
 	<body>
 		<!-- start header -->
@@ -126,56 +157,19 @@
 					</div>
 					<div class="rtcont fr">
 						<div class="ddzxbt">交易订单</div>
-						<!--<ul class="">
-							<li>订单号</li>
-							<li>商品名</li>
-							<li>数量</li>
-							<li>总价</li>
-							<li>下单时间</li>
-							<li>状态</li>
-							<li>操作</li>
+						<ul class="dd" v-for="item in orders">
+							<li><img :src="'/images/'+item.img"></li>
+							<li class="ddid">订单号：{{item.orderId}}</li>
+							<li class="ddname" style="font-size: 12px;">{{item.name}}</li>
+							<li class="ddquantity ddname">×{{item.quantity}}&nbsp;&nbsp;&nbsp;￥{{item.payment}}</li>
+							<li class="ddcreate ddname">下单时间：{{item.create_time | dateFilter}}</li>
+							<li class="ddstatus ddname">{{item.status | optStatusFilter}}</li>
+							<li class="ddcaozuo ddname">
+								<button class="bott">确认付款</button>
+								<button class="bott">确认收货</button>
+								<button class="bott" v-on:click="del(item.orderItemId)">删除订单</button>
+							</li>
 						</ul>
-						<ul class="" v-for="item in orders">
-							<li>{{item.order_id}}</li>
-							<li style="font-size: 12px;">{{item.name}}</li>
-							<li>{{item.quantity}}</li>
-							<li>{{item.payment}}</li>
-							<li>{{item.create_time | dateFilter}}</li>
-							<li>{{item.status}}</li>
-							<li>
-									<a href="javascript:void(0)" class="" style="font-size: 13px;">查看详情</a>
-									<a href="javascript:void(0)" class="" style="font-size: 13px;">确认付款</a>
-									<a href="javascript:void(0)" class="" style="font-size: 13px;">确认收货</a>
-									<a href="javascript:void(0)" class="" style="font-size: 13px;" title="删除订单">删除订单</a>
-								</li>
-						</ul>-->
-						<table>
-							<tr>
-								<td>图片</td>
-								<td>订单号</td>
-								<td>商品名</td>
-								<td>数量</td>
-								<td>总价</td>
-								<td>下单时间</td>
-								<td>状态</td>
-								<td>操作</td>
-							</tr>
-							<tr v-for="item in orders">
-								<td><img :src="'/images/'+item.img" height="50px"></td>
-								<td>{{item.order_id}}</td>
-								<td>{{item.name}}</td>
-								<td>{{item.quantity}}</td>
-								<td>{{item.payment}}</td>
-								<td>{{item.create_time | dateFilter}}</td>
-								<td>{{item.status | optStatusFilter}}</td>
-								<td>
-									<a href="javascript:void(0)" style="font-size: 13px;">查看详情</a>
-									<a href="javascript:void(0)" style="font-size: 13px;" v-if="item.status==0">确认付款</a>
-									<a href="javascript:void(0)" style="font-size: 13px;" v-if="item.status==2">确认收货</a>
-									<a href="javascript:void(0)" style="font-size: 13px;" title="删除订单">删除订单</a>
-								</td>
-							</tr>
-						</table>
 						<nav aria-label="Page navigation center">
 							<ul class="pagination">
 								<li>
@@ -222,7 +216,7 @@
 					getOrders: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
-						axios.get("/order", {
+						axios.get("/orderItem", {
 							params: {
 								pageNum: pageIndex,
 								size: _this.pageSize
@@ -254,6 +248,16 @@
 						}
 						this.getOrders(this.pageNum);
 					},
+					del: function(id) {
+						var _this = this;
+						if(confirm("是否删除该订单？")) {
+							axios.delete('/orderItem/' + id)
+								.then(function(res) {
+									alert("删除成功");
+									_this.getOrders();
+								})
+						}
+					},
 				},
 				created: function() {
 					this.getOrders();
@@ -264,11 +268,7 @@
 						return moment(value).format('YYYY-MM-DD hh:mm:ss');
 					},
 					optStatusFilter: function(value) {
-						for(var i = 0; i < optStatus.length; i++) {
-							if(value == i) {
-								return optStatus[i];
-							}
-						}
+						return optStatus[value];
 					}
 				}
 			})

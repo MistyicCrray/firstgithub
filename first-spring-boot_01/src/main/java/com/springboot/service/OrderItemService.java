@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.entity.OrderItem;
 import com.springboot.mapper.OrderItemMapper;
+import com.springboot.mapper.OrderMapper;
 
 @Service
 public class OrderItemService {
 
 	@Autowired
 	private OrderItemMapper orderItemMapper;
+
+	@Autowired
+	private OrderMapper orderMapper;
 
 	// 添加
 	public Integer add(OrderItem orderItem) {
@@ -22,14 +27,23 @@ public class OrderItemService {
 
 	// 删除
 	public int delete(String id) {
-		return orderItemMapper.deleteByPrimaryKey(id);
+		OrderItem orderItem = orderItemMapper.selectByPrimaryKey(id);
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderId", orderItem.getOrderId());
+		List<OrderItem> orderItemList = orderItemMapper.findList(map);
+		if (orderItemList.size() > 1) {
+			return orderItemMapper.deleteByPrimaryKey(id);
+		} else {
+			orderMapper.deleteByPrimaryKey(orderItem.getOrderId());
+			return orderItemMapper.deleteByPrimaryKey(id);
+		}
 	}
 
 	// 修改
 	public Integer update(Map<String, Object> map) {
 		return orderItemMapper.update(map);
 	}
-	
+
 	// 修改
 	public Integer update(OrderItem orderItem) {
 		return orderItemMapper.updateByPrimaryKey(orderItem);

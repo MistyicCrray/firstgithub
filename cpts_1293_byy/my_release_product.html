@@ -31,6 +31,36 @@
 			height: 95px;
 			width: 100px;
 		}
+		
+		.dd {
+			border: 1px #007AFF solid;
+			height: 200px;
+		}
+		
+		.dd .ddid {
+			/*font-size: 18px;*/
+			padding-left: 5px;
+		}
+		
+		.ddname {
+			margin-left: 300px;
+		}
+		
+		.dd li img {
+			position: absolute;
+			height: 150px;
+			padding-top: 30px;
+			padding-left: 5px;
+			/*margin-left: 600px;*/
+		}
+		
+		.bott {
+			border: 1px #007AB6 solid;
+			background-color: #007AB6;
+			color: #fff;
+			padding: 3px;
+			margin: 10px 10px 10px 0px;
+		}
 	</style>
 
 	<body>
@@ -153,7 +183,7 @@
 							<a href="javascript:void(0)" style="color: #0000FF; text-align: right;" v-on:click="addProduct()">发布二手</a>
 						</div>
 						<div style="margin-top: 50px;" v-if="product.length!=0">
-							<table>
+							<!--<table>
 								<tr>
 									<td>商品名</td>
 									<td>种类 </td>
@@ -181,7 +211,21 @@
 										<a href="javascript:void(0)" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</a>
 									</td>
 								</tr>
-							</table>
+							</table>-->
+							<ul class="dd" v-for="item in product">
+							<li><img :src="'/images/'+item.img"></li>
+							<li class="ddid">名称：{{item.name}}</li>
+							<li class="ddname" style="font-size: 15px;" v-for="opt in categories" v-if="item.category==opt.id">种类：{{opt.name}}</li>
+							<li class="ddquantity ddname">数量：{{item.quality}}&nbsp;&nbsp;&nbsp;单价：￥{{item.price}}</li>
+							<li class="ddcreate ddname">上架时间：{{item.createdate | dateFilter}}</li>
+							<li class="ddcreate ddname">浏览量：{{item.hits}}</li>
+							<li class="ddstatus ddname">{{item.status | optionStatusFilter}}</li>
+							<li class="ddcaozuo ddname">
+								<button class="bott" v-on:click="editProduct(item.proid)">修改</button>
+								<button class="bott" v-if="item.status==0" v-on:click="soldOut(item.proid)">下架</button>
+								<button class="bott" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</button>
+							</li>
+						</ul>
 							<nav aria-label="Page navigation center">
 								<ul class="pagination">
 									<li>

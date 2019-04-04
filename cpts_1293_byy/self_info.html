@@ -162,9 +162,9 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="tel" class="col-sm-2 control-label">手机号</label>
+									<label for="phone" class="col-sm-2 control-label">手机号</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="tel" name="tel" placeholder="手机号" v-model="user.tel">
+										<input type="text" class="form-control" id="phone" name="phone" placeholder="手机号" v-model="user.phone">
 									</div>
 								</div>
 								<div class="form-group">
@@ -246,7 +246,7 @@
 							})
 					},
 					editUser: function() {
-						if(!this.isMobilePhone($("#tel").val())) {
+						if(!this.isMobilePhone($("#phone").val())) {
 							alert("请输入正确的手机号码");
 							return false;
 						}

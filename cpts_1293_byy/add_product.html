@@ -5,6 +5,7 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+		<link rel="stylesheet" href="resource/css/bootstrap-datetimepicker.css"></link>
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 	</head>
 
@@ -19,7 +20,7 @@
 								<div class="form-group">
 									<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 									<div class="col-sm-6">
-										<select v-model="product.isNotAuction" v-on:change="isNotAuction" class="form-control" name="isNotAuction">
+										<select v-model="product.isnotauction" v-on:change="isnotauction" class="form-control" name="isnotauction">
 											<option value="1">是</option>
 											<option value="0">否</option>
 										</select>
@@ -41,25 +42,25 @@
 										</select>
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
+								<div class="form-group" v-if="product.isnotauction==1">
 									<label for="consignee" class="col-sm-2 control-label">最低价格:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.minPrice" name="minPrice">
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
+								<div class="form-group" v-if="product.isnotauction==1">
 									<label for="consignee" class="col-sm-2 control-label">最高价格:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.maxPrice" name="maxPrice">
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
+								<div class="form-group" v-if="product.isnotauction==1">
 									<label for="consignee" class="col-sm-2 control-label">每次叫价:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.increments" name="increments">
 									</div>
 								</div>
-								<div class="form-group" v-if="product.isNotAuction==0">
+								<div class="form-group" v-if="product.isnotauction==0">
 									<label for="consignee" class="col-sm-2 control-label">单价:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" v-model="product.price" name="price">
@@ -72,15 +73,15 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="consignee" class="col-sm-2 control-label">图片:</label>
-									<div class="col-sm-6">
-										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
-									</div>
-								</div>
-								<div class="form-group" v-if="product.isNotAuction==1">
 									<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" id="outTime" v-model="product.outTime" name="outTime">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="consignee" class="col-sm-2 control-label">图片:</label>
+									<div class="col-sm-6">
+										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
 									</div>
 								</div>
 								<div class="form-group">
@@ -109,7 +110,15 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
+		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
+		<script src="resource/js/bootstrap-datetimepicker.js"></script>
+		<script src="resource/js/bootstrap-datetimepicker.zh-CN.js"></script>
 		<script>
+			$(function() {
+				$("#outTime").datetimepicker({
+					format: 'yyyy-mm-dd hh:ii'
+				});
+			})
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　
 				editor = K.create('textarea[name="detail"]', {
@@ -124,8 +133,13 @@
 					categories: ""
 				},
 				methods: {
-					isNotAuction: function() {
-						console.info(this.product.isNotAuction);
+					isnotauction: function() {
+						var _this = this;
+						if(_this.product.isnotauction == "1") {
+							$("#outTimeDiv").show();
+						} else {
+							$("#outTimeDiv").hide();
+						}
 					},
 					getCategory: function() {
 						var _this = this;
@@ -136,7 +150,7 @@
 					},
 					submit: function() {
 						var _this = this;
-						if(_this.product.isNotAuction == "" || _this.product.isNotAuction == "") {
+						if(_this.product.isnotauction == "" || _this.product.isnotauction == "") {
 							alert("请选择是否拍卖");
 							return;
 						}
@@ -152,7 +166,7 @@
 						formData.append("detail", editor.html());
 						formData.append("name", _this.product.name);
 						formData.append("category", _this.product.category);
-						if(_this.product.isNotAuction == 1) {
+						if(_this.product.isnotauction == 1) {
 							formData.append("quality", 1);
 							// 当前定价
 							formData.append("price", _this.product.minPrice);
@@ -161,7 +175,9 @@
 							// 设定每次最小叫价
 							formData.append("increments", _this.product.increments);
 							// 设定是否时拍卖
-							formData.append("isNotAuction", _this.product.isNotAuction);
+							formData.append("isnotauction", _this.product.isnotauction); 
+							formData.append("maxPrice", _this.product.maxPrice);
+							formData.append("outtime", $("#outTime").val());
 						} else {
 							if(_this.product.quality == null || _this.product.quality == "") {
 								alert("请输入数量");
@@ -169,7 +185,7 @@
 							}
 							formData.append("quality", _this.product.quality);
 							formData.append("price", _this.product.price);
-							formData.append("isnotauction", _this.product.isNotAuction);
+							formData.append("isnotauction", _this.product.isnotauction);
 						}
 
 						formData.append("file", $("#file")[0].files[0]);
@@ -182,7 +198,16 @@
 					},
 				},
 				created: function() {
-					this.getCategory();
+					var _this = this;
+					_this.getCategory();
+					if(_this.product.isnotauction == "1") {
+						$("#outTimeDiv").show();
+					} else {
+						$("#outTimeDiv").hide();
+					}
+					$("#qqq").datetimepicker({
+						format: 'yyyy-mm-dd hh:ii'
+					});
 				}
 			})
 		</script>

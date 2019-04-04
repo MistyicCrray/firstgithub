@@ -125,11 +125,13 @@
 					<div class="row">
 						<div class="item" v-for="item in products">
 							<div class="minni">
-								<a v-bind:href="'xiangqing.html?id='+item.proid"><img height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
+								<a v-bind:href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction=='0'"><img height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
+								<a v-bind:href="'auction.html?id='+item.proid" v-if="item.isnotauction=='1'"><img height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
 								<div class="caption pinpai" style="font-size: 13px;">
-									<a v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid" style="text-align: left;text-align: center;">{{item.name}}</a>
+									<a v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction=='0'" style="text-align: left;text-align: center;">{{item.name}}</a>
+									<a v-bind:title="item.name" v-bind:href="'auction.html?id='+item.proid" v-if="item.isnotauction=='1'" style="text-align: left;text-align: center;">{{item.name}}</a>
 									<p v-for="opt in users" v-if="opt.id==item.userid"><i class="fa fa-user"></i>{{opt.username}}</p>
-									<p style="color: red;text-align: center;">{{item.price}}元</p>
+									<p style="color: red;text-align: center;">￥{{item.price}}</p>
 								</div>
 							</div>
 						</div>
@@ -163,6 +165,7 @@
 		<script type="text/javascript">
 			var id = GetQueryString("cateid");
 			var search = GetQueryString("search");
+			var aution = GetQueryString("aution");
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -196,30 +199,46 @@
 						if(cateid != undefined) {
 							id = cateid;
 						}
-						if(id != null) {
+						if(aution != null) {
 							axios.get('/product', {
 									params: {
-										cateid: id = "" ? null : id,
 										pageNum: pageIndex,
-										size: _this.pageSize
+										size: _this.pageSize,
+										isNotAuction: 1
 									}
 								})
 								.then(function(res) {
 									_this.products = res.data.data.rows;
+									_this.category = "";
 									_this.pageNum = pageIndex;
 									_this.total = res.data.data.total;
 									_this.pages = Math.ceil(_this.total / _this.pageSize);
 								});
 						} else {
-							axios.post('/search?keyword=' + search + "&pageNum=" + pageIndex + "&size=" + _this.pageSize)
-								.then(function(res) {
-									_this.products = res.data.data.rows;
-									_this.pageNum = pageIndex;
-									_this.total = res.data.data.total;
-									_this.pages = Math.ceil(_this.total / _this.pageSize);
-								})
+							if(id != null) {
+								axios.get('/product', {
+										params: {
+											cateid: id = "" ? null : id,
+											pageNum: pageIndex,
+											size: _this.pageSize
+										}
+									})
+									.then(function(res) {
+										_this.products = res.data.data.rows;
+										_this.pageNum = pageIndex;
+										_this.total = res.data.data.total;
+										_this.pages = Math.ceil(_this.total / _this.pageSize);
+									});
+							} else {
+								axios.post('/search?keyword=' + search + "&pageNum=" + pageIndex + "&size=" + _this.pageSize)
+									.then(function(res) {
+										_this.products = res.data.data.rows;
+										_this.pageNum = pageIndex;
+										_this.total = res.data.data.total;
+										_this.pages = Math.ceil(_this.total / _this.pageSize);
+									})
+							}
 						}
-
 					},
 					getCategory: function() {
 						var _this = this;
@@ -260,7 +279,9 @@
 				},
 				created: function() {
 					this.getProducts();
-					this.getCategory();
+					if(aution == null) {
+						this.getCategory();
+					}
 					this.getUsers();
 				}
 			})

@@ -154,6 +154,9 @@ public class ProductController {
 			}
 			map1.put("proid", productMap.get("proid"));
 			map1.put("quality", i);
+			if (productMap.get("isnotauction").toString().equals("1")) {
+				map1.put("auctionStatus", "2");
+			}
 			productService.update(map1, null); // 修改库存量
 			Map<String, Object> shoppingMap = new HashMap<>();
 			shoppingMap.put("productid", productMap.get("productid"));
@@ -217,7 +220,7 @@ public class ProductController {
 		map.put("currentBidder", user.getUsername()); // 竞拍者姓名
 		map.put("auctionStatus", "1"); // 竞拍状态
 		map.put("price", Float.parseFloat(map.get("price").toString())); // 商品当前价格
-		productService.update(map, null);
+		productService.update(map, null); // 修改商品信息
 		return ResultGenerator.genSuccessResult("竞拍成功");
 	}
 

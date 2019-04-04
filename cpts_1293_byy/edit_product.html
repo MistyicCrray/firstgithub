@@ -7,6 +7,14 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 	</head>
+	<style type="text/css">
+		.bott {
+			border: 1px #007AB6 solid;
+			background-color: #007AB6;
+			color: #fff;
+			padding: 0px 70px 0px 70px;
+		}
+	</style>
 
 	<body>
 		<div id="main">
@@ -20,7 +28,7 @@
 									<div class="form-group">
 										<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 										<div class="col-sm-6">
-											<select v-model="product.isnotauction" class="form-control" name="isNotAuction">
+											<select v-model="product.isnotauction" v-on:change="isNotAuction" class="form-control" name="isnotauction">
 												<option value="1">是</option>
 												<option value="0">否</option>
 											</select>
@@ -72,13 +80,19 @@
 											<input type="text" class="form-control" v-model="product.quality" name="quality">
 										</div>
 									</div>
-									<div class="form-group" v-if="product.img==''">
+									<div class="form-group" id="outTimeDiv">
+										<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" id="outTime" v-model="product.outTime" name="outTime">
+										</div>
+									</div>
+									<div class="form-group" v-if="product.img==''||product.img==null">
 										<label for="consignee" class="col-sm-2 control-label">图片:</label>
 										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
 									</div>
 									<div class="form-group" v-if="product.img!=''"><label for="consignee" class="col-sm-2 control-label">图片:</label>
 										<div class="busin_img">
-											<a><img v-bind:src="'/images/'+product.img"><em></em></a><button class="btn btn-cancel" type="button" v-on:click="delImg()">删除</button>
+											<a><img v-bind:src="'/images/'+product.img"><em></em></a><button class="bott" type="button" v-on:click="delImg()">删除</button>
 										</div>
 									</div>
 									<div class="form-group">
@@ -89,7 +103,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="mt10 item"><button type="button" v-on:click="submit" class="btn">上架</button></div>
+							<div class="mt10 item"><button type="button" v-on:click="submit" class="bott">上架</button></div>
 						</form>
 					</div>
 				</div>
@@ -103,6 +117,7 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
+		<script type="text/javascript" src="resource/laydate/laydate.js"></script>
 		<script>
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　
@@ -110,6 +125,12 @@
 					width: '700px',
 					height: '200px'
 				});
+			});
+			laydate.render({
+				elem: '#outTime' //指定元素
+					,
+				type: 'datetime'
+
 			});
 			var id = GetQueryString("proid");
 			var vue = new Vue({
@@ -120,6 +141,14 @@
 					detail: ''
 				},
 				methods: {
+					isNotAuction: function() {
+						var _this = this;
+						if(_this.product.isnotauction == "1") {
+							$("#outTimeDiv").show();
+						} else {
+							$("#outTimeDiv").hide();
+						}
+					},
 					getProduct: function() {
 						var _this = this;
 						axios.get('/product/' + id)
@@ -127,7 +156,6 @@
 								console.info(res);
 								_this.product = res.data.data;
 								_this.detail = _this.product.detail;
-								console.info(_this.product.isnotauction);
 								editor.html(_this.detail);
 							})
 					},
@@ -149,16 +177,24 @@
 							})
 					},
 					delImg: function() {
-						axios.put('/product/delImag/' + id)
-							.then(function(res) {
-								alert("删除成功");
-								this.getProduct();
-							})
+						if(confirm("是否删除该图片？")) {
+							axios.put('/product/delImag/' + id)
+								.then(function(res) {
+									alert("删除成功");
+									this.getProduct();
+								})
+						}
 					},
 				},
 				created: function() {
 					this.getProduct();
 					this.getCategory();
+					var _this = this;
+					if(_this.product.isnotauction == "1") {
+						$("#outTimeDiv").show();
+					} else {
+						$("#outTimeDiv").hide();
+					}
 				}
 			})
 		</script>

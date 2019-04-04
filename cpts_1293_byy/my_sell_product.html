@@ -90,32 +90,17 @@
 				</a>
 				<div class="nav fl">
 					<ul>
-						<li>
-							<a href="">小米手机</a>
+						<li class="active">
+							<a href="index.html">主页</a>
 						</li>
 						<li>
-							<a href="">红米</a>
+							<a href="liebiao.html?search=手机">手机二手</a>
 						</li>
 						<li>
-							<a href="">平板·笔记本</a>
+							<a href="saleroom.html">拍卖场</a>
 						</li>
 						<li>
-							<a href="">电视</a>
-						</li>
-						<li>
-							<a href="">盒子·影音</a>
-						</li>
-						<li>
-							<a href="">路由器</a>
-						</li>
-						<li>
-							<a href="">智能硬件</a>
-						</li>
-						<li>
-							<a href="">服务</a>
-						</li>
-						<li>
-							<a href="">社区</a>
+							<a href="my_release_product.html">我的发布</a>
 						</li>
 					</ul>
 				</div>
@@ -228,7 +213,7 @@
 					getProducts: function(pageIndex) {
 						var _this = this;
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
-						axios.get('/order', {
+						axios.get('/orderItem', {
 								params: {
 									pageNum: pageIndex,
 									size: _this.pageSize,

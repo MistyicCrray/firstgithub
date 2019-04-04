@@ -69,7 +69,7 @@ public class OrderItemDynaProvider {
 	public String selectBySql(Map<String, Object> map) {
 		return new SQL() {
 			{
-				SELECT("o.order_id, o.create_time, o.quantity" + ", o.payment, o.status, u.username, p.name"
+				SELECT("o.order_id, o.order_item_id, o.create_time, o.quantity" + ", o.payment, o.status, u.username, p.name"
 						+ ", p.price, p.img,a.*");
 				FROM("t_order_item o");
 				LEFT_OUTER_JOIN("t_user u ON u.id=o.userid");
@@ -78,6 +78,9 @@ public class OrderItemDynaProvider {
 				if (map != null) {
 					if (map.get("orderId") != null) {
 						WHERE("o.order_id=#{orderId}");
+					}
+					if (map.get("orderItemId") != null) {
+						WHERE("o.order_item_id=#{orderItemId}");
 					}
 					if (map.get("userid") != null) {
 						WHERE("o.userid=#{userid}");

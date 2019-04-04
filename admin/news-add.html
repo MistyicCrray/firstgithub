@@ -80,6 +80,8 @@
 						axios.post("/news", _this.inputtext)
 							.then(function(res) {
 								layer.alert("添加成功");
+								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+								parent.layer.close(index); // 关闭layer
 							});
 					}
 				},

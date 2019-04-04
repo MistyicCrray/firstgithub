@@ -102,7 +102,7 @@
 				methods: {
 					setup: function(id) {
 						var _this = this;
-						layer.confirm("是否删除公告？", {
+						layer.confirm("是否置顶该公告？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
 							axios.put('/news/' + id + '?istop=0')
@@ -116,12 +116,12 @@
 					},
 					cancel: function(id) {
 						var _this = this;
-						layer.confirm("是否删除公告？", {
+						layer.confirm("是否取消置顶公告？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
 							axios.put('/news/' + id + '?istop=1')
 								.then(function(res) {
-									layer.msg('置顶成功', {
+									layer.msg('取消置顶成功', {
 										icon: 1
 									});
 									_this.getNews();

@@ -9,15 +9,15 @@ import org.apache.ibatis.type.JdbcType;
 @Mapper
 public interface StatisticsMapper {
 
-	@Select({ "select COUNT(*) as num from `user`" })
+	@Select({ "select COUNT(*) as num from `t_user`" })
 	@Results({ @Result(column = "num", property = "num", jdbcType = JdbcType.INTEGER) })
 	int getUser();
 
-	@Select({ "select COUNT(*) as num from `t_order`" })
+	@Select({ "select COUNT(*) as num from `t_order_item`" })
 	@Results({ @Result(column = "num", property = "num", jdbcType = JdbcType.INTEGER) })
 	int getOrder();
 
-	@Select({ "select COUNT(*) as num from `product`" })
+	@Select({ "select COUNT(*) as num from `t_product`" })
 	@Results({ @Result(column = "num", property = "num", jdbcType = JdbcType.INTEGER) })
 	int getProduct();
 	

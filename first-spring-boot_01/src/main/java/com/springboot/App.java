@@ -1,5 +1,10 @@
 package com.springboot;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.servlet.MultipartConfigElement;
 
 import org.springframework.boot.SpringApplication;
@@ -11,7 +16,23 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 @Configuration
 public class App {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		String url = "http://localhost/cpts_1293_byy/login.html";
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.browse(new URI(url));
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("xdg-open " + url);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		SpringApplication.run(App.class, args);
 	}
 
@@ -22,7 +43,7 @@ public class App {
 		factory.setMaxFileSize("20MB"); // KB,MB
 		/// 设置总上传数据总大小
 		factory.setMaxRequestSize("1000MB");
-		factory.setLocation("e:/data/upload/images");
+//		factory.setLocation("e:/data/upload/images");
 		return factory.createMultipartConfig();
 	}
 }

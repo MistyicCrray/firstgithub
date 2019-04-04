@@ -160,7 +160,7 @@ public class UserController {
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public Result Login(@RequestBody(required = false) Map<String, Object> map,
 			@RequestParam(required = false) MultipartFile file) {
-		map.put("password", MD5.md5((String) map.get("password")));
+		map.put("password", MD5.md5(map.get("password").toString()));
 		List<User> users = userService.findList(map);
 		if (users.size() == 0) {
 			return ResultGenerator.genFailResult("用户名或密码错误");

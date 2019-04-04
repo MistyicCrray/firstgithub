@@ -81,19 +81,37 @@
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript">
+			var orderId = GetQueryString("orderId");
+			console.info(orderId);
 			var vue = new Vue({
 				el: "#main",
 				data: {
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
-					monney: "",
-					ordernum: ""
+					monney: 0,
+					ordernum: 0,
+					orders: []
 				},
 				methods: {
 					logout: function() {
 						logout();
 						location.href = "login.html";
 					},
+					getOrder: function() {
+						var _this = this;
+						axios.get("/orderItem?orderId=" + orderId)
+							.then(function(res) {
+								console.info(res);
+								_this.orders = res.data.data.rows;
+								_this.ordernum = res.data.data.total;
+								for(var i = 0; i <= _this.orders.length; i++) {
+									_this.monney += _this.orders[i].payment;
+								}
+							})
+					},
+				},
+				created: function() {
+					this.getOrder();
 				}
 			})
 		</script>

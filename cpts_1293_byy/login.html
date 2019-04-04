@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/login.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/layer.css">
 
 	</head>
 	<style type="text/css">
@@ -69,6 +70,7 @@
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript" src="resource/js/base64.js"></script>
 		<script type="text/javascript">
 			var app = new Vue({
@@ -113,23 +115,24 @@
 					autoLoginF: function() {
 						var _this = this;
 						_this.inputtext.password = _this.getCookie("password");
-						_this.inputtext.loginName = _this.getCookie("loginName");
-						_this.inputtext.remenber = _this.getCookie("remenber");
-						_this.inputtext.autoLogin = _this.getCookie("autoLogin");
-						if(_this.inputtext.autoLogin) {
+						_this.inputtext.loginname = _this.getCookie("loginname");
+						_this.remenber = _this.getCookie("remenber");
+						_this.autoLogin = _this.getCookie("autoLogin");
+						if(_this.autoLogin) {
+							console.info("自動登陸")
 							layer.msg('自动登陆中...', {
 								time: 2000, //2s后自动关闭
 								btn: ['取消'],
 								shade: 0.5,
 								yes: function(index) {
 									layer.close(index);
-									_this.inputtext.autoLogin = false;
+									_this.autoLogin = false;
 								}
 							});
 						}
-						if(_this.inputtext.autoLogin) {
+						if(_this.autoLogin) {
 							setTimeout(function() {
-								if(_this.inputtext.autoLogin) {
+								if(_this.autoLogin) {
 									_this.submit();
 								}      
 							}, 2000)
@@ -145,16 +148,16 @@
 									sessionStorage.setItem("userId", response.data.data.userInfo.id);
 									sessionStorage.setItem("username", response.data.data.userInfo.username);
 									sessionStorage.setItem("accessToken", response.data.data.accessToken);
-									if(_this.inputtext.remenber) {
-										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+									if(_this.remenber) {
+										_this.setCookie("loginname", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "", 7);
 									} else {
 										document.cookie = "";
 									}
-									if(_this.inputtext.autologin) {
-										_this.setCookie("loginName", _this.inputtext.loginName, 7);
+									if(_this.autoLogin) {
+										_this.setCookie("loginname", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "true", 7);

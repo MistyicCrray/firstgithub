@@ -90,7 +90,12 @@
 			.ord_step .item {
 				text-align: center;
 			}
-			
+			.ord_step .item span{
+				display: inline-block;
+			}
+			.ml50{
+				margin-left: 80px;
+			}
 			.steps {
 				padding-left: 100px;
 				height: 90px;
@@ -218,7 +223,7 @@
 			</div>
 			<div class="ord_step" v-show="status==2" v-cloak>
 				<div class="item">
-					<span>验证码</span>
+					<span class="ml50">验证码</span>
 					<input class="form-control" v-model="inputtext.activeCode" />
 					<button v-on:click='getCode()' class="btn-sm" id="activeCode">{{content}}</button>
 				</div>
@@ -247,7 +252,7 @@
 				el: '#main',
 				data: {
 					chosekey: -1,
-					status: 1,
+					status: 2,
 					inputtext: {},
 					count: 60,
 					timer: null,

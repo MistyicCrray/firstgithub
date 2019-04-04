@@ -53,7 +53,8 @@
 							<td v-if="item.img==null">暂无图片</td>
 							<td>{{item.hits}}</td>
 							<td>{{item.quality}}</td>
-							<td>{{item.isnotauction}}</td>
+							<td v-if="item.isnotauction==1">是</td>
+							<td v-if="item.isnotauction==0">否</td>
 							<td>{{item.status | optionStatusFilter}}</td>
 							<td class="td-manage">
 								<a title="删除" v-on:click="deleteP(item.proid)" href="javascript:;">

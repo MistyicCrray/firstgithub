@@ -27,6 +27,8 @@
 						<div class="regist_main center">
 							<div class="username">用&nbsp;&nbsp;户&nbsp;&nbsp;名:&nbsp;&nbsp;<input class="shurukuang" type="text" v-model="inputtext.loginname" placeholder="请输入你的用户名" /><span><a></a></span>
 							</div>
+							<div class="username">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp;<input class="shurukuang" type="text" v-model="inputtext.username" placeholder="请输入你的昵称" /><span><a></a></span>
+							</div>
 							<div class="username">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;&nbsp;<input class="shurukuang" v-model="inputtext.password" type="password" placeholder="请输入你的密码" /><span>请输入6位以上字符</span></div>
 
 							<div class="username">确认密码:&nbsp;&nbsp;<input class="shurukuang" type="password" placeholder="请确认你的密码" id="confirmPassword" /><span>两次密码要输入一致哦</span></div>
@@ -54,15 +56,23 @@
 					submit: function() {
 						var _this = this;
 						if(_this.inputtext.loginname == null || _this.inputtext.loginname == "") {
-							alert("邮箱不能为空");
+							alert("用户名不能为空");
 							return false;
 						}
 						if(!_this.verifyEmail(_this.inputtext.loginname)) {
-							alert("邮箱格式不正确");
+							alert("用户名为邮箱格式");
 							return;
+						}
+						if(_this.inputtext.username == null || _this.inputtext.username == "") {
+							alert("昵称不能为空");
+							return false;
 						}
 						if(_this.inputtext.password == null || _this.inputtext.password == "") {
 							alert("密码不能为空");
+							return false;
+						}
+						if(_this.inputtext.password.length < 6) {
+							alert("密码必须为6位以上字符");
 							return false;
 						}
 						if($("#confirmPassword").val() == null || $("#confirmPassword").val() == "") {
