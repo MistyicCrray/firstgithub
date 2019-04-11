@@ -57,14 +57,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 				try {
 					claims = TokenUtil.parseJWT(accessToken);
 				} catch (ExpiredJwtException e) {
-//					response.setStatus(401);
 					throw new AuthorizationException("token失效，请重新登录");
 				} catch (SignatureException se) {
-//					response.setStatus(401);
 					throw new AuthorizationException("token令牌错误");
 				} catch (MalformedJwtException e2) {
-//					response.setStatus(401);
-//					e2.printStackTrace();
 					throw new AuthorizationException("token令牌错误，格式不对");
 				}
 

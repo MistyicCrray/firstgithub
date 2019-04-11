@@ -217,7 +217,6 @@
 						_this.currentPrice = res.data.data.price;
 						document.getElementById("detail").innerHTML = res.data.data.detail;
 						_this.isnotstop = moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss');
-						console.info(_this.product.bidderid + "------" + _this.user.userId + "---" + _this.isnotstop);
 						if(moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss')) {
 							alert("竞拍已结束");
 						}
@@ -272,11 +271,22 @@
 					},
 					dateFilter: function(value) {
 						var _this = this;
-						if(_this.isnotstop == false) {
-							Ticts.createTicts("outTime", value);
-						} else {
-							return "0天0小时0分钟0秒";
-						}
+						console.info(value);
+						//						if(_this.isnotstop) {
+						//							return "0天0小时0分钟0秒";
+						//						} else {
+						//							Ticts.createTicts("outTime", value);
+						//						}
+						axios.get('/product/' + id).then(function(res) {
+							console.info(res);
+							_this.product = res.data.data;
+							_this.isnotstop = moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss');
+							if(moment(_this.product.outtime).format('YYYY-MM-DD hh:mm:ss') < moment(new Date()).format('YYYY-MM-DD hh:mm:ss')) {
+								return "0天0小时0分钟0秒";
+							} else {
+								Ticts.createTicts("outTime", _this.product.outtime);
+							}
+						})
 					},
 				}
 			})

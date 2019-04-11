@@ -160,8 +160,8 @@
 							<div class="ztxx fr">
 								<ul>
 									<li>￥{{item.price}}</li>
-									<li>{{item.quantity}}</li>
-									<li>{{item.total}}</li>
+									<li>×{{item.quantity}}</li>
+									<li>￥{{item.total}}</li>
 									<div class="clear"></div>
 								</ul>
 							</div>
@@ -243,7 +243,6 @@
 						var _this = this;
 						//						 获取地址，如没有地址则跳到添加地址页面
 						axios.get('/address').then(function(res) {
-							console.info(res);
 							_this.address = res.data.data.rows;
 							for(var i = 0; i < _this.address.length; i++) {
 								if(_this.address[i].status == '0') {
@@ -257,27 +256,42 @@
 								}
 							}
 						});
-						if(proid == null) {
-							axios.get('/shoppingCart/comfirm').then(function(res) {
-								console.info(res);
-								_this.products = res.data.data;
-								_this.total = 0;
-								for(var i = 0; i < res.data.data.length; i++) {
-									if(res.data.data[i].ischeck == '0') {
-										_this.total += res.data.data[i].total;
+						if(orderId != null) {
+							axios.get('/orderItem/order/' + orderId)
+								.then(function(res) {
+									console.info(res);
+									_this.products = res.data.data;
+									_this.total = 0;
+									for(var i = 0; i < res.data.data.length; i++) {
+										_this.total += res.data.data[i].payment;
+										_this.products[i].total = res.data.data[i].payment;
 									}
-								}
-							})
-						} else {
-							axios.get('/product?proid=' + proid).then(function(res) {
-								console.info(res);
-								_this.products = res.data.data.rows;
-								_this.products[0].quantity = quantity;
-								_this.products[0].total = _this.products[0].quantity * _this.products[0].price;
-								_this.total = _this.products[0].quantity * _this.products[0].price;
-							})
-						}
 
+								})
+						} else {
+							if(proid == null) {
+								axios.get('/shoppingCart/comfirm')
+									.then(function(res) {
+										console.info(res);
+										_this.products = res.data.data;
+										_this.total = 0;
+										for(var i = 0; i < res.data.data.length; i++) {
+											if(res.data.data[i].ischeck == '0') {
+												_this.total += res.data.data[i].total;
+											}
+										}
+									})
+							} else {
+								axios.get('/product?proid=' + proid)
+									.then(function(res) {
+										console.info(res);
+										_this.products = res.data.data.rows;
+										_this.products[0].quantity = quantity;
+										_this.products[0].total = _this.products[0].quantity * _this.products[0].price;
+										_this.total = _this.products[0].quantity * _this.products[0].price;
+									})
+							}
+						}
 					},
 					buy: function() {
 						var _this = this;
@@ -293,10 +307,14 @@
 							alert("订单中没有商品，请选择商品后再购买");
 							return;
 						}
-						axios.post('/product/buy/' + _this.addrId, _this.products)
-							.then(function(res) {
-								window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.data.data.orderId;
-							});
+						if(orderId != null) {
+							window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + orderId;
+						} else {
+							axios.post('/product/buy/' + _this.addrId, _this.products)
+								.then(function(res) {
+									window.location.href = '/first-spring-boot_01/pay?pd_FrpId=' + _this.pd_FrpId + "&p3_Amt=" + 0.01 + "&p2_Order=" + res.data.data.orderId;
+								});
+						}
 					},
 					logout: function() {
 						logout();
@@ -307,7 +325,7 @@
 					},
 					switch_addrKey: function(i) { // 选择地址
 						this.addrKey = i;
-					}
+					},
 				},
 				created: function() {
 					this.getbank("ICBC-NET-B2C");

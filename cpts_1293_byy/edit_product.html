@@ -6,6 +6,7 @@
 		<title></title>
 		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" href="resource/css/bootstrap-datetimepicker.css"></link>
 	</head>
 	<style type="text/css">
 		.bott {
@@ -75,20 +76,20 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="consignee" class="col-sm-2 control-label">数量:</label>
-										<div class="col-sm-6">
-											<input type="text" class="form-control" v-model="product.quality" name="quality">
-										</div>
-									</div>
-									<div class="form-group" id="outTimeDiv">
 										<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
 										<div class="col-sm-6">
-											<input type="text" class="form-control" id="outTime" v-model="product.outTime" name="outTime">
+											<input type="text" class="form-control" v-model="product.outtime" name="outTime">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="consignee" class="col-sm-2 control-label">数量:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" id="outTime" v-model="product.quality" name="quality">
 										</div>
 									</div>
 									<div class="form-group" v-if="product.img==''||product.img==null">
 										<label for="consignee" class="col-sm-2 control-label">图片:</label>
-										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
+										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" v-on:change="uploadImg" name="file" class="input_opt" id="file"></p>
 									</div>
 									<div class="form-group" v-if="product.img!=''"><label for="consignee" class="col-sm-2 control-label">图片:</label>
 										<div class="busin_img">
@@ -117,20 +118,21 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
-		<script type="text/javascript" src="resource/laydate/laydate.js"></script>
+		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
+		<script src="resource/js/bootstrap-datetimepicker.js"></script>
+		<script src="resource/js/bootstrap-datetimepicker.zh-CN.js"></script>
 		<script>
+			$(function() {
+				$("#outTime").datetimepicker({
+					format: 'yyyy-mm-dd hh:ii'
+				});
+			})
 			var editor = null;
 			KindEditor.ready(function(K) {　　　　　　　　
 				editor = K.create('textarea[name="detail"]', {
 					width: '700px',
 					height: '200px'
 				});
-			});
-			laydate.render({
-				elem: '#outTime' //指定元素
-					,
-				type: 'datetime'
-
 			});
 			var id = GetQueryString("proid");
 			var vue = new Vue({
@@ -168,7 +170,17 @@
 					},
 					submit: function() {
 						var _this = this;
-						var formData = new FormData($("#addProduct")[0]);
+						axios.put('/product/' + id, $("#addProduct").serialize())
+							.then(function(res) {
+								alert("修改成功");
+								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+								parent.layer.close(index); // 关闭layer
+							})
+					},
+					uploadImg: function() {
+						var _this = this;
+						var formData = new FormData();
+						formData.append("file", $("#file")[0].files[0]);
 						axios.put('/product/' + id, formData)
 							.then(function(res) {
 								alert("修改成功");

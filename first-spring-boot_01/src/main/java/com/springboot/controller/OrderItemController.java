@@ -88,8 +88,9 @@ public class OrderItemController {
 	 * @date 2018年11月19日下午3:32:47
 	 */
 	@LoginRequired
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
+		map.put("orderItemId", id);
 		return ResultGenerator.genSuccessResult(orderItemService.update(map));
 	}
 

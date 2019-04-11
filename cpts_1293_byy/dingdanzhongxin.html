@@ -165,9 +165,10 @@
 							<li class="ddcreate ddname">下单时间：{{item.create_time | dateFilter}}</li>
 							<li class="ddstatus ddname">{{item.status | optStatusFilter}}</li>
 							<li class="ddcaozuo ddname">
-								<button class="bott">确认付款</button>
-								<button class="bott">确认收货</button>
-								<button class="bott" v-on:click="del(item.orderItemId)">删除订单</button>
+								<button class="bott" v-if="item.status==0" v-on:click="check(item.orderId)">确认付款</button>
+								<button class="bott" v-if="item.status==1&&item.sellid==user.userId" v-on:click="sendP(item.orderItemId)">点击发货</button>
+								<button class="bott" v-if="item.status==3" v-on:click="shouP(item.orderItemId)">确认收货</button>
+								<button class="bott" v-if="item.status==4" v-on:click="del(item.orderItemId)">删除订单</button>
 							</li>
 						</ul>
 						<nav aria-label="Page navigation center">
@@ -199,7 +200,7 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript">
-			var optStatus = ['待付款', '未发货', '已发货', '未签收', '已签收'];
+			var optStatus = ['待付款', '未发货(卖家尚未发货，请等待卖家发货)', '已发货(等待签收)', '未签收', '已签收'];
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -254,6 +255,31 @@
 							axios.delete('/orderItem/' + id)
 								.then(function(res) {
 									alert("删除成功");
+									_this.getOrders();
+								})
+						}
+					},
+					check: function(id) {
+						location.href = "comfirm_order.html?orderId=" + id;
+					},
+					// 发货操作
+					sendP: function(id) {
+						var _this = this;
+						if(confirm("是否确认发货？")) {
+							axios.put("/orderItem/" + id + "?status=2")
+								.then(function(res) {
+									alert("发货成功，请等待买家收货");
+									_this.getOrders();
+								})
+						}
+					},
+					// 收货操作
+					shouP: function(id) {
+						var _this = this;
+						if(confirm("是否确认收货？")) {
+							axios.put("/orderItem/" + id + "?status=4")
+								.then(function(res) {
+									alert("收货成功");
 									_this.getOrders();
 								})
 						}

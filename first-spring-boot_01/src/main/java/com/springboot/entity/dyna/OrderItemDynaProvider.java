@@ -61,7 +61,7 @@ public class OrderItemDynaProvider {
 						SET("address_id=#{addressId}");
 					}
 				}
-				WHERE("order_id=#{orderId}");
+				WHERE("order_item_id=#{orderItemId}");
 			}
 		}.toString();
 	}
@@ -69,8 +69,8 @@ public class OrderItemDynaProvider {
 	public String selectBySql(Map<String, Object> map) {
 		return new SQL() {
 			{
-				SELECT("o.order_id, o.order_item_id, o.create_time, o.quantity" + ", o.payment, o.status, u.username, p.name"
-						+ ", p.price, p.img,a.*");
+				SELECT("o.order_id, o.order_item_id, o.create_time, o.quantity, o.sellid"
+						+ ", o.payment, o.status, u.username, p.name, p.isNotAuction" + ", p.price, p.img,a.*");
 				FROM("t_order_item o");
 				LEFT_OUTER_JOIN("t_user u ON u.id=o.userid");
 				LEFT_OUTER_JOIN("t_product p ON p.proid=o.productid");

@@ -220,9 +220,10 @@
 							<li class="ddcreate ddname">上架时间：{{item.createdate | dateFilter}}</li>
 							<li class="ddcreate ddname">浏览量：{{item.hits}}</li>
 							<li class="ddstatus ddname">{{item.status | optionStatusFilter}}</li>
+							<li class="ddstatus ddname" v-if="item.isnotauction==1">该商品为拍卖商品</li>
 							<li class="ddcaozuo ddname">
 								<button class="bott" v-on:click="editProduct(item.proid)">修改</button>
-								<button class="bott" v-if="item.status==0" v-on:click="soldOut(item.proid)">下架</button>
+								<button class="bott" v-if="item.status!=1" v-on:click="soldOut(item.proid)">下架</button>
 								<button class="bott" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</button>
 							</li>
 						</ul>
@@ -316,6 +317,7 @@
 								}
 							})
 							.then(function(res) {
+								console.info(res);
 								_this.product = res.data.data.rows;
 								_this.pageNum = pageIndex;
 								_this.total = res.data.data.total;
@@ -376,7 +378,7 @@
 							shadeClose: true,
 							scrollbar: true,
 							closeBtn: 1,
-							area: ['800px', '450px'],
+							area: ['1200px', '450px'],
 							content: ['edit_product.html?proid=' + proid],
 							end: function() {
 								location.href = "my_release_product.html";
@@ -390,7 +392,7 @@
 							shadeClose: true,
 							scrollbar: true,
 							closeBtn: 1,
-							area: ['800px', '450px'],
+							area: ['1200px', '450px'],
 							content: ['add_product.html'],
 							end: function() {
 								location.href = "my_release_product.html";

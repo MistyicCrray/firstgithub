@@ -20,7 +20,7 @@
 								<div class="form-group">
 									<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 									<div class="col-sm-6">
-										<select v-model="product.isnotauction" v-on:change="isnotauction" class="form-control" name="isnotauction">
+										<select v-model="product.isnotauction" v-on:change="isnotau" class="form-control" name="isnotauction">
 											<option value="1">是</option>
 											<option value="0">否</option>
 										</select>
@@ -133,7 +133,7 @@
 					categories: ""
 				},
 				methods: {
-					isnotauction: function() {
+					isnotau: function() {
 						var _this = this;
 						if(_this.product.isnotauction == "1") {
 							$("#outTimeDiv").show();
@@ -205,9 +205,6 @@
 					} else {
 						$("#outTimeDiv").hide();
 					}
-					$("#qqq").datetimepicker({
-						format: 'yyyy-mm-dd hh:ii'
-					});
 				}
 			})
 		</script>
