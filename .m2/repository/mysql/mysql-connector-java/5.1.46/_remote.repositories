@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 18:27:22 CST 2019
+mysql-connector-java-5.1.46.jar>central=
+mysql-connector-java-5.1.46.pom>central=
+mysql-connector-java-5.1.46-sources.jar>central=

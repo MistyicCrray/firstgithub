@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 18:43:24 CST 2019
+spring-cloud-commons-2.0.0.RELEASE-sources.jar>central=
+spring-cloud-commons-2.0.0.RELEASE.jar>central=
+spring-cloud-commons-2.0.0.RELEASE.pom>central=

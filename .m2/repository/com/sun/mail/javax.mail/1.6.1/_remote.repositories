@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 18:38:29 CST 2019
+javax.mail-1.6.1-sources.jar>central=
+javax.mail-1.6.1.jar>central=
+javax.mail-1.6.1.pom>central=

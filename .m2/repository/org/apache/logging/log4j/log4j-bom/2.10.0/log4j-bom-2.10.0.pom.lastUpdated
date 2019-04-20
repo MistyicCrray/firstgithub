@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 17:55:40 CST 2019
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1553248540535
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.apache.logging.log4j\:log4j-bom\:pom\:2.10.0 from/to central (https\://repo.maven.apache.org/maven2)\: C\:\\Users\\Administrator\\.m2\\repository\\org\\apache\\logging\\log4j\\log4j-bom\\2.10.0\\aether-9e38d205-28d3-4535-933d-549b9545a81b-log4j-bom-2.10.0.pom-in-progress (\u7CFB\u7EDF\u627E\u4E0D\u5230\u6307\u5B9A\u7684\u6587\u4EF6\u3002)

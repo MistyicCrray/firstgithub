@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 18:31:16 CST 2019
+mockito-core-2.15.0.jar>central=
+mockito-core-2.15.0.pom>central=
+mockito-core-2.15.0-sources.jar>central=

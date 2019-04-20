@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 17:56:41 CST 2019
+file\://${project.basedir}/.error=
+file\://${project.basedir}/.lastUpdated=1553248601701
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1553248601143
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.apache\:apache\:pom\:11 from/to central (https\://repo.maven.apache.org/maven2)\: C\:\\Users\\Administrator\\.m2\\repository\\org\\apache\\apache\\11\\aether-d26e6cca-161b-4128-bc4c-1e5e70d129b8-apache-11.pom-in-progress (\u7CFB\u7EDF\u627E\u4E0D\u5230\u6307\u5B9A\u7684\u6587\u4EF6\u3002)

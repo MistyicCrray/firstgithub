@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Mar 22 18:34:24 CST 2019
+fastjson-1.2.15.jar>central=
+fastjson-1.2.15-sources.jar>central=
+fastjson-1.2.15.pom>central=
