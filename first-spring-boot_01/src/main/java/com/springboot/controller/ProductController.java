@@ -154,7 +154,7 @@ public class ProductController {
 			}
 			map1.put("proid", productMap.get("proid"));
 			map1.put("quality", i);
-			if (productMap.get("isnotauction").toString().equals("1")) {
+			if (productMap.get("isNotAuction").toString().equals("1")) {
 				map1.put("auctionStatus", "2");
 			}
 			productService.update(map1, null); // 修改库存量

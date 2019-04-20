@@ -183,51 +183,22 @@
 							<a href="javascript:void(0)" style="color: #0000FF; text-align: right;" v-on:click="addProduct()">发布二手</a>
 						</div>
 						<div style="margin-top: 50px;" v-if="product.length!=0">
-							<!--<table>
-								<tr>
-									<td>商品名</td>
-									<td>种类 </td>
-									<td>价格 </td>
-									<td>上架时间</td>
-									<td>图片</td>
-									<td>浏览量</td>
-									<td>剩余数量</td>
-									<td>状态</td>
-									<td>操作</td>
-								</tr>
-								<tr v-for="item in product">
-									<td>{{item.name}}</td>
-									<td v-for="opt in categories" v-if="item.category==opt.id">{{opt.name}}</td>
-									<td>￥{{item.price}}</td>
-									<td>{{item.createdate | dateFilter}}</td>
-									<td v-if="item.img!=null"><img v-bind:src="'/images/' + item.img" style="width: 20px; height: 20px;"></td>
-									<td v-if="item.img==null">暂无图片</td>
-									<td>{{item.hits}}</td>
-									<td>{{item.quality}}</td>
-									<td>{{item.status | optionStatusFilter}}</td>
-									<td>
-										<a href="javascript:void(0)" v-on:click="editProduct(item.proid)">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="javascript:void(0)" v-if="item.status==0" v-on:click="soldOut(item.proid)">下架</a>
-										<a href="javascript:void(0)" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</a>
-									</td>
-								</tr>
-							</table>-->
 							<ul class="dd" v-for="item in product">
-							<li><img :src="'/images/'+item.img"></li>
-							<li class="ddid">名称：{{item.name}}</li>
-							<li class="ddname" style="font-size: 15px;" v-for="opt in categories" v-if="item.category==opt.id">种类：{{opt.name}}</li>
-							<li class="ddquantity ddname">数量：{{item.quality}}&nbsp;&nbsp;&nbsp;单价：￥{{item.price}}</li>
-							<li class="ddcreate ddname">上架时间：{{item.createdate | dateFilter}}</li>
-							<li class="ddcreate ddname">浏览量：{{item.hits}}</li>
-							<li class="ddstatus ddname">{{item.status | optionStatusFilter}}</li>
-							<li class="ddstatus ddname" v-if="item.isnotauction==1">该商品为拍卖商品</li>
-							<li class="ddcaozuo ddname">
-								<button class="bott" v-on:click="editProduct(item.proid)">修改</button>
-								<button class="bott" v-if="item.status!=1" v-on:click="soldOut(item.proid)">下架</button>
-								<button class="bott" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</button>
-							</li>
-						</ul>
-							<nav aria-label="Page navigation center">
+								<li><img :src="'/images/'+item.img"></li>
+								<li class="ddid">名称：{{item.name}}</li>
+								<li class="ddname" style="font-size: 15px;" v-for="opt in categories" v-if="item.category==opt.id">种类：{{opt.name}}</li>
+								<li class="ddquantity ddname">数量：{{item.quality}}&nbsp;&nbsp;&nbsp;单价：￥{{item.price}}</li>
+								<li class="ddcreate ddname">上架时间：{{item.createdate | dateFilter}}</li>
+								<li class="ddcreate ddname">浏览量：{{item.hits}}</li>
+								<li class="ddstatus ddname">{{item.status | optionStatusFilter}}</li>
+								<li class="ddstatus ddname" v-if="item.isnotauction==1">该商品为拍卖商品</li>
+								<li class="ddcaozuo ddname">
+									<button class="bott" v-on:click="editProduct(item.proid)">修改</button>
+									<button class="bott" v-if="item.status!=1" v-on:click="soldOut(item.proid)">下架</button>
+									<button class="bott" v-if="item.status==1" v-on:click="putaway(item.proid)">上架</button>
+								</li>
+							</ul>
+							<nav aria-label="Page navigation center" v-if="total!=0">
 								<ul class="pagination">
 									<li>
 										<a href="javascript:void(0)" aria-label="Previous" v-on:click="prePage">
@@ -250,10 +221,12 @@
 			</div>
 			<div class="clear"></div>
 		</div>
-		</div>
-		</div>
 		<!-- self_info -->
-
+		<footer class="mt20 center">
+			<div class="mt20">Select Region</div>
+			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		</footer>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>

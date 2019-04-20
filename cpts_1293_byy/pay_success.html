@@ -29,6 +29,59 @@
 			text-align: center;
 			color: #007AB6;
 		}
+		
+		.upload_img {
+			position: relative;
+		}
+		
+		#image {
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 95px;
+			width: 100px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 9;
+		}
+		
+		#avatar {
+			height: 95px;
+			width: 100px;
+		}
+		
+		.dd {
+			border: 1px #007AFF solid;
+			height: 180px;
+		}
+		
+		.dd .ddid {
+			padding-left: 5px;
+		}
+		
+		.ddname {
+			margin-left: 300px;
+		}
+		
+		.dd li img {
+			position: absolute;
+			height: 150px;
+			padding-top: 30px;
+			padding-left: 5px;
+		}
+		
+		.bott {
+			border: 1px #007AB6 solid;
+			background-color: #007AB6;
+			color: #fff;
+			padding: 3px;
+			margin: 10px 10px 10px 0px;
+		}
+		
+		.orders {
+			margin: 0 auto;
+			width: 800px;
+		}
 	</style>
 
 	<body>
@@ -71,11 +124,23 @@
 			<div class="xiantiao"></div>
 			<div>
 				<p class="h1 zftitle"><i class="fa fa-3x fa-check-square"></i><span class="ml40">支付成功！</span></p>
-				<p class="zftitle">共计支付金额{{monney}}</p>
-				<p class="zftitle">以下{{ordernum}}个订单已经支付成功，共计{{monney}}</p>
+				<p class="zftitle">订单将送至{{address}}</p>
+				<p class="zftitle">共计支付金额{{monney}}元</p>
+				<p class="zftitle">以下{{ordernum}}个订单已经支付成功，共计{{monney}}元</p>
+			</div>
+			<div class="orders">
+				<ul class="dd" v-for="item in orders">
+					<li><img :src="'/images/'+item.img"></li>
+					<li class="ddid">名称：{{item.name}}</li>
+					<li class="ddquantity ddname">数量：{{item.quantity}}&nbsp;&nbsp;&nbsp;总价：￥{{item.price * item.quantity}}</li>
+				</ul>
 			</div>
 		</div>
-
+		<footer class="mt20 center">
+			<div class="mt20">Select Region</div>
+			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		</footer>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
@@ -90,7 +155,8 @@
 					islogin: sessionStorage.length > 0,
 					monney: 0,
 					ordernum: 0,
-					orders: []
+					orders: [],
+					address: ""
 				},
 				methods: {
 					logout: function() {
@@ -103,6 +169,7 @@
 							.then(function(res) {
 								console.info(res);
 								_this.orders = res.data.data.rows;
+								_this.address = _this.orders[0].province + _this.orders[0].city + _this.orders[0].region + _this.orders[0].address;
 								_this.ordernum = res.data.data.total;
 								for(var i = 0; i <= _this.orders.length; i++) {
 									_this.monney += _this.orders[i].payment;

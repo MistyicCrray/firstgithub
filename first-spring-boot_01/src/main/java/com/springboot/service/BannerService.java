@@ -63,8 +63,13 @@ public class BannerService {
 		return bannerMapper.findList(map);
 	}
 
-	public String update(Map<String, Object> map) {
+	public String update(Map<String, Object> map, MultipartFile image) {
 		map.put("updateDate", new Date());
+		if (image != null) {
+			map.put("image", (String) FileUtil.uploadImage(image).get("filePath"));
+		} else {
+			map.put("image", null);
+		}
 		int i = bannerMapper.update(map);
 		if (i > 0) {
 			return "修改成功";

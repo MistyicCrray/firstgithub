@@ -41,7 +41,7 @@ public class BannerDynaProvider {
 					SET("is_show=#{isShow}");
 				}
 				if (param.get("isTop") != null) {
-					SET("isTop=#{isTop}");
+					SET("is_top=#{isTop}");
 				}
 				if (param.get("image") != null) {
 					SET("image=#{image}");

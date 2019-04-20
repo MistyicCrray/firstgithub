@@ -70,10 +70,8 @@ public class BannerController {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
-		Banner banner = new Banner();
-		BeanUtils.populate(banner, map);
-		banner.setId(id);
-		return ResultGenerator.genSuccessResult(bannerService.update(banner, image));
+		map.put("id", id);
+		return ResultGenerator.genSuccessResult(bannerService.update(map, image));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

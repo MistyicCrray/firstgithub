@@ -139,7 +139,9 @@
 			<!-- start danpin -->
 			<div class="danpin center">
 				<!--新品-->
-				<div class="biaoti center">正在热拍<a href="liebiao.html?aution='拍卖'" style="float: right;color: #007AB6;">查看更多>></a></div>
+				<div class="biaoti center">正在热拍
+					<a href="liebiao.html?aution='拍卖'" style="float: right;color: #007AB6;">查看更多>></a>
+				</div>
 				<div class="main center">
 					<div class="mingxing fl" v-for="item in products">
 						<div class="sub_mingxing">
@@ -155,7 +157,11 @@
 				</div>
 			</div>
 		</div>
-
+		<footer class="mt20 center">
+			<div class="mt20">Select Region</div>
+			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		</footer>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
@@ -288,6 +294,9 @@
 							_this.news = response.data.data.rows;
 						})
 					},
+				},
+				filters: {
+
 				}
 			});
 		</script>

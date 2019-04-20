@@ -164,19 +164,19 @@
 								</div>
 							</div>
 						</div>
-						<nav aria-label="Page navigation">
+						<nav aria-label="Page navigation center" v-if="total!=0">
 							<ul class="pagination">
 								<li>
-									<a href="javascript:void(0) " aria-label="Previous " v-on:click="prePage">
-										<span aria-hidden="true ">&laquo;</span>
+									<a href="javascript:void(0)" aria-label="Previous" v-on:click="prePage">
+										<span aria-hidden="true">&laquo;</span>
 									</a>
 								</li>
-								<li v-for="page in pages" v-bind:class="{ 'active': pageNum==page} ">
+								<li v-for="page in pages" v-bind:class="{ 'active': pageNum == page}">
 									<a href="javascript:void(0)" v-on:click="pageClick(page)">{{page}}</a>
 								</li>
 								<li>
-									<a href="javascript:void(0) " aria-label="Next" v-on:click="nextPage">
-										<span aria-hidden="true ">&raquo;</span>
+									<a href="javascript:void(0)" aria-label="Next" v-on:click="nextPage">
+										<span aria-hidden="true">&raquo;</span>
 									</a>
 								</li>
 							</ul>
@@ -186,6 +186,11 @@
 				</div>
 			</div>
 		</div>
+		<footer class="mt20 center">
+			<div class="mt20">Select Region</div>
+			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		</footer>
 		<script type="text/javascript " src="resource/js/jquery.min.js "></script>
 		<script type="text/javascript " src="resource/js/vue-2.5.17.min.js "></script>
 		<script type="text/javascript " src="resource/js/axios-0.18.min.js "></script>
