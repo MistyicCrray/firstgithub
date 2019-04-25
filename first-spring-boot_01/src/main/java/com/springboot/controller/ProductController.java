@@ -75,6 +75,14 @@ public class ProductController {
 		return ResultGenerator.genSuccessResult(productService.add(product, file));
 	}
 
+	/**
+	 * 获取商品列表
+	 * @param pageNum
+	 * @param size
+	 * @param product
+	 * @param map
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result get(Integer pageNum, Integer size, Product product,
 			@RequestParam(required = false) Map<String, Object> map) {
@@ -84,19 +92,37 @@ public class ProductController {
 		return ResultGenerator.genSuccessResult(new TableData<Product>(page.getTotal(), list));
 	}
 
+	/**
+	 * 删除商品
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Result delete(@PathVariable(value = "id") String id) {
 		return ResultGenerator.genSuccessResult(productService.delete(id));
 	}
-
+	
+	/**
+	 * 获取商品详情
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		productService.getHits(id); // 增加浏览量
 		return ResultGenerator.genSuccessResult(productService.findById(id));
 	}
 
+	/**
+	 * 修改商品详情
+	 * @param map
+	 * @param user
+	 * @param id
+	 * @param file
+	 * @return
+	 */
 	@LoginRequired
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	public Result update(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User user,
 			@PathVariable String id, @RequestParam(required = false) MultipartFile file) {
 		map.put("updateby", user.getId());
@@ -154,7 +180,7 @@ public class ProductController {
 			}
 			map1.put("proid", productMap.get("proid"));
 			map1.put("quality", i);
-			if (productMap.get("isNotAuction").toString().equals("1")) {
+			if (productMap.get("isnotauction").toString().equals("1")) {
 				map1.put("auctionStatus", "2");
 			}
 			productService.update(map1, null); // 修改库存量
@@ -166,8 +192,8 @@ public class ProductController {
 				shoppingCartService.delete(id);
 			}
 			Product product = productService.findById((String) productMap.get("proid"));
-			// 购买时生成订单详情
-			orderItem.setOrderItemId(UUIDUtils.getOrderIdByTime()); // 订单详情号
+			// 购买时生成订单子项
+			orderItem.setOrderItemId(UUIDUtils.getOrderIdByTime()); // 订单子项号
 			orderItem.setOrderId(order.getOrderId()); // 对应订单号
 			orderItem.setSellid(product.getUserid()); // 卖家Id
 			orderItem.setUserid(user.getId()); // 买家Id
@@ -175,14 +201,14 @@ public class ProductController {
 			orderItem.setStatus("0"); // 未发货待付款状态
 			orderItem.setQuantity(quantity); // 数量
 			orderItem.setPayment(quantity * product.getPrice()); // 小计
-			orderItem.setProductid(product.getProid());
-			orderItem.setAddressId(addrid);
-			orderItemService.add(orderItem);
-			total += orderItem.getPayment();
+			orderItem.setProductid(product.getProid()); // 商品id
+			orderItem.setAddressId(addrid); // 地址id
+			orderItemService.add(orderItem); // 添加
+			total += orderItem.getPayment(); // 计算总价
 		}
-		// 添加至订单
+		// 同时生成订单
 		order.setAddrId(addrid);
-		order.setPayment(total);
+		order.setPayment(total); // 总价
 		order.setUserId(user.getId());
 		order.setStatus("0");
 		orderService.add(order);

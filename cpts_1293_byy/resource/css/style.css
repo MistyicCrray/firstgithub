@@ -135,7 +135,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 
 /*peijian*/
 .peijian{background: rgb(245,245,245);}
-.peijian .main{height:614px;}
+.peijian .main{height:300px;}
 .peijian .main .content{width: 1226px;height: 300px;}
 .peijian .main .content:nth-of-type(2){margin-top: 14px;}
 .peijian .main .content .remen{width:234px;height: 300px;margin-right: 14px;position:relative;background: #fff;}
@@ -192,7 +192,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .banner_x .dlzc ul li a:hover{color:#007ab6; }
 .xiantiao{width: 100%;height: 2px;background:#007ab6; }
 /*购物车详单*/
-.gwcxqbj{width: 100%;background: rgb(245,245,245);padding-bottom: 20px;}
+.gwcxqbj{width: 100%;padding-bottom: 20px;}
 .gwcxqbj .gwcxd{background: #fff;width: 1800px;height: auto;padding-top: 30px;}
 .gwcxqbj .gwcxd .top2{width: 100%;height: 70px;}
 .gwcxqbj .gwcxd .top2 .sub_top{width: 150px;height: 70px;line-height:36px;margin-right: 0px;margin-top:0px;margin-left: 30px;}
@@ -226,7 +226,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .jiesuandan .jiesuan .jsanniu .jsan:hover{background: #009ab6;}
 .btn{width: 200px;height: 50px;color:#fff;background:#007ab6; font-size: 20px;border:none;cursor:pointer;}
 /*个人中心*/
-.grzxbj{width: 100%;height:auto;background: rgb(245,245,245);padding-bottom: 20px;padding-top: 20px;}
+.grzxbj{width: 100%;height:auto;padding-bottom: 20px;padding-top: 20px;}
 .grzxbj .selfinfo{width: 1226px;}
 .grzxbj .selfinfo .lfnav{width: 234px;background: #fff;}
 .grzxbj .selfinfo .lfnav .ddzx{width: 234px;height: 40px;line-height: 40px;font-size: 19px; margin:30px 20px 10px 40px;color:rgb(51,51,51);}

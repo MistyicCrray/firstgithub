@@ -159,12 +159,13 @@
 						<div class="ddzxbt">交易订单</div>
 						<ul class="dd" v-for="item in orders">
 							<li><img :src="'/images/'+item.img"></li>
-							<li class="ddid">订单号：{{item.orderId}}</li>
+							<li class="ddid">订单号：{{item.orderItemId}}</li>
 							<li class="ddname" style="font-size: 12px;">{{item.name}}</li>
 							<li class="ddquantity ddname">×{{item.quantity}}&nbsp;&nbsp;&nbsp;￥{{item.payment}}</li>
 							<li class="ddcreate ddname">下单时间：{{item.create_time | dateFilter}}</li>
 							<li class="ddstatus ddname">{{item.status | optStatusFilter}}</li>
 							<li class="ddcaozuo ddname">
+								<button class="bott" v-on:click="detail(item.orderItemId)">查看详情</button>
 								<button class="bott" v-if="item.status==0" v-on:click="check(item.orderId)">确认付款</button>
 								<button class="bott" v-if="item.status==1&&item.sellid==user.userId" v-on:click="sendP(item.orderItemId)">点击发货</button>
 								<button class="bott" v-if="item.status==3" v-on:click="shouP(item.orderItemId)">确认收货</button>
@@ -194,11 +195,6 @@
 				</div>
 			</div>
 		</div>
-		<footer class="mt20 center">
-			<div class="mt20">Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>
 		<!-- self_info -->
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
@@ -289,6 +285,9 @@
 									_this.getOrders();
 								})
 						}
+					},
+					detail: function(id) {
+						location.href = "order_detail.html?id=" + id;
 					},
 				},
 				created: function() {

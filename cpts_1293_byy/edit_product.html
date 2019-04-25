@@ -24,13 +24,13 @@
 				<div class="ddzxbt">修改商品</div>
 				<div style="position: relative;" class="ml40 infor">
 					<div>
-						<form id="addProduct">
+						<form id="edit">
 							<div style="position: relative;" class="ml40 infor">
 								<div class="form-horizontal">
 									<div class="form-group">
 										<label for="postal" class="col-sm-2 control-label">是否拍卖:</label>
 										<div class="col-sm-6">
-											<select v-model="product.isnotauction" v-on:change="isNotAuction" class="form-control" name="isnotauction">
+											<select v-model="product.isnotauction" v-on:change="isnotau" class="form-control" name="isnotauction">
 												<option value="1">是</option>
 												<option value="0">否</option>
 											</select>
@@ -76,25 +76,22 @@
 											<input type="text" class="form-control" v-model="product.price" name="price">
 										</div>
 									</div>
-									<div class="form-group" id="outTimeDiv">
-										<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
-										<div class="col-sm-6">
-											<input type="text" class="form-control" v-model="product.outtime" name="outTime">
-										</div>
-									</div>
 									<div class="form-group">
 										<label for="consignee" class="col-sm-2 control-label">数量:</label>
 										<div class="col-sm-6">
-											<input type="text" class="form-control" id="outTime" v-model="product.quality" name="quality">
+											<input type="text" class="form-control" v-model="product.quality" name="quality">
 										</div>
 									</div>
-									<div class="form-group" v-if="product.img==''||product.img==null">
-										<label for="consignee" class="col-sm-2 control-label">图片:</label>
-										<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" v-on:change="uploadImg" name="file" class="input_opt" id="file"></p>
+									<div class="form-group" id="outTimeDiv">
+										<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" autocomplete="off" id="outTime" v-model="product.outTime" name="outTime">
+										</div>
 									</div>
-									<div class="form-group" v-if="product.img!=''"><label for="consignee" class="col-sm-2 control-label">图片:</label>
-										<div class="busin_img">
-											<a><img v-bind:src="'/images/'+product.img"><em></em></a><button class="bott" type="button" v-on:click="delImg()">删除</button>
+									<div class="form-group">
+										<label for="consignee" class="col-sm-2 control-label">图片:</label>
+										<div class="col-sm-6">
+											<p class="img_thumb"><b></b><em class="input_fieldBtn">上传图片</em><input type="file" name="file" class="input_opt" id="file"></p>
 										</div>
 									</div>
 									<div class="form-group">
@@ -103,9 +100,14 @@
 											<textarea class="form-control" id="content" name="detail"></textarea>
 										</div>
 									</div>
+									<div class="form-group center">
+										<label for="inputEmail3" class="col-sm-2 control-label"></label>
+										<div class="col-sm-5">
+											<input type="button" v-on:click="submit" class="form-control btn-default" value="修改">
+										</div>
+									</div>
 								</div>
 							</div>
-							<div class="mt10 item"><button type="button" v-on:click="submit" class="bott">上架</button></div>
 						</form>
 					</div>
 				</div>
@@ -141,10 +143,11 @@
 				data: {
 					product: {},
 					categories: "",
-					detail: ''
+					detail: '',
+					filed: ""
 				},
 				methods: {
-					isNotAuction: function() {
+					isnotau: function() {
 						var _this = this;
 						if(_this.product.isnotauction == "1") {
 							$("#outTimeDiv").show();
@@ -171,24 +174,52 @@
 					},
 					submit: function() {
 						var _this = this;
-						axios.put('/product/' + id, $("#addProduct").serialize())
-							.then(function(res) {
-								alert("修改成功");
-								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-								parent.layer.close(index); // 关闭layer
-							})
-					},
-					uploadImg: function() {
-						var _this = this;
 						var formData = new FormData();
-						formData.append("file", $("#file")[0].files[0]);
-						axios.put('/product/' + id, formData)
+						formData.append("detail", editor.html());
+						formData.append("name", _this.product.name);
+						formData.append("category", _this.product.category);
+						if(_this.product.isnotauction == 1) {
+							formData.append("quality", 1);
+							// 当前定价
+							formData.append("price", _this.product.minPrice);
+							// 设定为最小定价
+							formData.append("minPrice", _this.product.minPrice);
+							// 设定每次最小叫价
+							formData.append("increments", _this.product.increments);
+							// 设定是否时拍卖
+							formData.append("isnotauction", _this.product.isnotauction);
+							formData.append("maxPrice", _this.product.maxPrice);
+							formData.append("outTime", $("#outTime").val());
+						} else {
+							if(_this.product.quality == null || _this.product.quality == "") {
+								alert("请输入数量");
+								return;
+							}
+							formData.append("quality", _this.product.quality);
+							formData.append("price", _this.product.price);
+							formData.append("isnotauction", _this.product.isnotauction);
+						}
+						if(document.getElementById("file").value != "") {
+							formData.append("file", $("#file")[0].files[0]);
+						}
+						axios.post('/product/' + id, formData)
 							.then(function(res) {
 								alert("修改成功");
 								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
 								parent.layer.close(index); // 关闭layer
 							})
 					},
+					//					uploadImg: function() {
+					//						var _this = this;
+					//						var formData = new FormData();
+					//						formData.append("file", $("#file")[0].files[0]);
+					//						axios.post('/product/' + id, formData)
+					//							.then(function(res) {
+					//								alert("修改成功");
+					//								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+					//								parent.layer.close(index); // 关闭layer
+					//							})
+					//					},
 					delImg: function() {
 						if(confirm("是否删除该图片？")) {
 							axios.put('/product/delImag/' + id)
@@ -207,11 +238,7 @@
 							_this.product = res.data.data;
 							_this.detail = _this.product.detail;
 							editor.html(_this.detail);
-							if(_this.product.isnotauction == "1") {
-								$("#outTimeDiv").show();
-							} else {
-								$("#outTimeDiv").hide();
-							}
+							//							_this.isNotAuction();
 						})
 					this.getCategory();
 

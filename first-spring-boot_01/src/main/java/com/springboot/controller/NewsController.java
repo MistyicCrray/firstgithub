@@ -41,7 +41,7 @@ public class NewsController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Result getAll(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map) {
-		Page<News> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
+		Page<News> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,"istop");
 		List<News> list = newsService.findList(map);
 		return ResultGenerator.genSuccessResult(new TableData<News>(page.getTotal(), list));
 	}
@@ -62,6 +62,7 @@ public class NewsController {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
+		news.setCreateby(currentUser.getUsername());
 		return ResultGenerator.genSuccessResult(newsService.add(news));
 	}
 
@@ -92,13 +93,13 @@ public class NewsController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public Result update(@RequestParam(required = false) Map<String, Object> map, @PathVariable String id,
+	public Result update(@RequestBody News news, @PathVariable String id,
 			@CurrentUser User currentUser) {
 		if (!currentUser.getUsertype().equals("1")) {
 			return ResultGenerator.genFailResult("您无权访问");
 		}
-		map.put("id", id);
-		return ResultGenerator.genSuccessResult(newsService.update(map));
+		news.setUpdateby(currentUser.getUsername());
+		return ResultGenerator.genSuccessResult(newsService.update(news));
 	}
 
 	/**

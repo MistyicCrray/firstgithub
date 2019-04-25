@@ -1,5 +1,6 @@
 package com.springboot.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +90,8 @@ public class OrderItemController {
 	 */
 	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map, @CurrentUser User user) {
+	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User user) {
 		map.put("orderItemId", id);
 		return ResultGenerator.genSuccessResult(orderItemService.update(map));
 	}
@@ -139,11 +141,14 @@ public class OrderItemController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {
-		OrderItem orderitem = orderItemService.findById(id);
-		Product product = productService.findById(orderitem.getProductid());
+		OrderItem orderitem = orderItemService.findById(id);// 商品详情
+		if(orderitem==null) {
+			return ResultGenerator.genFailResult("暂无此订单");
+		}
+		Product product = productService.findById(orderitem.getProductid());// 商品
 		User sell = userService.findById(orderitem.getSellid()); // 卖家
 		User buy = userService.findById(orderitem.getUserid()); // 买家
-		Address address = addressService.findById(orderitem.getAddressId());
+		Address address = addressService.findById(orderitem.getAddressId());// 地址
 		Map<String, Object> orderMap = new HashMap<String, Object>();
 		orderMap.put("product", product);
 		orderMap.put("seller", sell);
@@ -152,18 +157,40 @@ public class OrderItemController {
 		orderMap.put("order", orderitem);
 		return ResultGenerator.genSuccessResult(orderMap);
 	}
-	
+
 	/**
 	 * 订单号查询订单详情列表
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/order/{id}", method = RequestMethod.GET)
-	public  Result findByOrderId(@PathVariable String id) {
+	public Result findByOrderId(@PathVariable String id) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("orderId", id);
 		List<Map<String, Object>> orderItems = orderItemService.findListBy(map);
 		return ResultGenerator.genSuccessResult(orderItems);
+	}
+	/**
+	 * 
+	 * @param currentUser
+	 * @param selectYear
+	 * @return
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/getMonthOrder", method = RequestMethod.GET)
+	public Result getMonthOrder(@CurrentUser User currentUser, @RequestParam(required = false) String selectYear) {
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 1; i < 13; i++) {
+			String s_i = String.valueOf(i);
+			if (i < 10) {
+				s_i = "0" + s_i;
+			}
+			String date = selectYear + "-" + s_i;// 拼接成为完整年月 如:2018-08
+			Integer count = orderItemService.getMonth(date);// 按月份查询订单数
+			list.add(count);
+		}
+		return ResultGenerator.genSuccessResult(list);
 	}
 
 }

@@ -103,15 +103,13 @@
 					</ul>
 				</div>
 				<div class="search fr">
-					<form>
-						<div class="text fl">
-							<input type="text" class="shuru" placeholder="" v-model="search">
-						</div>
-						<div class="submit fl">
-							<input type="button" v-on:click="searchForm" class="sousuo" value="搜索" />
-						</div>
-						<div class="clear"></div>
-					</form>
+					<div class="text fl">
+						<input type="text" class="shuru" placeholder="" v-model="search">
+					</div>
+					<div class="submit fl">
+						<input type="button" v-on:click="searchForm" class="sousuo" value="搜索" />
+					</div>
+					<div class="clear"></div>
 					<div class="clear"></div>
 				</div>
 			</div>
@@ -180,14 +178,9 @@
 								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
 							<div class="miaoshu">
-								<a :href="['xiangqing.html?id=' + item.proid]">{{item.name}}</a>
+								<a :href="['xiangqing.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
 							</div>
 							<div class="jiage">{{item.price}}元</div>
-							<div class="piao">
-								<a :href="['xiangqing.html?id=' + item.proid]">
-									<span class="pinpai" v-bind:id="item.proid"></span>
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -205,24 +198,14 @@
 								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
 							<div class="miaoshu">
-								<a :href="['xiangqing.html?id=' + item.proid]"></a>
+								<a :href="['xiangqing.html?id=' + item.proid]" v-bind:title="item.name">{{item.name}}</a>
 							</div>
 							<div class="jiage">{{item.price}}元</div>
-							<div class="piao">
-								<a :href="['xiangqing.html?id=' + item.proid]">
-									<span></span>
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<footer class="mt20 center">
-			<div class="mt20">Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
@@ -254,6 +237,7 @@
 					this.getProduct();
 					this.getCategory();
 					this.getComputer();
+					this.getFurniture();
 					this.$nextTick(function() {
 						swiper = new Swiper('.swiper-container', {
 							autoplay: {
@@ -346,7 +330,7 @@
 								pageNum: 1,
 								size: 4,
 								isNotAuction: 0,
-								cateid: 4
+								cateid: 1004
 							}
 						}).then(function(response) {
 							_this.furniture = response.data.data.rows;

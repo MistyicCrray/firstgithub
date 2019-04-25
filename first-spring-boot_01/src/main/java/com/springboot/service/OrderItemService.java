@@ -62,4 +62,11 @@ public class OrderItemService {
 	public List<Map<String, Object>> findListBy(Map<String, Object> map) {
 		return orderItemMapper.findListBy(map);
 	}
+	
+	public int getMonth(String year) {
+		if(orderItemMapper.getMonth(year)==null) {
+			return 0;
+		}
+		return orderItemMapper.getMonth(year);
+	}
 }

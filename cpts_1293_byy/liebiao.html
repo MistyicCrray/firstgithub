@@ -46,6 +46,11 @@
 			white-space: nowrap;
 			overflow: hidden;
 		}
+		
+		.center {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
 	</style>
 
 	<body>
@@ -109,6 +114,32 @@
 				<a href="">
 					<div class="ad_top fl"></div>
 				</a>
+				<div class="nav fl">
+					<ul>
+						<li class="active">
+							<a href="index.html">主页</a>
+						</li>
+						<li>
+							<a href="liebiao.html?search=手机">手机二手</a>
+						</li>
+						<li>
+							<a href="saleroom.html">拍卖场</a>
+						</li>
+						<li>
+							<a href="my_release_product.html">我的发布</a>
+						</li>
+					</ul>
+				</div>
+				<div class="search fr">
+					<div class="text fl">
+						<input type="text" class="shuru" placeholder="" v-model="search">
+					</div>
+					<div class="submit fl">
+						<input type="button" v-on:click="searchForm" class="sousuo" value="搜索" />
+					</div>
+					<div class="clear"></div>
+					<div class="clear"></div>
+				</div>
 			</div>
 			<div class="banner_x center">
 				<ul class="cate">
@@ -131,7 +162,8 @@
 									<a v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction=='0'" style="text-align: left;text-align: center;">{{item.name}}</a>
 									<a v-bind:title="item.name" v-bind:href="'auction.html?id='+item.proid" v-if="item.isnotauction=='1'" style="text-align: left;text-align: center;">{{item.name}}</a>
 									<p v-for="opt in users" v-if="opt.id==item.userid"><i class="fa fa-user"></i>{{opt.username}}</p>
-									<span v-if="item.isnotauction==1">该商品是拍卖商品</span><p style="color: red;text-align: center;">￥{{item.price}}</p>
+									<span v-if="item.isnotauction==1">该商品是拍卖商品</span>
+									<p style="color: red;text-align: center;">￥{{item.price}}</p>
 								</div>
 							</div>
 						</div>
@@ -156,11 +188,6 @@
 				</div>
 			</div>
 		</div>
-		<!--<footer class="mt20 center">
-			<div class="mt20">Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>-->
 		<!-- end danpin -->
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
@@ -183,7 +210,8 @@
 					user: sessionStorage,
 					islogin: sessionStorage.length > 0,
 					category: [],
-					users: []
+					users: [],
+					search: ""
 				},
 				methods: {
 					getUsers: function() {
@@ -280,6 +308,9 @@
 					logout: function() {
 						logout();
 						location.href = "login.html";
+					},
+					searchForm: function() {
+						location.href = "liebiao.html?search=" + this.search;
 					},
 				},
 				created: function() {

@@ -31,18 +31,19 @@
 								<option value="0">待付款</option>
 								<option value="1">未发货</option>
 								<option value="2">已发货</option>
-								<option value="3">未签收</option>
+								<!--<option value="3">未签收</option>-->
 								<option value="4">已签收</option>
 							</select>
 						</div>
 						<input type="text" v-model="inputtext.orderId" placeholder="请输入订单号" autocomplete="off" class="layui-input">
 						<button class="layui-btn" v-on:click="getOrders()"><i class="layui-icon">&#xe615;</i></button>
+						<span class="x-right" style="line-height:40px" v-on:click="onexport()"><a href="javascript:void(0)"><i style="font-size: 20px;" class="icon iconfont">&#xe73f;导出</i></a></span>
 					</div>
 				</div>
 				<xblock>
 					<span class="x-right" style="line-height:40px">共有数据：{{total}} 条,共有：{{pages}}页,当前第{{pageNum}}页</span>
 				</xblock>
-				<table class="layui-table">
+				<table class="layui-table" id="table">
 					<thead>
 						<tr>
 							<!--<th>
@@ -80,7 +81,7 @@
 								<!--<a title="查看" onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
 									<i class="layui-icon">&#xe63c;</i>
 								</a>-->
-								<a title="删除" v-on:click="del(item.order_id)" href="javascript:;">
+								<a title="删除" v-on:click="del(item.orderItemId)" href="javascript:;">
 									<i class="layui-icon">&#xe640;</i>
 								</a>
 							</td>
@@ -117,6 +118,8 @@
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script type="text/javascript" src="js/FileSaver-1.3.3.min.js"></script>
+		<script type="text/javascript" src="js/xlsx.full.min.js"></script>
 		<script>
 			var optionsOrderType = [{
 					text: '待付款',
@@ -158,7 +161,7 @@
 								params: {
 									pageNum: pageIndex,
 									size: _this.pageSize,
-									orderId: _this.inputtext.orderId == "" ? null : _this.inputtext.orderId,
+									orderItemId: _this.inputtext.orderId == "" ? null : _this.inputtext.orderId,
 									status: $("#status").val() == "" ? null : $("#status").val()
 								}
 							})
@@ -194,7 +197,7 @@
 						layer.confirm("是否删除该订单？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.delete('/order/' + id)
+							axios.delete('/orderItem/' + id)
 								.then(function(res) {
 									layer.msg('删除成功', {
 										icon: 1
@@ -202,7 +205,33 @@
 									_this.getOrders(_this.pageNum);
 								});
 						})
-					}
+					},
+					onexport: function(evt) {
+						var wb = XLSX.utils.table_to_book(document.getElementById('table'));
+						var wbout = XLSX.write(wb, {
+							bookType: 'xlsx',
+							type: 'binary'
+						});
+						saveAs(new Blob([this.s2ab(wbout)], {
+							type: 'application/octet-stream'
+						}), "订单列表.xlsx");
+					},
+					s2ab: function(s) {
+						if(typeof ArrayBuffer !== "undefined") {
+							var buf = new ArrayBuffer(s.length);
+							var view = new Uint8Array(buf);
+							for(var i = 0; i != s.length; ++i) {
+								view[i] = s.charCodeAt(i) & 0xFF;
+							}
+							return buf;
+						} else {
+							var buf = new ArrayBuffer(s.length);
+							for(var i = 0; i != s.length; ++i) {
+								view[i] = s.charCodeAt(i) & 0xFF;
+							}
+							return buf;
+						}
+					},
 				},
 				created: function() {
 					this.getOrders();

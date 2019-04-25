@@ -9,9 +9,11 @@ public class ProductDynaProvider {
 		return new SQL() {
 			{
 				UPDATE("t_product");
-
 				if (param.get("name") != null) {
 					SET("name=#{name}");
+				}
+				if (param.get("detail") != null) {
+					SET("detail=#{detail}");
 				}
 				if (param.get("img") != null) {
 					SET("img=#{img}");
@@ -46,8 +48,8 @@ public class ProductDynaProvider {
 				if (param.get("status") != null) {
 					SET("status=#{status}");
 				}
-				if (param.get("isNotAuction") != null) {
-					SET("isNotAuction=#{isNotAuction}");
+				if (param.get("isnotauction") != null) {
+					SET("isNotAuction=#{isnotauction}");
 				}
 				if (param.get("increments") != null) {
 					SET("increments=#{increments}");
@@ -137,7 +139,7 @@ public class ProductDynaProvider {
 				SELECT("*");
 				FROM("t_product");
 				WHERE("proid LIKE '%" + key + "%' OR" + " name LIKE '%" + key
-						+ "%' OR category=(SELECT ID FROM T_CATEGORY WHERE name LIKE '%" + key + "%') OR detail LIKE '%"
+						+ "%' OR category=ANY(SELECT ID FROM T_CATEGORY WHERE name LIKE '%" + key + "%') OR detail LIKE '%"
 						+ key + "%'");
 			}
 		}.toString();

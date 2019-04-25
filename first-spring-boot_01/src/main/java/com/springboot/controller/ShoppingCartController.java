@@ -114,8 +114,6 @@ public class ShoppingCartController {
 	 * 
 	 * @Title: find
 	 * @Description: TODO
-	 * @param pageNum
-	 * @param size
 	 * @param map
 	 * @return Result
 	 * @author hlx

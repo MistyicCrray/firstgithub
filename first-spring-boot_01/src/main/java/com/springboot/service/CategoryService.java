@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.StringUtil;
 import com.springboot.entity.Category;
+import com.springboot.entity.Product;
 import com.springboot.mapper.CategoryMapper;
+import com.springboot.mapper.ProductMapper;
 import com.springboot.tools.ServiceException;
 
 @Service
@@ -17,6 +19,8 @@ public class CategoryService {
 
 	@Autowired
 	private CategoryMapper categoryMapper;
+	@Autowired
+	private ProductMapper productMapper;
 
 	public int add(Category category) {
 		int id = 1001;
@@ -45,7 +49,7 @@ public class CategoryService {
 			}
 		}
 		for (Category cate : list) {
-			if (category.getName().equals(cate.getName())) {
+			if (category.getParentid().equals(cate.getParentid()) && category.getName().equals(cate.getName())) {
 				throw new ServiceException("该类型已存在");
 			}
 		}
@@ -53,6 +57,15 @@ public class CategoryService {
 	}
 
 	public int delete(String id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("cateid", id);
+		List<Product> proList = productMapper.findList(map);
+		if (proList.size() > 0) {
+			for (Product product : proList) {
+				if(product.getCategory().equals(id));
+				throw new ServiceException("该类型已存在使用商品，暂不可删除");
+			}
+		}
 		return categoryMapper.deleteByPrimaryKey(id);
 	}
 

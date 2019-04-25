@@ -10,7 +10,46 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" href="./css/font.css">
 		<link rel="stylesheet" href="./css/xadmin.css">
+		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
 	</head>
+	<style type="text/css">
+		/*重置样式开始*/
+		
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		/*重置样式结束*/
+		
+		.sta_top {
+			position: relative;
+			overflow: hidden;
+			border-bottom: 1px solid #EBEDF2;
+			-webkit-box-shadow: 0 0 4px 2px #EBEDF2;
+			box-shadow: 0 0 4px 2px #EBEDF2;
+		}
+		
+		.sta_top_li {
+			padding: 15px;
+			float: left;
+			width: 25%;
+			height: 80px;
+			text-align: center;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			border-left: 1px solid #EBEDF2;
+		}
+		
+		.sta_con {
+			margin: 20px 15px;
+			padding: 15px;
+			border: 1px solid #EBEDF2;
+			-webkit-box-shadow: 0 0 4px 2px #EBEDF2;
+			box-shadow: 0 0 4px 2px #EBEDF2;
+			height: 400px;
+		}
+	</style>
 
 	<body>
 		<div class="x-body layui-anim layui-anim-up" id="app">
@@ -46,13 +85,25 @@
 														<cite>{{orderQuantity}}</cite></p>
 												</a>
 											</li>
+											<li class="layui-col-xs2">
+												<a href="javascript:;" class="x-admin-backlog-body">
+													<h3>总交易额</h3>
+													<p>
+														<cite>{{payment}}</cite></p>
+												</a>
+											</li>
 										</ul>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div class="layui-form x-so">
+						<input autocomplete="off" class="layui-input" placeholder="请选择年份" id="year" />
+						<button class="layui-btn" v-on:click="query"><i class="layui-icon">&#xe615;</i></button>
+					</div>
 				</div>
+				<div id="order" style="width: 1000px;height:300px;"></div>
 			</fieldset>
 		</div>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
@@ -60,7 +111,16 @@
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script type="text/javascript" src="js/echarts.js"></script>
 		<script type="text/javascript">
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#year' //指定元素
+					,type: 'year'
+				});
+			});
 			var app = new Vue({
 				el: '#app',
 				data: {
@@ -70,8 +130,14 @@
 					userQuantity: 0,
 					productQuantity: 0,
 					orderQuantity: 0,
+					data: "",
+					payment: 0
 				},
 				methods: {
+					query: function() {
+						var years = $("#year").val();
+						this.getEc(years);
+					},
 					getUserQuantity: function() {
 						var _this = this;
 						axios.get('/user_statistics').then(function(res) {
@@ -89,7 +155,64 @@
 						axios.get('/product_statistics').then(function(res) {
 							_this.productQuantity = res.data.data;
 						})
-					}
+					},
+					getOrderPayment: function() {
+						var _this = this;
+						axios.get('/order_payment').then(function(res) {
+							_this.payment = res.data.data;
+						})
+					},
+					getEc: function() {
+						var $this = this;
+						axios.get('/orderItem/getMonthOrder', {
+							params: {
+								selectYear: $("#year").val()
+							}
+						}).then(function(response) {
+							console.info(response);
+							$this.data = response.data.data;
+							// 基于准备好的dom，初始化echarts实例
+							var myChart = echarts.init(document.getElementById('order'));
+							// 指定图表的配置项和数据
+							myChart.setOption({
+								title: {
+									text: $("#year").val() + '年每月订单数',
+								},
+								tooltip: {
+									trigger: 'axis'
+								},
+								grid: {
+									left: '3%',
+									right: '4%',
+									bottom: '3%',
+									containLabel: true
+								},
+								toolbox: {
+									feature: {
+										saveAsImage: {}
+									}
+								},
+								xAxis: {
+									type: 'category',
+									boundaryGap: false,
+									data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+								},
+								yAxis: {
+									type: 'value',
+									minInterval: 1,
+									axisLabel: {
+										formatter: '{value} 单'
+									}
+								},
+								series: [{
+									name: '订单数',
+									type: 'line',
+									stack: '总量',
+									data: $this.data
+								}]
+							});
+						})
+					},
 				},
 				mounted: function() {
 					let _this = this; // 声明一个变量指向Vue实例this，保证作用域一致
@@ -108,6 +231,8 @@
 					this.getUserQuantity();
 					this.getProductQuantity();
 					this.getOrderQuantity();
+					this.getEc();
+					this.getOrderPayment();
 				}
 			})
 		</script>

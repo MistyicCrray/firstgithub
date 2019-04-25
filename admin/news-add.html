@@ -43,7 +43,7 @@
                   <span class="x-red">*</span>内容
               </label>
 				<div class="layui-input-inline">
-					<textarea id="content" v-model="inputtext.content" class="layui-input"></textarea>
+					<textarea id="content" name="content" v-model="inputtext.content" class="layui-input"></textarea>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -56,7 +56,16 @@
 		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
+		<script type="text/javascript" src="kindeditor/kindeditor-all-min.js"></script>
+		<script type="text/javascript" src="kindeditor/lang/zh-CN.js"></script>
 		<script>
+			var editor = null;
+			KindEditor.ready(function(K) {　　　　　　　　
+				editor = K.create('textarea[name="content"]', {
+					width: '700px',
+					height: '200px'
+				});
+			});
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -65,6 +74,7 @@
 				methods: {
 					addUser: function() {
 						var _this = this;
+						_this.inputtext.content = editor.html();
 						if(_this.inputtext.title == "" || _this.inputtext.title == null) {
 							layer.alert("请输入标题");
 							return;
@@ -74,14 +84,12 @@
 							return;
 						}
 						if(_this.inputtext.content == "" || _this.inputtext.content == null) {
-							layer.alert("请选择是否置顶");
+							layer.alert("请输入内容");
 							return;
 						}
 						axios.post("/news", _this.inputtext)
 							.then(function(res) {
 								layer.alert("添加成功");
-								var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-								parent.layer.close(index); // 关闭layer
 							});
 					}
 				},

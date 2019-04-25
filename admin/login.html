@@ -11,6 +11,7 @@
 
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="css/layer.css">
 		<link rel="stylesheet" href="./css/xadmin.css">
 		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 		<script src="./lib/layui/layui.js" charset="utf-8"></script>
@@ -23,13 +24,13 @@
 			<div class="message">去哪儿买后台-管理登录</div>
 			<div id="darkbannerwrap"></div>
 
-			<form class="layui-form" @submit.prevent="submit">
+			<form class="layui-form">
 				<input name="username" placeholder="用户名" type="text" lay-verify="required" class="layui-input" v-model="inputtext.loginname">
 				<hr class="hr15">
 				<input name="password" lay-verify="required" placeholder="密码" type="password" class="layui-input" v-model="inputtext.password">
 				<hr class="hr15">
-				<input name="password" type="checkbox" id="remenber" class="layui-input" v-model="inputtext.remenber">记住密码
-				<input name="password" type="checkbox" id="autoLogin" class="layui-input" v-model="inputtext.autoLogin">自动登录
+				<input name="functional" type="checkbox" id="remenber" class="layui-input" v-model="inputtext.remenber">记住密码
+				<input name="functional" type="checkbox" id="autoLogin" class="layui-input" v-model="inputtext.autoLogin">自动登录
 				<hr class="hr15">
 				<input value="登录" style="width:100%;" type="button" v-on:click="submit">
 				<hr class="hr20">
@@ -53,7 +54,16 @@
 					}
 				},
 				// 在 `methods` 对象中定义方法
-				methods: { // 获取类别信息
+				methods: {
+					delCookie: function(name) {
+						var exp = new Date();
+						exp.setTime(exp.getTime() - 1);
+						//获取cookie是否存在
+						var value = getCookie(name);
+						if(value != null) {
+							document.cookie = name + "=" + value + ";expires=" + exp.toUTCString();
+						}
+					},
 					setCookie: function(cname, cvalue, exdays) {
 						var d = new Date();
 						var b = new Base64();
@@ -77,11 +87,12 @@
 					},
 					autoLogin: function() {
 						var _this = this;
+						var groupCheckbox = $("input[name='functional']");
 						_this.inputtext.password = _this.getCookie("password");
 						_this.inputtext.loginname = _this.getCookie("loginname");
 						_this.inputtext.remenber = _this.getCookie("remenber");
 						_this.inputtext.autoLogin = _this.getCookie("autoLogin");
-						if(document.getElementById("autoLogin").checked) {
+						if(groupCheckbox[1].checked) {
 							layer.msg('自动登陆中...', {
 								time: 2000, //2s后自动关闭
 								btn: ['取消'],
@@ -92,9 +103,9 @@
 								}
 							});
 						}
-						if(document.getElementById("autoLogin").checked) {
+						if(groupCheckbox[1].checked) {
 							setTimeout(function() {
-								if(document.getElementById("autoLogin").checked) {
+								if(groupCheckbox[1].checked) {
 									_this.submit();
 								}      
 							}, 2000)
@@ -110,29 +121,38 @@
 							alert("请输入密码");
 							return;
 						}
+						var groupCheckbox = $("input[name='functional']");
+						console.info(groupCheckbox);
+						console.info(groupCheckbox[0].checked);
+						console.info(groupCheckbox[1].checked);
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
-								console.info(response.data.code);
 								if(response.data.code == 200) {
 									console.info(response);
 									sessionStorage.setItem("userId", response.data.data.userInfo.id);
 									sessionStorage.setItem("username", response.data.data.userInfo.username);
 									sessionStorage.setItem("accessToken", response.data.data.accessToken);
-									if(_this.inputtext.remenber) {
-										_this.setCookie("loginName", _this.inputtext.loginname, 7);
+									if(groupCheckbox[0].checked) {
+										_this.setCookie("loginname", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "", 7);
 									} else {
-										document.cookie = "";
+										_this.delCookie("loginname");
+										_this.delCookie("password");
+										_this.delCookie("remenber");
+										_this.delCookie("autoLogin");
 									}
-									if(_this.inputtext.autologin) {
-										_this.setCookie("loginName", _this.inputtext.loginname, 7);
+									if(groupCheckbox[1].checked) {
+										_this.setCookie("loginname", _this.inputtext.loginname, 7);
 										_this.setCookie("password", _this.inputtext.password, 7);
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "true", 7);
 									} else {
-										document.cookie = "";
+										_this.delCookie("loginname");
+										_this.delCookie("password");
+										_this.delCookie("remenber");
+										_this.delCookie("autoLogin");
 									}
 									alert("登录成功");
 									if(response.data.data.userInfo.usertype == 1) {

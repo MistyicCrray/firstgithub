@@ -15,7 +15,7 @@ public class UserDynaProvider {
 						WHERE("id=#{id}");
 					}
 					if (map.get("username") != null) {
-						WHERE("username=#{username}");
+						WHERE("username like '%" + map.get("username") + "%'");
 					}
 					if (map.get("password") != null) {
 						WHERE("password=#{password}");

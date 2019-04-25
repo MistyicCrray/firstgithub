@@ -42,6 +42,16 @@ public class ProductService {
 	}
 
 	public Integer update(Map<String, Object> map, MultipartFile file) {
+		// 如果当前商品为非拍卖则修改竞拍结束时间
+//		if(map.get("isNotAuction").toString().equals("0")) {
+//			map.put("outTime", "");
+//			map.put("auctionStatus", "");
+//			map.put("bidderId", "");
+//			map.put("currentBidder", "");
+//			map.put("increments", 0);
+//			map.put("maxPrice", 0);
+//			map.put("minPrice", 0);
+//		}
 		if (file != null) {
 			map.put("img", (String) FileUtil.uploadImage(file).get("filePath"));
 		} else {
@@ -61,7 +71,7 @@ public class ProductService {
 	}
 
 	/**
-	 * 浏览量
+	 * 增加浏览量
 	 */
 	public Integer getHits(String id) {
 		Product product = productMapper.selectByPrimaryKey(id);

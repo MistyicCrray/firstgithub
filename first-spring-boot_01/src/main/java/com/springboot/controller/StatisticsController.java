@@ -33,4 +33,10 @@ public class StatisticsController {
 	public Result getOrderQuantity() {
 		return ResultGenerator.genSuccessResult(statisticsService.orderQuantity());
 	}
+	
+
+	@RequestMapping(value = "/order_payment", method = RequestMethod.GET)
+	public Result getOrderPayment() {
+		return ResultGenerator.genSuccessResult(statisticsService.orderPayMent());
+	}
 }

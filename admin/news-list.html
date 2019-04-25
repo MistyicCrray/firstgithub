@@ -23,7 +23,7 @@
 					<i class="layui-icon" style="line-height:30px">ဂ</i></a>
 			</div>
 			<xblock>
-				<button class="layui-btn" onclick="x_admin_show('添加公告','./news-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+				<button class="layui-btn" v-on:click="add"><i class="layui-icon"></i>添加</button>
 				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条,共有：{{pages}}页,当前第{{pageNum}}页</span>
 			</xblock>
 			<div class="x-body">
@@ -44,6 +44,9 @@
 							<td v-if="item.istop==0">置顶</td>
 							<td v-if="item.istop==1">非置顶</td>
 							<td class="td-manage">
+								<a title="详情" v-on:click="detail(item.id)" href="javascript:;">
+									<i class="icon iconfont">&#xe6a2;</i>
+								</a>
 								<a title="置顶" v-on:click="setup(item.id)" href="javascript:;" v-if="item.istop==1">
 									<i class="layui-icon">↑</i>
 								</a>
@@ -173,8 +176,23 @@
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
-							area: ['600px', '600px'],
+							area: ['877px', '600px'],
 							content: ['news-edit.html?id=' + id],
+							end: function() {
+								_this.getNews();
+							}
+						})
+					},
+					add: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改公告信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['877px', '600px'],
+							content: ['news-add.html?id=' + id],
 							end: function() {
 								_this.getNews();
 							}
@@ -194,6 +212,9 @@
 								});
 						})
 					},
+					detail:function(id){
+						window.location.href = "http://localhost/cpts_1293_byy/news_detail.html?id=" + id;
+					}
 				},
 				created: function() {
 					this.getNews();

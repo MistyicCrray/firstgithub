@@ -22,4 +22,8 @@ public class StatisticsService {
 	public int orderQuantity() {
 		return staticsticsMapper.getOrder();
 	}
+	
+	public double orderPayMent() {
+		return staticsticsMapper.getCountPayMent();
+	}
 }

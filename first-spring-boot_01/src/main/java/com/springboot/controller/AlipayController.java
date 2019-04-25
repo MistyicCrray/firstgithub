@@ -34,33 +34,43 @@ public class AlipayController {
 	// 用户APPid
 	@Value("${alipay.appId}")
 	String app_id;
+
 	// 私钥
 	@Value("${alipay.merchantPrivateKey}")
 	String private_key;
-	//　同步返回地址
+
+	// 同步返回地址
 	@Value("${alipay.notifyUrl}")
 	String notify_url;
+
 	// 异步返回地址
 	@Value("${alipay.returnUrl}")
 	String return_url;
+
 	// 支付网端
 	@Value("${alipay.gatewayUrl}")
 	String url;
+
 	// 编码格式
 	@Value("${alipay.charset}")
 	String charset;
+
 	// 传输格式
 	@Value("${alipay.format}")
 	String format;
+
 	// 公钥
 	@Value("${alipay.alipayPublicKey}")
 	String public_key;
+
 	// 签名方式
 	@Value("${alipay.signType}")
 	String signtype;
+
 	// 支付成功地址
 	@Value("${pay_s_url}")
 	String pay_success;
+
 	// 支付失败地址
 	@Value("${pay_f_url}")
 	String pay_failure;
@@ -135,10 +145,10 @@ public class AlipayController {
 		if (signVerified) {
 			// 商户订单号
 			String out_trade_no = new String(request.getParameter("out_trade_no"));
-			
+
 			map.put("status", "1"); // 未发货状态
 			orderService.update(map);
-			
+
 			Map<String, Object> orderMap = new HashMap<>();
 			orderMap.put("orderId", out_trade_no);
 			List<OrderItem> orderItemList = orderItemService.findList(orderMap);
@@ -150,8 +160,9 @@ public class AlipayController {
 			}
 			response.sendRedirect(pay_success + "?orderId=" + out_trade_no);
 		} else {
-			// 支付失败失败
-			map.put("status", "0"); // 待付款状态
+			// 支付失败
+			// 待付款状态
+			map.put("status", "0");
 			orderService.update(map);
 			response.sendRedirect(pay_failure);
 		}
@@ -164,10 +175,11 @@ public class AlipayController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/notifyUrl")
-	public void notifyUrl(HttpServletRequest request) throws Exception {
+	public void notifyUrl(HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// 获取支付宝GET过来反馈信息
 		Map<String, String> params = new HashMap<String, String>();
 		Map<String, String[]> requestParams = request.getParameterMap();
+		Map<String, Object> map = new HashMap<>();
 		for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();
 			String[] values = (String[]) requestParams.get(name);
@@ -188,8 +200,23 @@ public class AlipayController {
 			// 交易状态
 			String trade_status = request.getParameter("trade_status");
 			// 修改数据库
+			
+			map.put("status", "1"); // 未发货状态
+			orderService.update(map);
+
+			Map<String, Object> orderMap = new HashMap<>();
+			orderMap.put("orderId", out_trade_no);
+			List<OrderItem> orderItemList = orderItemService.findList(orderMap);
+			// 支付成功时修改订单状态
+			for (OrderItem orderItem : orderItemList) {
+				orderItem.setStatus("1");
+				// 更新订单详情状态
+				orderItemService.update(orderItem);
+			}
+			response.sendRedirect(pay_success + "?orderId=" + out_trade_no);
 		} else {
 			System.out.println("异步通知失败");
+			response.sendRedirect(pay_failure);
 		}
 	}
 

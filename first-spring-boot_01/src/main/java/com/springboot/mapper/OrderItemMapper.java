@@ -167,7 +167,8 @@ public interface OrderItemMapper {
 		@Result(column = "username", property = "username", jdbcType = JdbcType.VARCHAR),
 		@Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
 		@Result(column = "price", property = "price", jdbcType = JdbcType.DOUBLE),
-		@Result(column = "isNotAuction", property = "isNotAuction", jdbcType = JdbcType.VARCHAR),
+		@Result(column = "isNotAuction", property = "isnotauction", jdbcType = JdbcType.VARCHAR),
+		@Result(column = "proid", property = "proid", jdbcType = JdbcType.VARCHAR),
 		@Result(column = "img", property = "img", jdbcType = JdbcType.VARCHAR),
 		@Result(column = "addrid", property = "addrid", jdbcType = JdbcType.VARCHAR, id = true),
 		@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
@@ -180,4 +181,15 @@ public interface OrderItemMapper {
 		@Result(column = "consignee", property = "consignee", jdbcType = JdbcType.VARCHAR)
 	})
 	List<Map<String, Object>> findListBy(Map<String, Object> map);
+	
+  	@Select({
+        "select count(1) count from T_ORDER_ITEM o",
+        "where date_format(o.CREATE_TIME,'%Y-%m')=#{date}",
+        "group by date_format(o.CREATE_TIME,'%Y-%m')",
+        "order by date_format(o.CREATE_TIME,'%Y-%m')"
+    })
+  	@Results({
+        @Result(column="count", property="count", jdbcType=JdbcType.BIGINT)
+    })
+	Integer getMonth(String date);
 }

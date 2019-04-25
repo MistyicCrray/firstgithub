@@ -154,8 +154,8 @@
 						<div class="ddxq" v-for="item in products" style="margin-bottom: 30px;">
 							<div class="ddspt fl"><img :src="'/images/'+item.img" height="100px" alt=""></div>
 							<div class="ddbh fl pinpai" style="line-height: 100px;font-size: 16px; width: 180px;">
-								<a v-bind:title="item.name" :href="'xiangqing.html?id='+item.proid" v-if="item.isNotAuction==0">{{item.name}}</a>
-								<a v-bind:title="item.name" :href="'auction.html?id='+item.proid" v-if="item.isNotAuction==1">{{item.name}}</a>
+								<a v-bind:title="item.name" :href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction==0">{{item.name}}</a>
+								<a v-bind:title="item.name" :href="'auction.html?id='+item.proid" v-if="item.isnotauction==1">{{item.name}}</a>
 							</div>
 							<div class="ztxx fr">
 								<ul>
@@ -181,11 +181,6 @@
 				</div>
 			</div>
 		</div>
-		<footer class="mt20 center">
-			<div class="mt20">Select Region</div>
-			<div>©mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-		</footer>
 		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
@@ -266,6 +261,12 @@
 								.then(function(res) {
 									console.info(res);
 									_this.products = res.data.data;
+									if(_this.products[0].isnotauction==undefined){
+											_this.products[0].isnotauction = _this.products[0].isNotAuction;
+										}
+//									if(_this.products.isNotAuction!=){
+//										_this.products.isnotauction = _this.products.isNotAuction;
+//									}
 									_this.total = 0;
 									for(var i = 0; i < res.data.data.length; i++) {
 										_this.total += res.data.data[i].payment;
@@ -279,6 +280,7 @@
 									.then(function(res) {
 										console.info(res);
 										_this.products = res.data.data;
+										console.info(_this.products.isNotAuction);
 										_this.total = 0;
 										for(var i = 0; i < res.data.data.length; i++) {
 											if(res.data.data[i].ischeck == '0') {
@@ -291,6 +293,9 @@
 									.then(function(res) {
 										console.info(res);
 										_this.products = res.data.data.rows;
+										if(_this.products[0].isnotauction==undefined){
+											_this.products[0].isnotauction = _this.products[0].isNotAuction;
+										}
 										_this.products[0].quantity = quantity;
 										_this.products[0].total = _this.products[0].quantity * _this.products[0].price;
 										_this.total = _this.products[0].quantity * _this.products[0].price;

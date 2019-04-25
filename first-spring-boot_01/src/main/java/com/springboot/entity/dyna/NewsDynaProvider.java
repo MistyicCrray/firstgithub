@@ -54,6 +54,9 @@ public class NewsDynaProvider {
 				if (map.get("createdate") != null) {
 					SET("createdate=#{createdate}");
 				}
+				if (map.get("updatedate") != null) {
+					SET("updatedate=#{updatedate}");
+				}
 				WHERE("id=#{id}");
 			}
 		}.toString();

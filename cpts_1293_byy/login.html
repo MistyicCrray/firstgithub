@@ -87,6 +87,15 @@
 				},
 				// 在 `methods` 对象中定义方法
 				methods: {
+					delCookie: function(name) {
+						var exp = new Date();
+						exp.setTime(exp.getTime() - 1);
+						//获取cookie是否存在
+						var value = getCookie(name);
+						if(value != null) {
+							document.cookie = name + "=" + value + ";expires=" + exp.toUTCString();
+						}
+					},
 					setCookie: function(cname, cvalue, exdays) {
 						var d = new Date();
 						var b = new Base64();
@@ -119,8 +128,8 @@
 						_this.remenber = _this.getCookie("remenber");
 						_this.autoLogin = _this.getCookie("autoLogin");
 						if(_this.autoLogin) {
-							console.info("自動登陸")
-							layer.msg('自动登陆中...', {
+							console.info("自动登录")
+							layer.msg('自动登录中...', {
 								time: 2000, //2s后自动关闭
 								btn: ['取消'],
 								shade: 0.5,
@@ -154,7 +163,10 @@
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "", 7);
 									} else {
-										document.cookie = "";
+										_this.delCookie("loginname");
+										_this.delCookie("password");
+										_this.delCookie("remenber");
+										_this.delCookie("autoLogin");
 									}
 									if(_this.autoLogin) {
 										_this.setCookie("loginname", _this.inputtext.loginname, 7);
@@ -162,10 +174,17 @@
 										_this.setCookie("remenber", "true", 7);
 										_this.setCookie("autoLogin", "true", 7);
 									} else {
-										document.cookie = "";
+										_this.delCookie("loginname");
+										_this.delCookie("password");
+										_this.delCookie("remenber");
+										_this.delCookie("autoLogin");
 									}
 									alert("登录成功");
-									window.location.href = '/cpts_1293_byy/index.html'; // 跳转
+									if(response.data.data.userInfo.usertype == 1) {
+										window.location.href = '/admin/index.html';
+									} else {
+										window.location.href = '/cpts_1293_byy/index.html';
+									}
 								} else {
 									console.info(response.data.code);
 									alert(response.data.message);
