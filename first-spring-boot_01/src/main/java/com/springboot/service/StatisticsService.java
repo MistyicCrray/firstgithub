@@ -26,4 +26,8 @@ public class StatisticsService {
 	public double orderPayMent() {
 		return staticsticsMapper.getCountPayMent();
 	}
+	
+	public int getCollection(String productid) {
+		return staticsticsMapper.getCollection(productid);
+	}
 }

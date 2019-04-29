@@ -32,6 +32,9 @@
 					<li class="layui-nav-item">
 						<a href="javascript:;">{{user.username}}</a>
 					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;" v-on:click="logout">退出登录</a>
+					</li>
 				</ul>
 
 			</div>
@@ -189,7 +192,6 @@
 		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
-		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script type="text/javascript">
 			var app = new Vue({
 				el: '#main',
@@ -198,7 +200,10 @@
 					islogin: sessionStorage.length > 0,
 				},
 				methods: {
-
+					logout:function(){
+						logout();
+						location.href = "login.html";
+					}
 				}
 			})
 		</script>

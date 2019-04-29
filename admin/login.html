@@ -29,8 +29,7 @@
 				<hr class="hr15">
 				<input name="password" lay-verify="required" placeholder="密码" type="password" class="layui-input" v-model="inputtext.password">
 				<hr class="hr15">
-				<input name="functional" type="checkbox" id="remenber" class="layui-input" v-model="inputtext.remenber">记住密码
-				<input name="functional" type="checkbox" id="autoLogin" class="layui-input" v-model="inputtext.autoLogin">自动登录
+				<!--<input name="functional" type="checkbox" id="remenber" class="layui-input" v-model="inputtext.remenber">记住密码-->
 				<hr class="hr15">
 				<input value="登录" style="width:100%;" type="button" v-on:click="submit">
 				<hr class="hr20">
@@ -85,32 +84,32 @@
 						}
 						return "";
 					},
-					autoLogin: function() {
-						var _this = this;
-						var groupCheckbox = $("input[name='functional']");
-						_this.inputtext.password = _this.getCookie("password");
-						_this.inputtext.loginname = _this.getCookie("loginname");
-						_this.inputtext.remenber = _this.getCookie("remenber");
-						_this.inputtext.autoLogin = _this.getCookie("autoLogin");
-						if(groupCheckbox[1].checked) {
-							layer.msg('自动登陆中...', {
-								time: 2000, //2s后自动关闭
-								btn: ['取消'],
-								shade: 0.5,
-								yes: function(index) {
-									layer.close(index);
-									_this.inputtext.autoLogin = false;
-								}
-							});
-						}
-						if(groupCheckbox[1].checked) {
-							setTimeout(function() {
-								if(groupCheckbox[1].checked) {
-									_this.submit();
-								}      
-							}, 2000)
-						}
-					},
+//					autoLogin: function() {
+//						var _this = this;
+//						var groupCheckbox = $("input[name='functional']");
+//						_this.inputtext.password = _this.getCookie("password");
+//						_this.inputtext.loginname = _this.getCookie("loginname");
+//						_this.inputtext.remenber = _this.getCookie("remenber");
+//						_this.inputtext.autoLogin = _this.getCookie("autoLogin");
+//						if(groupCheckbox[1].checked) {
+//							layer.msg('自动登陆中...', {
+//								time: 2000, //2s后自动关闭
+//								btn: ['取消'],
+//								shade: 0.5,
+//								yes: function(index) {
+//									layer.close(index);
+//									_this.inputtext.autoLogin = false;
+//								}
+//							});
+//						}
+//						if(groupCheckbox[1].checked) {
+//							setTimeout(function() {
+//								if(groupCheckbox[1].checked) {
+//									_this.submit();
+//								}      
+//							}, 2000)
+//						}
+//					},
 					submit: function() {
 						var _this = this;
 						if(_this.inputtext.loginname == "" || _this.inputtext.loginname == null) {
@@ -122,9 +121,6 @@
 							return;
 						}
 						var groupCheckbox = $("input[name='functional']");
-						console.info(groupCheckbox);
-						console.info(groupCheckbox[0].checked);
-						console.info(groupCheckbox[1].checked);
 						axios.post('/user/Login', _this.inputtext)
 							.then(function(response) {
 								if(response.data.code == 200) {
@@ -132,28 +128,28 @@
 									sessionStorage.setItem("userId", response.data.data.userInfo.id);
 									sessionStorage.setItem("username", response.data.data.userInfo.username);
 									sessionStorage.setItem("accessToken", response.data.data.accessToken);
-									if(groupCheckbox[0].checked) {
-										_this.setCookie("loginname", _this.inputtext.loginname, 7);
-										_this.setCookie("password", _this.inputtext.password, 7);
-										_this.setCookie("remenber", "true", 7);
-										_this.setCookie("autoLogin", "", 7);
-									} else {
-										_this.delCookie("loginname");
-										_this.delCookie("password");
-										_this.delCookie("remenber");
-										_this.delCookie("autoLogin");
-									}
-									if(groupCheckbox[1].checked) {
-										_this.setCookie("loginname", _this.inputtext.loginname, 7);
-										_this.setCookie("password", _this.inputtext.password, 7);
-										_this.setCookie("remenber", "true", 7);
-										_this.setCookie("autoLogin", "true", 7);
-									} else {
-										_this.delCookie("loginname");
-										_this.delCookie("password");
-										_this.delCookie("remenber");
-										_this.delCookie("autoLogin");
-									}
+//									if(groupCheckbox[0].checked) {
+//										_this.setCookie("loginname", _this.inputtext.loginname, 7);
+//										_this.setCookie("password", _this.inputtext.password, 7);
+//										_this.setCookie("remenber", "true", 7);
+//										_this.setCookie("autoLogin", "", 7);
+//									} else {
+//										_this.delCookie("loginname");
+//										_this.delCookie("password");
+//										_this.delCookie("remenber");
+//										_this.delCookie("autoLogin");
+//									}
+									//									if(groupCheckbox[1].checked) {
+									//										_this.setCookie("loginname", _this.inputtext.loginname, 7);
+									//										_this.setCookie("password", _this.inputtext.password, 7);
+									//										_this.setCookie("remenber", "true", 7);
+									//										_this.setCookie("autoLogin", "true", 7);
+									//									} else {
+									//										_this.delCookie("loginname");
+									//										_this.delCookie("password");
+									//										_this.delCookie("remenber");
+									//										_this.delCookie("autoLogin");
+									//									}
 									alert("登录成功");
 									if(response.data.data.userInfo.usertype == 1) {
 										window.location.href = '/admin/index.html';
@@ -161,15 +157,13 @@
 										window.location.href = '/cpts_1293_byy/index.html';
 									}
 								} else {
-									console.info(response.data.code);
 									alert(response.data.message);
 								}
 
 							})
-							.catch(function(err) {});
 					}
 				},
-				mounted: function() {
+				created: function() {
 					this.autoLogin();
 				}
 			})

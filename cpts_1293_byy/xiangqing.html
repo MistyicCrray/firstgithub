@@ -98,7 +98,7 @@
 					<div class="left fl">
 						<ul>
 							<li class="drodown-show">
-								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
 							</li>
 							<li class="drodown-show">
 								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
@@ -117,7 +117,7 @@
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
-									<a href="#">
+									<a href="javascript:void(0)">
 										</i>退出登录</a>
 								</li>
 								<li>
@@ -192,6 +192,7 @@
 					<div class="xiadan ml20 mt20">
 						<input class="jrgwc" type="button" name="jrgwc" v-on:click="account" value="立即选购" />
 						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addCart" value="加入购物车" />
+						<input class="jrgwc" type="button" name="jrgwc" v-on:click="addCollection" value="添加收藏夹" />（已有{{collections}}人收藏）
 					</div>
 				</div>
 				<div class="clear"></div>
@@ -204,6 +205,7 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script>
 			var id = GetQueryString("id");
 			var vue = new Vue({
@@ -213,7 +215,9 @@
 					cart: {},
 					islogin: sessionStorage.length > 0,
 					user: sessionStorage,
-					quantity: 0
+					quantity: 0,
+					collection: {},
+					collections: 0
 				},
 				created: function() {
 					var _this = this;
@@ -223,6 +227,7 @@
 						document.getElementById("detail").innerHTML = res.data.data.detail;
 
 					})
+					_this.getCollection();
 				},
 				methods: {
 					addCart: function() {
@@ -269,7 +274,23 @@
 							_this.quantity = 0;
 						}
 					},
-
+					addCollection: function() {
+						var _this = this;
+						_this.collection.productid = id;
+						axios.post('/collection', _this.collection).then(function(res) {
+							console.info(res);
+							alert("添加成功");
+							_this.getCollection();
+						})
+					},
+					getCollection: function() {
+						var _this = this;
+						axios.get("/collection_statistics?productid=" + id)
+							.then(function(res) {
+								console.info(res);
+								_this.collections = res.data.data;
+							})
+					},
 				},
 				filters: {
 					numFilter: function(value) { // 截取当前数据到小数点后两位

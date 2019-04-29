@@ -102,7 +102,7 @@ public class CategoryController {
 	}
 
 	/**
-	 * 根据id查询
+	 * 删除
 	 * 
 	 * @Title: selectById
 	 * @Description: TODO

@@ -114,9 +114,9 @@ public class OrderItemController {
 	public Result find(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,
 			@CurrentUser User user) {
 		if (user.getUsertype().equals("0")) {
-			map.put("userid", user.getId());
-			// 管理员
-		} else if (user.getUsertype().equals("1")) {
+			
+		}
+		else if (user.getUsertype().equals("1")) {
 			map.remove("userid");
 		} else {
 			return ResultGenerator.genFailResult("您无权访问");
@@ -124,6 +124,31 @@ public class OrderItemController {
 		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
 				"create_time DESC");
 		List<Map<String, Object>> list = orderItemService.findListBy(map);
+
+		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
+	}
+	
+	
+	/**
+	 * 列表
+	 * 
+	 * @Title: find
+	 * @Description: TODO
+	 * @param pageNum
+	 * @param size
+	 * @param map
+	 * @param user
+	 * @return Result
+	 * @author hlx
+	 * @date 2018年11月19日下午3:36:22
+	 */
+	@LoginRequired
+	@RequestMapping(value = "/orderList", method = RequestMethod.GET)
+	public Result findList(Integer pageNum, Integer size, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User user) {
+		Page<Map<String, Object>> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size,
+				"create_time DESC");
+		List<Map<String, Object>> list = orderItemService.findListByOrderAndU(map);
 
 		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), list));
 	}

@@ -198,7 +198,8 @@
 				filters: {
 					date_format: function(value) {
 						if(!value) return '';
-						return moment(value).format('YYYY-MM-DD');
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
 					},
 					statusFilt: function(value) {
 						if(!value) return '';

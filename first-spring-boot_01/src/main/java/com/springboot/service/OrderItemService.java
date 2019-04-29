@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboot.entity.OrderItem;
+import com.springboot.entity.Product;
 import com.springboot.mapper.OrderItemMapper;
 import com.springboot.mapper.OrderMapper;
+import com.springboot.mapper.ProductMapper;
 
 @Service
 public class OrderItemService {
@@ -19,6 +21,9 @@ public class OrderItemService {
 
 	@Autowired
 	private OrderMapper orderMapper;
+
+	@Autowired
+	private ProductMapper productMapper;
 
 	// 添加
 	public Integer add(OrderItem orderItem) {
@@ -41,6 +46,14 @@ public class OrderItemService {
 
 	// 修改
 	public Integer update(Map<String, Object> map) {
+		OrderItem oldOrderItem = orderItemMapper.selectByPrimaryKey(map.get("orderItemId").toString());
+		Product product = productMapper.selectByPrimaryKey(oldOrderItem.getProductid());
+		// 如果订单取消则库存返回
+		if (map.get("status").toString().equals("4")) {
+			product.setQuality(oldOrderItem.getQuantity() + product.getQuality());
+			// 修改
+			productMapper.updateByPrimaryKey(product);
+		}
 		return orderItemMapper.update(map);
 	}
 
@@ -63,8 +76,12 @@ public class OrderItemService {
 		return orderItemMapper.findListBy(map);
 	}
 	
+	public List<Map<String, Object>> findListByOrderAndU(Map<String, Object> map) {
+		return orderItemMapper.findListByOrderAndU(map);
+	}
+
 	public int getMonth(String year) {
-		if(orderItemMapper.getMonth(year)==null) {
+		if (orderItemMapper.getMonth(year) == null) {
 			return 0;
 		}
 		return orderItemMapper.getMonth(year);

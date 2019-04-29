@@ -20,9 +20,13 @@ public interface StatisticsMapper {
 	@Select({ "select COUNT(*) as num from `t_product`" })
 	@Results({ @Result(column = "num", property = "num", jdbcType = JdbcType.INTEGER) })
 	int getProduct();
-	
+
 	@Select({ "SELECT sum(payment) as payment FROM t_order_item;" })
 	@Results({ @Result(column = "payment", property = "payment", jdbcType = JdbcType.DOUBLE) })
 	int getCountPayMent();
-	
+
+	@Select({ "SELECT count(*) as num from t_collection where productId=#{productid};" })
+	@Results({ @Result(column = "num", property = "num", jdbcType = JdbcType.INTEGER) })
+	int getCollection(String productid);
+
 }

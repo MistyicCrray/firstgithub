@@ -71,7 +71,7 @@
 					<div class="left fl">
 						<ul>
 							<li class="drodown-show">
-								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
 							</li>
 							<li class="drodown-show">
 								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
@@ -90,7 +90,7 @@
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
-									<a href="#">
+									<a href="javascript:void(0)">
 										</i>退出登录</a>
 								</li>
 								<li>
@@ -386,7 +386,8 @@
 				filters: {
 					dateFilter: function(value) {
 						if(!value) return '';
-						return moment(value).format('YYYY-MM-DD');
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
 					},
 					optionStatusFilter: function(value) {
 						if(!value) return '';

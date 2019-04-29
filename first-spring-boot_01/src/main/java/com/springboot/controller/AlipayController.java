@@ -145,7 +145,6 @@ public class AlipayController {
 		if (signVerified) {
 			// 商户订单号
 			String out_trade_no = new String(request.getParameter("out_trade_no"));
-
 			map.put("status", "1"); // 未发货状态
 			orderService.update(map);
 
@@ -197,8 +196,6 @@ public class AlipayController {
 			System.out.println("异步通知成功");
 			// 商户订单号
 			String out_trade_no = request.getParameter("out_trade_no");
-			// 交易状态
-			String trade_status = request.getParameter("trade_status");
 			// 修改数据库
 			
 			map.put("status", "1"); // 未发货状态

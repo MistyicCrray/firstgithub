@@ -1,15 +1,19 @@
 package com.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.service.StatisticsService;
 import com.springboot.tools.Result;
 import com.springboot.tools.ResultGenerator;
+
 /**
  * 统计
+ * 
  * @author Administrator
  *
  */
@@ -33,10 +37,14 @@ public class StatisticsController {
 	public Result getOrderQuantity() {
 		return ResultGenerator.genSuccessResult(statisticsService.orderQuantity());
 	}
-	
 
 	@RequestMapping(value = "/order_payment", method = RequestMethod.GET)
 	public Result getOrderPayment() {
 		return ResultGenerator.genSuccessResult(statisticsService.orderPayMent());
+	}
+
+	@RequestMapping(value = "/collection_statistics", method = RequestMethod.GET)
+	public Result getCollectionStatistics(@RequestParam String productid) {
+		return ResultGenerator.genSuccessResult(statisticsService.getCollection(productid));
 	}
 }

@@ -50,7 +50,7 @@
 					<div class="left fl">
 						<ul>
 							<li class="drodown-show">
-								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
 							</li>
 							<li class="drodown-show">
 								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
@@ -69,7 +69,7 @@
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
-									<a href="#">
+									<a href="javascript:void(0)">
 										</i>退出登录</a>
 								</li>
 								<li>
@@ -158,18 +158,21 @@
 					<div class="rtcont fr">
 						<div class="ddzxbt">交易订单</div>
 						<ul class="dd" v-for="item in orders">
-							<li><img :src="'/images/'+item.img"></li>
+							<li><a v-bind:href="'xiangqing.html?id=' + item.proid" v-if="item.isnotauction==0"><img :src="'/images/'+item.img"></a></li>
+							<li><a v-bind:href="'auction.html?id=' + item.proid" v-if="item.isnotauction==1"><img :src="'/images/'+item.img"></a></li>
 							<li class="ddid">订单号：{{item.orderItemId}}</li>
 							<li class="ddname" style="font-size: 12px;">{{item.name}}</li>
 							<li class="ddquantity ddname">×{{item.quantity}}&nbsp;&nbsp;&nbsp;￥{{item.payment}}</li>
 							<li class="ddcreate ddname">下单时间：{{item.create_time | dateFilter}}</li>
 							<li class="ddstatus ddname">{{item.status | optStatusFilter}}</li>
+							<li class="ddstatus ddname" v-if="item.sellid==user.userId">该订单为买家订单</li>
 							<li class="ddcaozuo ddname">
 								<button class="bott" v-on:click="detail(item.orderItemId)">查看详情</button>
-								<button class="bott" v-if="item.status==0" v-on:click="check(item.orderId)">确认付款</button>
+								<button class="bott" v-if="item.status==0&&item.userid==user.userId" v-on:click="check(item.orderId)">确认付款</button>
+								<button class="bott" v-if="item.status==0&&item.userid==user.userId" v-on:click="cancel(item.orderItemId)">取消订单</button>
 								<button class="bott" v-if="item.status==1&&item.sellid==user.userId" v-on:click="sendP(item.orderItemId)">点击发货</button>
-								<button class="bott" v-if="item.status==3" v-on:click="shouP(item.orderItemId)">确认收货</button>
-								<button class="bott" v-if="item.status==4" v-on:click="del(item.orderItemId)">删除订单</button>
+								<button class="bott" v-if="item.status==2&&item.userid==user.userId" v-on:click="shouP(item.orderItemId)">确认收货</button>
+								<button class="bott" v-if="item.status==3&&item.userid==user.userId" v-on:click="del(item.orderItemId)">删除订单</button>
 							</li>
 						</ul>
 						<nav aria-label="Page navigation center" v-if="total!=0">
@@ -202,7 +205,7 @@
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
 		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript">
-			var optStatus = ['待付款', '未发货(卖家尚未发货，请等待卖家发货)', '已发货(等待签收)', '未签收', '已签收'];
+			var optStatus = ['待付款', '未发货(卖家尚未发货，请等待卖家发货)', '已发货(等待签收)', '已签收', '已取消'];
 			var vue = new Vue({
 				el: "#main",
 				data: {
@@ -219,10 +222,12 @@
 					getOrders: function(pageIndex) {
 						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
 						var _this = this;
-						axios.get("/orderItem", {
+						axios.get("/orderItem/orderList", {
 							params: {
 								pageNum: pageIndex,
-								size: _this.pageSize
+								size: _this.pageSize,
+								userid: sessionStorage.getItem("userId"),
+								sellid: sessionStorage.getItem("userId")
 							}
 						}).then(function(res) {
 							console.info(res);
@@ -279,15 +284,29 @@
 					shouP: function(id) {
 						var _this = this;
 						if(confirm("是否确认收货？")) {
-							axios.put("/orderItem/" + id + "?status=4")
+							axios.put("/orderItem/" + id + "?status=3")
 								.then(function(res) {
 									alert("收货成功");
 									_this.getOrders();
 								})
 						}
 					},
+					cancel: function(id) {
+						var _this = this;
+						if(confirm("是否取消该订单？")) {
+							axios.put("/orderItem/" + id + "?status=4")
+								.then(function(res) {
+									alert("订单取消成功");
+									_this.getOrders();
+								})
+						}
+					},
 					detail: function(id) {
 						location.href = "order_detail.html?id=" + id;
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
 					},
 				},
 				created: function() {
@@ -296,7 +315,8 @@
 				filters: {
 					dateFilter: function(value) {
 						if(!value) return '';
-						return moment(value).format('YYYY-MM-DD hh:mm:ss');
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
 					},
 					optStatusFilter: function(value) {
 						return optStatus[value];

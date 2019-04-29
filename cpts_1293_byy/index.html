@@ -36,7 +36,7 @@
 					<div class="left fl">
 						<ul>
 							<li class="drodown-show">
-								<a href="#"><i class="fa fa-star"></i>我的收藏</a>
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
 							</li>
 							<li class="drodown-show">
 								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
@@ -55,7 +55,7 @@
 								</li>
 								<li>|</li>
 								<li v-on:click="logout">
-									<a href="#">
+									<a href="javascript:void(0)">
 										</i>退出登录</a>
 								</li>
 								<li>
@@ -173,7 +173,6 @@
 							<img width="234px" height="300px" src="resource/image/peijian1.jpg">
 						</div>
 						<div class="remen fl" v-for="item in computer">
-							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
 								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
@@ -193,7 +192,6 @@
 							<img width="234px" height="300px" src="resource/image/jiadian.jpg">
 						</div>
 						<div class="remen fl" v-for="item in furniture">
-							<div class="xinpin"><span style="background:red">火爆</span></div>
 							<div class="tu">
 								<a :href="['xiangqing.html?id=' + item.proid]"><img width="150px" height="150px" :src="'/images/'+item.img"></a>
 							</div>
@@ -210,7 +208,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/slide.js"></script>
 		<script type="text/javascript" src="resource/js/swiper.min.js"></script>
 		<script type="text/javascript">

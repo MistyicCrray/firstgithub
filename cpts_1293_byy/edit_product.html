@@ -85,7 +85,7 @@
 									<div class="form-group" id="outTimeDiv">
 										<label for="consignee" class="col-sm-2 control-label">竞拍结束时间:</label>
 										<div class="col-sm-6">
-											<input type="text" class="form-control" autocomplete="off" id="outTime" v-model="product.outTime" name="outTime">
+											<input type="text" class="form-control" autocomplete="off" id="outTime" v-model="product.outtime" name="outTime">
 										</div>
 									</div>
 									<div class="form-group">
@@ -119,7 +119,6 @@
 		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="resource/js/vue-main.js"></script>
-		<script type="text/javascript" src="resource/js/moment.min.js"></script>
 		<script type="text/javascript" src="resource/js/layer.js"></script>
 		<script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
 		<script src="resource/js/bootstrap-datetimepicker.js"></script>
@@ -232,6 +231,7 @@
 				},
 				created: function() {
 					var _this = this;
+					_this.isnotau();
 					axios.get('/product/' + id)
 						.then(function(res) {
 							console.info(res);
@@ -240,7 +240,7 @@
 							editor.html(_this.detail);
 							//							_this.isNotAuction();
 						})
-					this.getCategory();
+					_this.getCategory();
 
 				}
 			})

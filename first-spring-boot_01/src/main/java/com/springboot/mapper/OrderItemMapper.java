@@ -192,4 +192,32 @@ public interface OrderItemMapper {
         @Result(column="count", property="count", jdbcType=JdbcType.BIGINT)
     })
 	Integer getMonth(String date);
+  	
+  	
+ // 连表查询
+ 	@SelectProvider(type = com.springboot.entity.dyna.OrderItemDynaProvider.class, method = "select")
+ 	@Results({ 
+ 		@Result(column = "order_id", property = "orderId", jdbcType = JdbcType.VARCHAR, id = true),
+ 		 @Result(column="order_item_id", property="orderItemId", jdbcType=JdbcType.VARCHAR, id=true),
+ 		@Result(column = "create_time", property = "create_time", jdbcType = JdbcType.TIMESTAMP),
+ 		@Result(column = "quantity", property = "quantity", jdbcType = JdbcType.INTEGER),
+ 		@Result(column = "payment", property = "payment", jdbcType = JdbcType.DOUBLE),
+ 		@Result(column = "status", property = "status", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "username", property = "username", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "price", property = "price", jdbcType = JdbcType.DOUBLE),
+ 		@Result(column = "isNotAuction", property = "isnotauction", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "proid", property = "proid", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "img", property = "img", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "addrid", property = "addrid", jdbcType = JdbcType.VARCHAR, id = true),
+ 		@Result(column = "userid", property = "userid", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "sellid", property = "sellid", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "province", property = "province", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "city", property = "city", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "region", property = "region", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "address", property = "address", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "postal", property = "postal", jdbcType = JdbcType.VARCHAR),
+ 		@Result(column = "consignee", property = "consignee", jdbcType = JdbcType.VARCHAR)
+ 	})
+ 	List<Map<String, Object>> findListByOrderAndU(Map<String, Object> map);
 }

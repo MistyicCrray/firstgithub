@@ -145,6 +145,7 @@ public class UserController {
 	 * @param id
 	 * @return Result
 	 */
+	@LoginRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public Result getById(@PathVariable String id) {
 		User user = userService.findById(id);

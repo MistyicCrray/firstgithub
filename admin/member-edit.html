@@ -46,7 +46,7 @@
                   手机号
               </label>
 					<div class="layui-input-inline">
-						<input type="text" v-model="user.tel" lay-verify="nikename" autocomplete="off" class="layui-input">
+						<input type="text" v-model="user.phone" lay-verify="nikename" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -62,7 +62,6 @@
 		<script type="text/javascript" src="js/vue-2.5.17.min.js"></script>
 		<script type="text/javascript" src="js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="js/vue-main.js"></script>
-		<script type="text/javascript" src="js/moment.min.js"></script>
 		<script>
 			var id = GetQueryString('id');
 			var vue = new Vue({
