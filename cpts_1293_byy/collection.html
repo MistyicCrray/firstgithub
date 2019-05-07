@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="order by dede58.com" />
+		<title>去哪儿买二手商城-收藏夹</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+	</head>
+	<style type="text/css">
+		.cate li {
+			float: left;
+			margin-left: 100px;
+		}
+		
+		.pinpai {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+		
+		.item {
+			height: 400px;
+			width: 300px;
+			float: left;
+			margin-left: 60px;
+			border: #E6E6FA 1px solid;
+			margin-top: 50px;
+		}
+		
+		.item:hover {
+			border: #007ab6 1px solid;
+		}
+		
+		.minni {
+			padding: 10px 10px 10px 10px;
+		}
+		
+		.cate li {
+			width: 100px;
+			height: 40px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+		
+		.center {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+	</style>
+
+	<body>
+		<!-- start header -->
+		<div id="main">
+			<header>
+				<div class="top center">
+					<div class="left fl">
+						<ul>
+							<li class="drodown-show">
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
+							</li>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
+							</li>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<div class="right fr">
+						<div class="gouwuche fr">
+							<a href="gouwuche.html">购物车</a>
+						</div>
+						<div class="fr">
+							<ul v-if="islogin">
+								<li>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
+								</li>
+								<li>|</li>
+								<li v-on:click="logout">
+									<a href="javascript:void(0)">
+										</i>退出登录</a>
+								</li>
+								<li>
+									<a href="">消息通知</a>
+								</li>
+							</ul>
+							<ul v-else>
+								<li>
+									<a href="login.html" target="_blank">登录</a>
+								</li>
+								<li>|</li>
+								<li>
+									<a href="register.html" target="_blank">注册</a>
+								</li>
+								<li>|</li>
+							</ul>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</header>
+			<!--end header -->
+			<!-- start banner_x -->
+			<div class="banner_x center">
+				<a href="./index.html" target="_blank">
+					<div class="logo fl"></div>
+				</a>
+				<a href="">
+					<div class="ad_top fl"></div>
+				</a>
+				<div class="nav fl">
+					<ul>
+						<li class="active">
+							<a href="index.html">主页</a>
+						</li>
+						<li>
+							<a href="liebiao.html?search=手机">手机二手</a>
+						</li>
+						<li>
+							<a href="saleroom.html">拍卖场</a>
+						</li>
+						<li>
+							<a href="my_release_product.html">我的发布</a>
+						</li>
+					</ul>
+				</div>
+				<div class="search fr">
+					<div class="clear"></div>
+				</div>
+			</div>
+			<!-- end banner_x -->
+			<!-- self_info -->
+			<div class="danpin center">
+				<div class="main center">
+					<div class="row">
+						<div class="col-md-1" v-for=""></div>
+					</div>
+					<div class="row">
+						<div class="item" v-for="item in collections">
+							<div class="minni">
+								<a v-bind:href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction=='0'"><img style="margin-left: 40px;" height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
+								<a v-bind:href="'auction.html?id='+item.proid" v-if="item.isnotauction=='1'"><img style="margin-left: 40px;" height="300px" width="200px" v-bind:src="'/images/' + item.img" alt=""></a>
+								<div class="caption pinpai" style="font-size: 13px;">
+									<a v-bind:title="item.name" v-bind:href="'xiangqing.html?id='+item.proid" v-if="item.isnotauction=='0'" style="text-align: left;text-align: center;">{{item.pname}}</a>
+									<a v-bind:title="item.name" v-bind:href="'auction.html?id='+item.proid" v-if="item.isnotauction=='1'" style="text-align: left;text-align: center;">{{item.pname}}</a>
+									<p v-for="opt in users" v-if="opt.id==item.userid"><i class="fa fa-user"></i>{{opt.username}}</p>
+									<span v-if="item.isnotauction==1">该商品是拍卖商品</span>
+									<p style="color: red;text-align: center;">￥{{item.price}}&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" v-on:click="del(item.collectionid)">移除</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<nav aria-label="Page navigation center" v-if="total!=0">
+						<ul class="pagination">
+							<li>
+								<a href="javascript:void(0)" aria-label="Previous" v-on:click="prePage">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li v-for="page in pages" v-bind:class="{ 'active': pageNum == page}">
+								<a href="javascript:void(0)" v-on:click="pageClick(page)">{{page}}</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" aria-label="Next" v-on:click="nextPage">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<!-- self_info -->
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script type="text/javascript" src="resource/js/moment.min.js"></script>
+		<script type="text/javascript">
+			var optStatus = ['待付款', '未发货(卖家尚未发货，请等待卖家发货)', '已发货(等待签收)', '已签收'];
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					collections: "",
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					inputPage: '',
+					pageNum: 1,
+					users: ""
+				},
+				methods: {
+					getUsers: function() {
+						var _this = this;
+						axios.get('/user', {
+								params: {
+									size: 1000
+								}
+							})
+							.then(function(res) {
+								console.info(res);
+								_this.users = res.data.data.rows;
+							})
+					},
+					getCollections: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get("/collection", {
+							params: {
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.collections = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						});
+					},
+					pageClick: function(page) {
+						this.getOrders(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if(this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getOrders(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if(this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getOrders(this.pageNum);
+					},
+					del: function(id) {
+						var _this = this;
+						if(confirm("是是否移除收藏夹？")) {
+							axios.delete('/collection/' + id)
+								.then(function(res) {
+									alert("移除成功");
+									_this.getCollections();
+								})
+						}
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+				},
+				created: function() {
+					this.getCollections();
+					this.getUsers();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if(!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
+					},
+					optStatusFilter: function(value) {
+						return optStatus[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

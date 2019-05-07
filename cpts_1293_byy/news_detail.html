@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>去哪儿买二手商城-公告信息</title>
+		<link rel="shortcut icon" href="resource/image/logo_01.png" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="resource/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/style.css">
+		<link rel="stylesheet" type="text/css" href="resource/css/bootstrap.min.css">
+	</head>
+	<style type="text/css">
+		.detail {
+			margin-left: 100px;
+			line-height: 55px;
+		}
+		.content p {
+			font-size: 20px;
+		}
+		.title{
+			text-align: center;
+		}
+	</style>
+
+	<body>
+		<div id="main">
+			<!-- start header -->
+			<header>
+				<div class="top center">
+					<div class="left fl">
+						<ul>
+							<li class="drodown-show">
+								<a href="collection.html"><i class="fa fa-star"></i>我的收藏</a>
+							</li>
+							<li class="drodown-show">
+								<a href="#"><i class="fa fa-phone"></i>联系客服</a>
+							</li>
+							<div class="clear"></div>
+						</ul>
+					</div>
+					<div class="right fr">
+						<div class="gouwuche fr">
+							<a href="gouwuche.html">购物车</a>
+						</div>
+						<div class="fr">
+							<ul v-if="islogin">
+								<li>
+									<a href="self_info.html"><i class="fa fa-user"></i>{{user.username}}</a>
+								</li>
+								<li>|</li>
+								<li v-on:click="logout">
+									<a href="javascript:void(0)">
+										</i>退出登录</a>
+								</li>
+								<li>
+									<a href="">消息通知</a>
+								</li>
+							</ul>
+							<ul v-else>
+								<li>
+									<a href="login.html" target="_blank">登录</a>
+								</li>
+								<li>|</li>
+								<li>
+									<a href="register.html" target="_blank">注册</a>
+								</li>
+								<li>|</li>
+							</ul>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</header>
+			<div class="content">
+				<p class="title">{{news.title}}</p>
+				<p id="detail" class="detail"></p>
+			</div>
+		</div>
+		<script type="text/javascript" src="resource/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="resource/js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="resource/js/vue-main.js"></script>
+		<script src="resource/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			var id = GetQueryString("id");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					news: "",
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+				},
+				methods: {
+					getDetail: function() {
+						var _this = this;
+						axios.get("/news/" + id).then(function(res) {
+							console.info(res);
+							_this.news = res.data.data;
+							document.getElementById("detail").innerHTML = res.data.data.content;
+						})
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+				},
+				created: function() {
+					this.getDetail();
+				}
+			})
+		</script>
+	</body>
+
+</html>
