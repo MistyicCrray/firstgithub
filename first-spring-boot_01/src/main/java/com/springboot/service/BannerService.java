@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,5 +77,11 @@ public class BannerService {
 		} else {
 			throw new ServiceException("修改失败");
 		}
+	}
+
+	// 定时任务
+	@Scheduled(cron = "* * * * * MON-SAT")
+	public void hello() {
+		System.out.println("打印");
 	}
 }
