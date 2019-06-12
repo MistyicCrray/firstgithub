@@ -80,8 +80,8 @@ public class BannerService {
 	}
 
 	// 定时任务
-	@Scheduled(cron = "* * * * * MON-SAT")
-	public void hello() {
-		System.out.println("打印");
-	}
+	/*
+	 * @Scheduled(cron = "* * * * * MON-SAT") public void hello() {
+	 * System.out.println("打印"); }
+	 */
 }

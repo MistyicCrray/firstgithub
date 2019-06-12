@@ -46,8 +46,6 @@ public class PublicPayController {
 	@Autowired
 	private OrderItemService orderItemService;
 
-	// 会员名称: tiantest@126.com
-	// 交易密码: 123123
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public void pay(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.setCharacterEncoding("utf-8");

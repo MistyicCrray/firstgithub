@@ -17,8 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableAsync
 @EnableScheduling
-@SpringBootApplication
 @Configuration
+@SpringBootApplication  // 核心注解
 public class App {
 	public static void main(String[] args) throws IOException {
 		String url = "http://localhost/cpts_1293_byy/login.html";
