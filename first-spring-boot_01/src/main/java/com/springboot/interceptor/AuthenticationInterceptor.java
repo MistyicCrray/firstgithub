@@ -30,8 +30,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	// 在业务处理器处理请求之前被调用
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
 		// 如果不是映射到方法直接通过
 		if (!(handler instanceof HandlerMethod)) {
@@ -67,7 +66,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 				String id = claims.getId();
 				Object user = userService.findById(id);
 				if (user == null) {
-//					response.setStatus(401);
 					throw new AuthorizationException("token无效，用户不存在，请重新登录");
 				}
 
@@ -91,6 +89,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 	// 在整个请求结束之后被调用，也就是在DispatcherServlet 渲染了对应的视图之后执行（主要是用于进行资源清理工作）
 	@Override
 	public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-			Object o, Exception e) throws Exception {
+			Object o, Exception e) {
 	}
 }

@@ -27,7 +27,7 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		User user = (User) webRequest.getAttribute(CurrentUserConstants.CURRENT_USER, RequestAttributes.SCOPE_REQUEST);
-		if (user != null) {
+		if (user!= null) {
 			return user;
 		}
 		throw new MissingServletRequestPartException(CurrentUserConstants.CURRENT_USER);
