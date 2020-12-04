@@ -10,11 +10,6 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @Description:md5加密
  */
 public class MD5 {
-
-	public static void main(String[] args) {
-		System.out.println(md5("123456"));
-	}
-
 	public static String md5(String str) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
